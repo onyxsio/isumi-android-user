@@ -9,11 +9,7 @@ class SearchHeader extends SliverPersistentHeaderDelegate {
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
-    final theme = Theme.of(context);
-    return Material(
-      color: theme.backgroundColor,
-      child: _SearchInput(),
-    );
+    return Material(child: _SearchInput());
   }
 
   @override
@@ -32,7 +28,6 @@ class SearchHeader extends SliverPersistentHeaderDelegate {
 class _SearchInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return InkWell(
       onTap: () {
         // method to show the search bar
@@ -45,7 +40,7 @@ class _SearchInput extends StatelessWidget {
         height: 64,
         padding: const EdgeInsets.symmetric(horizontal: 15),
         margin: const EdgeInsets.symmetric(horizontal: 20).copyWith(bottom: 10),
-        decoration: o.BoxDeco.deco_3,
+        decoration: o.BoxDeco.deco_2,
         child: Center(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
