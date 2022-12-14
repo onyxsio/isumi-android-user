@@ -22,10 +22,11 @@ class FirestoreRepository {
   static var sellerDB = firestore.collection('seller');
   // Stream<QuerySnapshot>
   static var productStream = productsDB.snapshots();
+  static var productLimitStream = productsDB.limit(10).snapshots();
   static var offerDB = firestore.collection('offers');
   static var offerStream = offerDB.snapshots();
   // Stream<QuerySnapshot>
-  // static var orderStream = sellerDB.doc('order').snapshots();
+  // static var orderStream = sellerDB.doc('order').snapshots(); .limit(1).
   //
   Future<void> setupDeviceToken() async {
     String? deviceToken = await FirebaseMessaging.instance.getToken();

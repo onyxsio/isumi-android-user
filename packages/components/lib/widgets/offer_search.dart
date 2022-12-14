@@ -293,7 +293,7 @@ class _OfferSearchPageState<T> extends State<_OfferSearchPage<T>> {
                 widget.delegate.showResults(context);
               },
               controller: widget.delegate._queryTextController,
-              onTap: showSearchFilter,
+              // onTap: showSearchFilter,
             ),
             body: AnimatedSwitcher(
               duration: const Duration(milliseconds: 300),

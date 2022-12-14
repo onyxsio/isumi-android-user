@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:isumi/core/util/image.dart';
 import 'package:isumi/core/util/utils.dart';
@@ -93,13 +91,18 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                   reviewAndRating(),
                   // space,
                   const Divider(),
+
+                  space,
                   Text('Select color', style: TxtStyle.b5B),
                   space,
                   _buildColorGrid(),
+
                   space, const Divider(),
                   Text('Select size', style: TxtStyle.b5B),
                   space,
                   _buildSizeGrid(),
+                  space,
+                  Text('Only $stock items left', style: TxtStyle.b6),
                   space,
                 ],
               ),
@@ -151,6 +154,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                 selectedSize = 0;
                 price = convertToSize(veriants[i])[0].price!;
                 stock = convertToSize(veriants[i])[0].stock!;
+                context.read<CounterCubit>().reset();
               });
             },
             child: Container(
@@ -182,6 +186,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
               setState(() {
                 price = convertToSize(veriants[selectedColor])[i].price!;
                 stock = convertToSize(veriants[selectedColor])[i].stock!;
+                context.read<CounterCubit>().reset();
                 selectedSize = i;
               });
             },

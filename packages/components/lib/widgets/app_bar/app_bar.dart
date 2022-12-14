@@ -37,8 +37,7 @@ bottomNavigationBar({required Function() onTap, required String text}) =>
     );
 //
 searchPageAppBar(
-        {required Function() onTap,
-        required Function(String) onSubmitted,
+        {required Function(String) onSubmitted,
         required TextEditingController controller}) =>
     AppBar(
       leading: const ArrowBackButton(),

@@ -24,13 +24,13 @@ class _ImageCarouselSliderState extends State<ImageCarouselSlider> {
               CachedNetworkImage(
             imageUrl: widget.imgList[pageViewIndex],
             // height: 35.w,
-            placeholder: (context, url) => const SizedBox(),
+            placeholder: (context, url) => _buildnetworkloader(),
             errorWidget: (context, url, error) => const Icon(Icons.error),
           ),
           carouselController: _controller,
           options: CarouselOptions(
             height: 35.h,
-            // aspectRatio: 2,
+            // aspectRatio: 0.5,
             // viewportFraction: 0.5,
             // initialPage: 1,
             enableInfiniteScroll: false,
@@ -60,6 +60,16 @@ class _ImageCarouselSliderState extends State<ImageCarouselSlider> {
           }).toList(),
         ),
       ],
+    );
+  }
+
+  Widget _buildnetworkloader() {
+    return Shimmer(
+      linearGradient: AppColor.shimmerGradient,
+      child: ShimmerLoading(
+        isLoading: true,
+        child: ColoredBox(color: AppColor.divider),
+      ),
     );
   }
 }
