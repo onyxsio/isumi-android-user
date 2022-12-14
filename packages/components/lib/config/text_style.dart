@@ -14,10 +14,18 @@ class TxtStyle {
   static FontWeight l = FontWeight.w300;
   static FontWeight sb = FontWeight.w500;
   //
-  static TextStyle get bodyFont => TextStyle(fontFamily: Fonts.body);
-  static TextStyle get titleFont => TextStyle(fontFamily: Fonts.title);
-  static TextStyle get lableFont =>
-      TextStyle(fontFamily: Fonts.body, color: AppColor.menuUnselect);
+  static TextStyle get bodyFont => TextStyle(
+        fontFamily: Fonts.body,
+        color: AppColor.text,
+      );
+  static TextStyle get titleFont => TextStyle(
+        fontFamily: Fonts.title,
+        color: AppColor.text,
+      );
+  static TextStyle get lableFont => TextStyle(
+        fontFamily: Fonts.body,
+        color: AppColor.menuUnselect,
+      );
   //
   static TextStyle get b1 => bodyFont.copyWith(fontSize: 8.sp);
   static TextStyle get b2 => bodyFont.copyWith(fontSize: 9.sp);

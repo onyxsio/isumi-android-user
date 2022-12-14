@@ -55,7 +55,7 @@ class _TextBoxState extends State<TextBox> {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.w),
                 margin: EdgeInsets.only(bottom: hasError ? 2.w : 5.w, top: 3.w),
-                decoration: BoxDeco.textbox(hasError),
+                decoration: BoxDeco.deco_1m(hasError),
                 child: Center(
                   child: TextFormField(
                     maxLines: maxLines,
