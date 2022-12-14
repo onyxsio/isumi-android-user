@@ -11,3 +11,5 @@ export 'src/providers/notification_badg.dart';
 export 'src/providers/selected_list.dart';
 
 export 'package:path_provider/path_provider.dart';
+
+export 'src/cubit/quantity/counter_cubit.dart';

@@ -1,4 +1,5 @@
 import 'package:app_provider/app_provider.dart';
+import 'package:app_provider/src/cubit/quantity/counter_cubit.dart';
 import 'package:components/components.dart';
 import 'package:flutter/material.dart';
 import 'package:isumi/auth.dart';
@@ -26,6 +27,7 @@ class AppProviders extends StatelessWidget {
           // BlocProvider<ConnectedBloc>(create: (context) => ConnectedBloc()),
           BlocProvider<AppBloc>(create: (_) => AppBloc(authRepo: _authRepo)),
           // BlocProvider<SellerCubit>(create: (context) => SellerCubit()),
+          BlocProvider<CounterCubit>(create: (context) => CounterCubit()),
         ],
         child: MultiProvider(
           providers: [

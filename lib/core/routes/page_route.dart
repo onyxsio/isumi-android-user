@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:isumi/app/screens/authentication/forgotPass/view/forgot_page.dart';
 import 'package:isumi/app/screens/authentication/login/login.dart';
 import 'package:isumi/app/screens/authentication/sign_up/view/sign_up_page.dart';
+import 'package:isumi/app/screens/home/producat_details.dart';
 // import 'package:isumi/app/screens/Order/view/bill_generate_page.dart';
 // import 'package:isumi/app/screens/Order/view/order_details.dart';
 // import 'package:isumi/app/screens/home/offer_page.dart';
@@ -42,9 +43,9 @@ class RouteGenerator {
 
       // case '/OfferPage':
       //   return createRoute(child: const OfferPage());
-      // case '/ProductDetails':
-      //   Product product = arguments as Product;
-      //   return createRoute(child: ProductDetailsPage(product: product));
+      case '/ProductDetails':
+        Product product = arguments as Product;
+        return OpenAndFadeTransition(ProductDetailsPage(product: product));
       // case '/ProductUpdate':
       //   Product product = arguments as Product;
       //   return createRoute(child: ProductUpdatePage(product: product));
