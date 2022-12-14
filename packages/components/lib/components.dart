@@ -26,3 +26,4 @@ export 'package:components/custom/curruncy.dart';
 
 export 'package:carousel_slider/carousel_slider.dart';
 export 'package:components/widgets/buttons/counter_slider.dart';
+export 'widgets/loading.dart';

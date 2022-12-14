@@ -25,6 +25,8 @@ class AppColor {
   static Color gray1 = const Color(0XFFA5A5BA);
   static Color gray2 = const Color(0XFF666687);
   static Color divider = const Color(0XFFEAEAEF);
+
+  static Color shimmerLight = AppColor.black.withOpacity(0.04);
   //const Color() #1488CC
   // static LinearGradient shimmerGradient = const LinearGradient(
   //   colors: [
@@ -41,19 +43,23 @@ class AppColor {
   //   end: Alignment(1.0, 0.3),
   //   tileMode: TileMode.clamp,
   // );
-  static LinearGradient shimmerGradient = const LinearGradient(
+  // static LinearGradient shimmerGradient = LinearGradient(
+  //   colors: [white, const Color(0xFFF4F4F4), white, const Color(0xFFF4F4F4)],
+  //   stops: const [0.1, 0.3, 0.4, 0.5],
+  //   begin: const Alignment(-1.0, -0.3),
+  //   end: const Alignment(1.0, 0.3),
+  //   tileMode: TileMode.clamp,
+  // );
+  static LinearGradient shimmerGradient = LinearGradient(
     colors: [
-      Color(0XFF303030),
-      Color.fromARGB(255, 59, 59, 59),
-      Color(0XFF303030),
+      AppColor.black.withOpacity(0.2),
+      const Color(0xFFEBEBF4),
+      AppColor.black.withOpacity(0.2),
+      // const Color(0xFFEBEBF4),
     ],
-    stops: [
-      0.1,
-      0.3,
-      0.4,
-    ],
-    begin: Alignment(-1.0, -0.3),
-    end: Alignment(1.0, 0.3),
+    stops: const [0.1, 0.3, 0.4],
+    begin: const Alignment(-1.0, -0.3),
+    end: const Alignment(1.0, 0.3),
     tileMode: TileMode.clamp,
   );
   //

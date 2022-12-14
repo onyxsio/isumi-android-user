@@ -14,23 +14,6 @@ Future<T?> mySearchDelegate<T>({
       .push(_SearchPageRoute<T>(delegate: delegate));
 }
 
-// !
-//
-// Future<T?> mySearchDelegate<T>({
-//   required BuildContext context,
-//   required SearchDelegate<T> delegate,
-//   String? query = '',
-//   autoFocus = false,
-//   bool useRootNavigator = false,
-// }) {
-//   delegate.query = query ?? delegate.query;
-//   delegate._currentBody = _SearchBody.suggestions;
-//   return Navigator.of(context, rootNavigator: useRootNavigator)
-//       .push(_SearchPageRoute<T>(
-//     delegate: delegate,
-//   ));
-// }
-
 abstract class SearchDelegate<T> {
   SearchDelegate({
     this.searchFieldLabel,
@@ -44,7 +27,7 @@ abstract class SearchDelegate<T> {
   Widget buildResults(BuildContext context);
 
   // Widget buildLeading(BuildContext context);
-  Widget buildFilter(BuildContext context);
+  // Widget buildFilter(BuildContext context);
 
   // List<Widget>? buildActions(BuildContext context);
 
@@ -315,7 +298,7 @@ class _SearchPageState<T> extends State<_SearchPage<T>> {
               widget.delegate.showResults(context);
             },
             controller: widget.delegate._queryTextController,
-            onTap: showSearchFilter,
+            // onTap: showSearchFilter,
           ),
           body: AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
@@ -326,13 +309,13 @@ class _SearchPageState<T> extends State<_SearchPage<T>> {
     );
   }
 
-  showSearchFilter() {
-    return showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        backgroundColor: Colors.transparent,
-        builder: (context) {
-          return widget.delegate.buildFilter(context);
-        });
-  }
+  // showSearchFilter() {
+  //   return showModalBottomSheet(
+  //       context: context,
+  //       isScrollControlled: true,
+  //       backgroundColor: Colors.transparent,
+  //       builder: (context) {
+  //         return widget.delegate.buildFilter(context);
+  //       });
+  // }
 }

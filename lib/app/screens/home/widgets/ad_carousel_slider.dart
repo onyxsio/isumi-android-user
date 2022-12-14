@@ -14,7 +14,7 @@ class AdCarouselSlider extends StatelessWidget {
           }
 
           if (snap.connectionState == ConnectionState.waiting) {
-            return _buildTopRowItem();
+            return AppLoading.adCarousel;
           }
 
           if (snap.data!.docs.isEmpty) {
@@ -49,16 +49,14 @@ class AdCarouselSlider extends StatelessWidget {
                   child: CachedNetworkImage(
                     imageUrl: data['banner'],
                     height: 35.w,
-                    placeholder: (context, url) => _buildTopRowItem(),
+                    placeholder: (context, url) => AppLoading.adCarousel,
                     imageBuilder: (context, imageProvider) => Container(
                       margin: EdgeInsets.symmetric(vertical: 2.w),
                       decoration: BoxDecoration(
-                          color: AppColor.black,
+                          color: AppColor.shimmerLight,
                           borderRadius: BorderRadius.circular(10),
                           image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit.cover,
-                          )),
+                              image: imageProvider, fit: BoxFit.cover)),
                     ),
                     errorWidget: (context, url, error) =>
                         const Icon(Icons.error),
@@ -68,22 +66,5 @@ class AdCarouselSlider extends StatelessWidget {
             ),
           );
         });
-  }
-
-  Widget _buildTopRowItem() {
-    return Shimmer(
-      linearGradient: AppColor.shimmerGradient,
-      child: ShimmerLoading(
-        isLoading: true,
-        child: Container(
-          height: 35.w,
-          margin: EdgeInsets.symmetric(vertical: 5.w, horizontal: 5.w),
-          decoration: BoxDecoration(
-            color: AppColor.divider,
-            borderRadius: BorderRadius.circular(16),
-          ),
-        ),
-      ),
-    );
   }
 }

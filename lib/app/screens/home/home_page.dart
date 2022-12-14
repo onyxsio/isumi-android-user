@@ -39,7 +39,7 @@ class _HomePageState extends State<HomePage> {
 
         SliverToBoxAdapter(
           child: StreamBuilder<QuerySnapshot>(
-            stream: FirestoreRepository.productStream,
+            stream: FirestoreRepository.productLimitStream,
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.hasError) {
@@ -47,7 +47,7 @@ class _HomePageState extends State<HomePage> {
               }
 
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const SizedBox();
+                return AppLoading.productList;
               }
 
               List<Product> weightData =
@@ -64,7 +64,6 @@ class _HomePageState extends State<HomePage> {
   GridView _buildProductList(List<Product> weightData) {
     return GridView.builder(
       shrinkWrap: true,
-      // physics: const BouncingScrollPhysics(),
       physics: const NeverScrollableScrollPhysics(),
       padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

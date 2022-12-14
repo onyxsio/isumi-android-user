@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:isumi/app/screens/home/featching.dart';
 import 'package:isumi/core/util/image.dart';
 import 'package:onyxsio/onyxsio.dart' as o;
-
-// import 'custom_search.dart';
-import 'search_page.dart';
+// import 'search_page.dart';
 
 class SearchHeader extends SliverPersistentHeaderDelegate {
   @override
@@ -31,10 +30,7 @@ class _SearchInput extends StatelessWidget {
     return InkWell(
       onTap: () {
         // method to show the search bar
-        o.mySearchDelegate(
-            context: context,
-            // delegate to customize the search bar
-            delegate: SearchScreen());
+        o.mySearchDelegate(context: context, delegate: SearchScreen());
       },
       child: Container(
         // height: 64,
@@ -56,5 +52,25 @@ class _SearchInput extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class SearchScreen extends o.SearchDelegate<String> {
+// third overwrite to show query result
+  @override
+  Widget buildResults(BuildContext context) {
+    return FetchingItems(query: query);
+  }
+
+// last overwrite to show the
+// querying process at the runtime
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    return FetchingItems(query: query);
+  }
+
+  @override
+  Widget buildFilter(BuildContext context) {
+    return const Text('Filters');
   }
 }
