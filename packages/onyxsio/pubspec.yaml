@@ -1,0 +1,25 @@
+name: onyxsio
+description: Combine all local packages with the Flutter project.
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.17.6 <3.0.0"
+
+dependencies:
+  payment_ui:
+    path: ../payment
+  splashpage:
+    path: ../splashscreen
+  # remote_data:
+  #   path: ../remote_data
+  # components:
+  #   path: ../components
+  # theme:
+  #   path: ../theme
+  # app_provider:
+  #   path: ../provider
+  # local_database:
+  #   path: ../local_data
+  # form_inputs:
+  #   path: ../form_inputs
