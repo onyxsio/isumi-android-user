@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "761954711929",
+    "firebase_url": "https://jpstore-8dfac-default-rtdb.firebaseio.com",
+    "project_id": "jpstore-8dfac",
+    "storage_bucket": "jpstore-8dfac.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:761954711929:android:fa4e882249d8bf41b157a8",
+        "android_client_info": {
+          "package_name": "com.isumi.admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "761954711929-53jgb47nte5js9n15b2het696h3el7qv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvIP2-eP3-v0WhDZmI8vET-yF6t824Fs4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "761954711929-53jgb47nte5js9n15b2het696h3el7qv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:761954711929:android:62835d35eed0fbecb157a8",
+        "android_client_info": {
+          "package_name": "com.isumi.user"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "761954711929-53jgb47nte5js9n15b2het696h3el7qv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvIP2-eP3-v0WhDZmI8vET-yF6t824Fs4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "761954711929-53jgb47nte5js9n15b2het696h3el7qv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
