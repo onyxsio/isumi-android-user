@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:isumi/app/screens/authentication/login/login.dart';
+import 'package:isumi/app/screens/main_page.dart';
 import 'package:onyxsio/onyxsio.dart';
 
 // import 'login/login.dart';
@@ -30,7 +31,7 @@ class _WapperPageState extends State<WapperPage> {
     // return const Scaffold();
     switch (widget.state) {
       case AppStatus.authenticated:
-        return const Scaffold();
+        return const MainPage();
       case AppStatus.unauthenticated:
         return const LoginPage();
     }

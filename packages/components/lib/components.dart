@@ -23,3 +23,5 @@ export 'util/space.dart';
 export 'package:components/animations/shimmer_loading.dart';
 export 'package:components/animations/shimmer.dart';
 export 'package:components/custom/curruncy.dart';
+
+export 'package:carousel_slider/carousel_slider.dart';

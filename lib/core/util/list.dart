@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:isumi/app/screens/home/home_page.dart';
 
 List<Widget> mainPages = [
-  // const HomePage(),
+  const HomePage(),
   // const OrderPage(),
   // const NotificationPage(),
   // const SettingsPage(),
