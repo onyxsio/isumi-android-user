@@ -1,17 +1,23 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:cache/cache.dart';
 import 'package:remote_data/src/error/failure.dart';
 import 'package:remote_data/src/model/models.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class AuthRepository {
   AuthRepository({
     CacheClient? cache,
     firebase_auth.FirebaseAuth? firebaseAuth,
+    GoogleSignIn? googleSignIn,
   })  : _cache = cache ?? CacheClient(),
-        _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance;
+        _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
+        _googleSignIn = googleSignIn ?? GoogleSignIn.standard();
 
   final CacheClient _cache;
+  final GoogleSignIn _googleSignIn;
   final firebase_auth.FirebaseAuth _firebaseAuth;
 
   static const userCacheKey = '__user_cache_key__';
@@ -72,6 +78,37 @@ class AuthRepository {
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw AppFirebaseFailure.fromCode(e.code);
     } catch (_) {
+      throw const AppFirebaseFailure();
+    }
+  }
+
+  /// Starts the Sign In with Google Flow.
+
+  Future<void> logInWithGoogle() async {
+    try {
+      late final firebase_auth.AuthCredential credential;
+
+      // if (kIsWeb) {
+      //   final googleProvider = firebase_auth.GoogleAuthProvider();
+      //   final userCredential = await _firebaseAuth.signInWithPopup(
+      //     googleProvider,
+      //   );
+      //   credential = userCredential.credential!;
+      // } else {
+      final googleUser = await _googleSignIn.signIn();
+      final googleAuth = await googleUser!.authentication;
+      credential = firebase_auth.GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+      // }
+
+      await _firebaseAuth.signInWithCredential(credential);
+    } on firebase_auth.FirebaseAuthException catch (e) {
+      log(e.code);
+      throw AppFirebaseFailure.fromCode(e.code);
+    } catch (e) {
+      log(e.toString());
       throw const AppFirebaseFailure();
     }
   }

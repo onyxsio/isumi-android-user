@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:isumi/app/screens/authentication/forgotPass/view/forgot_page.dart';
+import 'package:isumi/app/screens/authentication/login/login.dart';
+import 'package:isumi/app/screens/authentication/sign_up/view/sign_up_page.dart';
 // import 'package:isumi/app/screens/Order/view/bill_generate_page.dart';
 // import 'package:isumi/app/screens/Order/view/order_details.dart';
 // import 'package:isumi/app/screens/home/offer_page.dart';
@@ -16,6 +19,14 @@ class RouteGenerator {
       // SpalshPage MainPage
       // case '/':
       //   return createRoute(child: const SpalshPage());
+
+      case '/SignUpPage':
+        return OpenAndFadeTransition(const SignUpPage());
+
+      case '/LoginPage':
+        return OpenAndFadeTransition(const LoginPage());
+      case '/ForgotPassPage':
+        return OpenAndFadeTransition(const ForgotPassPage());
       // case '/SendArlet':
       //   return createRoute(child: const SendArlet());
       // case '/MainPage':

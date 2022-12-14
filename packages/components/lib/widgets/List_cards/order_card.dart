@@ -15,7 +15,7 @@ class NowOrderListCard extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(4.w),
         margin: EdgeInsets.symmetric(vertical: 3.w),
-        decoration: BoxDeco.overview,
+        decoration: BoxDeco.deco_2,
         child: Column(
           children: [
             Row(

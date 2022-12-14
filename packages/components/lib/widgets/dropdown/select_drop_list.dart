@@ -60,7 +60,7 @@ class _SelectDropListState extends State<SelectDropList>
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 17),
           // padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.w),
           margin: widget.title != null ? null : EdgeInsets.only(top: 3.w),
-          decoration: BoxDeco.itemSizeCard,
+          decoration: BoxDeco.deco_5,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
@@ -112,7 +112,7 @@ class _SelectDropListState extends State<SelectDropList>
       child: Container(
         padding: EdgeInsets.all(5.w),
         margin: EdgeInsets.only(bottom: 2.w),
-        decoration: BoxDeco.itemSizeCard,
+        decoration: BoxDeco.deco_5,
         child: Center(child: Text(item, style: TxtStyle.header4B)),
       ),
       onTap: () {
@@ -191,7 +191,7 @@ class _ProductSizeDropListState extends State<ProductSizeDropList>
         SizedBox(height: 3.w),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 17),
-          decoration: BoxDeco.itemSizeCard,
+          decoration: BoxDeco.deco_5,
           child: Row(
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -248,7 +248,7 @@ class _ProductSizeDropListState extends State<ProductSizeDropList>
     return GestureDetector(
       child: Container(
         // padding: EdgeInsets.all(5.w),
-        decoration: BoxDeco.itemSizeCard,
+        decoration: BoxDeco.deco_5,
         child: Center(
             child: Text(item,
                 style: TxtStyle.header4B, textAlign: TextAlign.start)),

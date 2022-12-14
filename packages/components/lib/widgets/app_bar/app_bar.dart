@@ -49,7 +49,7 @@ searchPageAppBar(
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 4.w),
           margin: EdgeInsets.symmetric(horizontal: 5.w),
-          decoration: BoxDeco.overview,
+          decoration: BoxDeco.deco_2,
           child: Row(
             children: [
               SvgPicture.asset(AppCIcon.search),
