@@ -8,3 +8,4 @@ We need to setup ios part in this project.
 2. flutter_native_splash
 3. image_picker
 4. flutter_local_notifications
+5. google_sign_in: ^5.4.2
