@@ -11,15 +11,15 @@ dependencies:
     path: ../payment
   splashpage:
     path: ../splashscreen
-  # remote_data:
-  #   path: ../remote_data
-  # components:
-  #   path: ../components
+  remote_data:
+    path: ../firebase
+  components:
+    path: ../components
   # theme:
   #   path: ../theme
-  # app_provider:
-  #   path: ../provider
-  # local_database:
-  #   path: ../local_data
-  # form_inputs:
-  #   path: ../form_inputs
+  app_provider:
+    path: ../provider
+  local_database:
+    path: ../local_data
+  form_inputs:
+    path: ../form_inputs
