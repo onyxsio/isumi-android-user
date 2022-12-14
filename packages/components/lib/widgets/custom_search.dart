@@ -1,9 +1,5 @@
-// import 'package:onyxsio/onyxsio.dart';
 import 'package:components/components.dart';
-
-import '/util/util.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_svg/flutter_svg.dart';
 
 //
 Future<T?> mySearchDelegate<T>({
@@ -324,13 +320,6 @@ class _SearchPageState<T> extends State<_SearchPage<T>> {
           body: AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
             child: body,
-          ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              Navigator.pushNamed(context, '/ProductAdd');
-            },
-            backgroundColor: AppColor.white,
-            child: SvgPicture.asset(AppCIcon.add),
           ),
         ),
       ),

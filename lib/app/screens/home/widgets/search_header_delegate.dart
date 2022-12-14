@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:isumi/core/util/image.dart';
 import 'package:onyxsio/onyxsio.dart' as o;
 
-import 'custom_search.dart';
+// import 'custom_search.dart';
 import 'search_page.dart';
 
 class SearchHeader extends SliverPersistentHeaderDelegate {
@@ -13,10 +13,10 @@ class SearchHeader extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  double get maxExtent => 65;
+  double get maxExtent => 55;
 
   @override
-  double get minExtent => 64;
+  double get minExtent => 54;
 
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
@@ -31,24 +31,24 @@ class _SearchInput extends StatelessWidget {
     return InkWell(
       onTap: () {
         // method to show the search bar
-        mySearchDelegate(
+        o.mySearchDelegate(
             context: context,
             // delegate to customize the search bar
             delegate: SearchScreen());
       },
       child: Container(
-        height: 64,
-        padding: const EdgeInsets.symmetric(horizontal: 15),
-        margin: const EdgeInsets.symmetric(horizontal: 20).copyWith(bottom: 10),
+        // height: 64,
+        padding: EdgeInsets.symmetric(horizontal: 4.w),
+        margin: EdgeInsets.symmetric(horizontal: 5.w),
         decoration: o.BoxDeco.deco_2,
         child: Center(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               o.SvgPicture.asset(AppIcon.search),
-              const SizedBox(width: 5),
+              SizedBox(width: 3.w),
               Expanded(
-                child: Text('Search', style: o.TxtStyle.l3),
+                child: Text('Search', style: o.TxtStyle.searchBox),
               ),
               // o.SvgPicture.asset(AppIcon.filter)
             ],

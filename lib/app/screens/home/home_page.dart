@@ -3,6 +3,7 @@ import 'package:isumi/core/util/image.dart';
 import 'package:onyxsio/onyxsio.dart';
 
 import 'widgets/ad_carousel_slider.dart';
+import 'widgets/product_card.dart';
 import 'widgets/search_header_delegate.dart';
 
 class HomePage extends StatefulWidget {
@@ -27,48 +28,56 @@ class _HomePageState extends State<HomePage> {
     return CustomScrollView(
       physics: const BouncingScrollPhysics(),
       slivers: <Widget>[
-        //
         topAppBar(),
-        //
         topTitle(),
-        //
         SliverPersistentHeader(delegate: SearchHeader(), pinned: true),
-        //
-        // TODO: if this availbale to offers is availabale
-        SliverToBoxAdapter(
-          child: Column(
-            children: const [
-              SizedBox(height: 20),
-              AdCarouselSlider(),
-              SizedBox(height: 20),
-            ],
-          ),
-        ),
+        const SliverToBoxAdapter(child: AdCarouselSlider()),
         //
         // SliverPersistentHeader(delegate: CategoryDelegate(), pinned: true),
         //
         mostPopularTitle(),
-        //
-        _buildProductList()
+
+        SliverToBoxAdapter(
+          child: StreamBuilder<QuerySnapshot>(
+            stream: FirestoreRepository.productStream,
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return const Text('Something went wrong');
+              }
+
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const SizedBox();
+              }
+
+              List<Product> weightData =
+                  snapshot.data!.docs.map((e) => Product.fromSnap(e)).toList();
+
+              return _buildProductList(weightData);
+            },
+          ),
+        )
       ],
     );
   }
 
-  // Product List view
-  SliverPadding _buildProductList() {
-    return SliverPadding(
+  GridView _buildProductList(List<Product> weightData) {
+    return GridView.builder(
+      shrinkWrap: true,
+      // physics: const BouncingScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-      sliver: SliverGrid(
-        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 50.w,
-          mainAxisSpacing: 2.h,
-          crossAxisSpacing: 4.w,
-          childAspectRatio: 0.8,
-        ),
-        delegate: SliverChildBuilderDelegate((context, index) => Text('data'),
-            // (context, index) => ProductCard(product: demoCart[index]),
-            childCount: 5),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        mainAxisSpacing: 5.h,
+        crossAxisSpacing: 5.w,
+        childAspectRatio: 0.75,
       ),
+      itemCount: weightData.length,
+      itemBuilder: (context, index) {
+        var result = weightData[index];
+        return GridProductCard(product: result);
+      },
     );
   }
 
@@ -108,7 +117,7 @@ class _HomePageState extends State<HomePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: 3.w),
-          Text('Most Popular', style: TxtStyle.h12),
+          Text('Most Popular', style: TxtStyle.h10),
           SizedBox(height: 2.w),
         ],
       ),

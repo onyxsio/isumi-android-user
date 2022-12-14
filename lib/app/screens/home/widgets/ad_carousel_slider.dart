@@ -6,86 +6,83 @@ class AdCarouselSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CarouselSlider.builder(
-      itemCount: 5,
-      itemBuilder: (context, itemIndex, pageViewIndex) => Container(
-        width: 90.w,
-        // margin: EdgeInsets.symmetric(horizontal: 5),
-        decoration: BoxDecoration(
-          color: const Color(0XFF212134),
-          borderRadius: BorderRadius.circular(16),
+    return StreamBuilder(
+        stream: FirestoreRepository.offerStream,
+        builder: (builder, AsyncSnapshot<QuerySnapshot> snap) {
+          if (snap.hasError) {
+            return const SizedBox();
+          }
+
+          if (snap.connectionState == ConnectionState.waiting) {
+            return _buildTopRowItem();
+          }
+
+          if (snap.data!.docs.isEmpty) {
+            return const SizedBox();
+          }
+          return Padding(
+            padding: EdgeInsets.symmetric(vertical: 5.w),
+            child: CarouselSlider(
+              options: CarouselOptions(
+                height: 18.h,
+                aspectRatio: 16 / 5,
+                viewportFraction: 0.9,
+                initialPage: 1,
+                enableInfiniteScroll: false,
+                reverse: false,
+                autoPlay: true,
+                autoPlayInterval: const Duration(seconds: 3),
+                autoPlayAnimationDuration: const Duration(milliseconds: 800),
+                autoPlayCurve: Curves.fastOutSlowIn,
+                enlargeCenterPage: true,
+                scrollDirection: Axis.horizontal,
+              ),
+              items: snap.data!.docs.map((DocumentSnapshot document) {
+                Map<String, dynamic> data =
+                    document.data()! as Map<String, dynamic>;
+
+                return GestureDetector(
+                  onTap: () {
+                    // TODO show items list
+                    // showOfferDetails(data);
+                  },
+                  child: CachedNetworkImage(
+                    imageUrl: data['banner'],
+                    height: 35.w,
+                    placeholder: (context, url) => _buildTopRowItem(),
+                    imageBuilder: (context, imageProvider) => Container(
+                      margin: EdgeInsets.symmetric(vertical: 2.w),
+                      decoration: BoxDecoration(
+                          color: AppColor.black,
+                          borderRadius: BorderRadius.circular(10),
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.cover,
+                          )),
+                    ),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                  ),
+                );
+              }).toList(),
+            ),
+          );
+        });
+  }
+
+  Widget _buildTopRowItem() {
+    return Shimmer(
+      linearGradient: AppColor.shimmerGradient,
+      child: ShimmerLoading(
+        isLoading: true,
+        child: Container(
+          height: 35.w,
+          margin: EdgeInsets.symmetric(vertical: 5.w, horizontal: 5.w),
+          decoration: BoxDecoration(
+            color: AppColor.divider,
+            borderRadius: BorderRadius.circular(16),
+          ),
         ),
-        child: Stack(
-          children: [
-            Positioned(
-              right: -10,
-              top: -10,
-              child: CircleAvatar(
-                radius: 80,
-                backgroundColor: AppColor.white.withOpacity(0.04),
-              ),
-            ),
-            Positioned(
-              right: 10,
-              top: 10,
-              child: CircleAvatar(
-                radius: 60,
-                backgroundColor: AppColor.white.withOpacity(0.06),
-              ),
-            ),
-            Positioned(
-              right: 20,
-              top: 20,
-              child: CircleAvatar(
-                radius: 50,
-                backgroundColor: AppColor.white.withOpacity(0.06),
-              ),
-            ),
-            Align(
-              alignment: Alignment.centerLeft,
-              // widthFactor: 30.w,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0).copyWith(left: 20),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Product of the day',
-                      style:
-                          TxtStyle.h3.copyWith(color: const Color(0XFFA5A5BA)),
-                    ),
-                    SizedBox(
-                      width: 40.w,
-                      child: Text(
-                        'Majority’s best choice',
-                        style: TxtStyle.h3.copyWith(color: AppColor.white),
-                      ),
-                    ),
-                    Text(
-                      'See more',
-                      style: TxtStyle.h3.copyWith(color: AppColor.orange),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-      options: CarouselOptions(
-        height: 18.h,
-        aspectRatio: 16 / 5.5,
-        viewportFraction: 0.85,
-        initialPage: 1,
-        enableInfiniteScroll: false,
-        reverse: false,
-        autoPlay: true,
-        autoPlayInterval: const Duration(seconds: 3),
-        autoPlayAnimationDuration: const Duration(milliseconds: 800),
-        autoPlayCurve: Curves.fastOutSlowIn,
-        enlargeCenterPage: true,
-        scrollDirection: Axis.horizontal,
       ),
     );
   }

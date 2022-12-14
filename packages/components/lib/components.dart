@@ -25,3 +25,4 @@ export 'package:components/animations/shimmer.dart';
 export 'package:components/custom/curruncy.dart';
 
 export 'package:carousel_slider/carousel_slider.dart';
+export 'package:components/widgets/buttons/counter_slider.dart';
