@@ -1,0 +1,41 @@
+name: remote_data
+description: Control the whole firebase operation with the Flutter project.
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.17.6 <3.0.0"
+
+dependencies:
+  # Firebase
+  firebase_core: ^2.2.0
+  cloud_firestore: ^4.0.5
+  firebase_storage: ^11.0.5
+  firebase_messaging: ^14.1.0
+  firebase_auth: ^4.1.0
+  flutter_local_notifications: ^12.0.4
+
+  #
+  flutter:
+    sdk: flutter
+  #UtiLyti
+  uuid: ^3.0.7
+  image_picker: ^0.8.6
+  flutter_bloc: ^8.1.1
+  http: ^0.13.5
+  equatable: ^2.0.5
+  #
+  components:
+    path: ../components
+  cache:
+    path: ../cache
+  local_database:
+    path: ../local_data
+  #
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^2.0.0
+flutter:
+  uses-material-design: true

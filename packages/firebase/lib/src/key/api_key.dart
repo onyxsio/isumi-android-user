@@ -1,0 +1,2 @@
+const serverKey =
+    "key=AAAAsWgKOXk:APA91bF-OKhH0rJZHuYfi6TvtxLm2WdeltMOSfR1MaLlAEeSaHgs1dP7s2drWwkJwCZo7hPQB94Z_Olbkz6OR4AsSzUS7NFjjxMXhmaxVPkUL2N8DKT3b7A7eCwPl4kzqRi2j1dmfWMD";

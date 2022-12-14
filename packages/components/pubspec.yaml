@@ -1,0 +1,42 @@
+name: components
+description: Control the whole components and widgets operation with the Flutter project.
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.17.6 <3.0.0"
+
+dependencies:
+  #
+  flutter:
+    sdk: flutter
+
+  # image_picker: ^0.8.6
+  # Network image
+  cached_network_image: ^3.2.1
+  carousel_slider: ^4.1.1
+  image_picker: ^0.8.6
+  flutter_svg: ^1.1.6
+  intl: ^0.17.0
+  provider: ^6.0.1
+
+  # permission_handler: ^10.2.0
+  pdf: ^3.8.4
+  open_file: ^3.2.1
+  barcode: ^2.2.3
+
+  app_provider:
+    path: ../provider
+  remote_data:
+    path: ../firebase
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^2.0.0
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/svg/
+    # - assets/icons/
