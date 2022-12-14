@@ -92,11 +92,9 @@ class _HomePageState extends State<HomePage> {
   // Top Title
   SliverToBoxAdapter topTitle() {
     return SliverToBoxAdapter(
-      child: Column(
-        children: [
-          Text('Find the latest trend for you', style: TxtStyle.h12),
-          SizedBox(height: 5.w),
-        ],
+      child: Padding(
+        padding: EdgeInsets.only(left: 6.w, bottom: 5.w),
+        child: Text('Find the latest trend for you', style: TxtStyle.h10),
       ),
     );
   }
