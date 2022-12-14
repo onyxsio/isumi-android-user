@@ -27,15 +27,15 @@ class DeliveredInformation extends StatelessWidget {
           return const CupertinoActivityIndicator();
         }
         return ListView(
-          padding: EdgeInsets.symmetric(horizontal: 5),
+          padding: EdgeInsets.symmetric(horizontal: 5.w),
           children: snapshot.data!.docs.map((DocumentSnapshot document) {
             Map<String, dynamic> data =
                 document.data()! as Map<String, dynamic>;
             Orders order = Orders.fromJson(data);
-            return SizedBox();
-            // return FocusedMenuHolder(
-            //     menuContent: menuContent(index: document.id, context: context),
-            //     child: NowOrderListCard(order: order));
+
+            return FocusedMenuHolder(
+                menuContent: menuContent(index: document.id, context: context),
+                child: NowOrderListCard(order: order));
           }).toList(),
         );
       },

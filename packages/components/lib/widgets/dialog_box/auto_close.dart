@@ -1,7 +1,6 @@
 import 'dart:async';
+import 'package:components/components.dart';
 import 'package:flutter/material.dart';
-import 'package:onyxsio/onyxsio.dart';
-// import 'dialog_boxes.dart';
 
 class AutoDialogBoxUI extends StatefulWidget {
   final String message;

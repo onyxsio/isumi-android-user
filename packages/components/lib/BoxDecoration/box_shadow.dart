@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:onyxsio/onyxsio.dart';
+import 'package:components/config/colors.dart';
 
 class AppBoxShadow {
   //
