@@ -96,7 +96,7 @@ class DBSetup {
     );
   }
 
-  Future<int> delete(int id) async {
+  static Future<int> delete(int id) async {
     final db = await _database;
 
     return await db!.delete(

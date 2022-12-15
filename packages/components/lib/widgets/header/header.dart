@@ -1,4 +1,5 @@
 import 'package:components/components.dart';
+import 'package:components/util/util.dart';
 import 'package:flutter/material.dart';
 
 class TXTHeader {
@@ -24,19 +25,15 @@ class TXTHeader {
 
   //
   static Widget notificationHeader(String text) =>
-      Text(text, style: TxtStyle.b5B.copyWith(color: const Color(0XFF32324D)));
+      Text(text, style: TxtStyle.b5B.copyWith(color: AppColor.black4));
 
   static Widget notificationSubHeader(String text) =>
-      Text(text, style: TxtStyle.b4.copyWith(color: const Color(0XFFC0C0CF)));
+      Text(text, style: TxtStyle.b4.copyWith(color: AppColor.gray3));
 
-  static Widget cartListTileHeader(String text) => Text(text,
-      style: TxtStyle.b1
-          .copyWith(color: const Color(0XFF32324D), fontSize: 14.sp));
   static Widget cartListTileSubHeader(String text) => Text(text,
-      style: TxtStyle.b2
-          .copyWith(color: const Color(0XFFC0C0CF), fontSize: 12.sp));
-  static Widget cartListTilePrice(String text) =>
-      Text(text, style: TxtStyle.h3.copyWith(color: const Color(0XFF32324D)));
-  static Widget cartListTileQty(String text) =>
-      Text(text, style: TxtStyle.h3.copyWith(color: const Color(0XFF32324D)));
+      style: TxtStyle.b5.copyWith(color: AppColor.error.withOpacity(0.5)));
+
+  static Widget cartListTilePrice(String text, String currency) =>
+      Text(Utils.currency(name: currency, amount: double.parse(text)),
+          style: TxtStyle.b10B);
 }

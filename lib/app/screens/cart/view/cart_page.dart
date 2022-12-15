@@ -8,11 +8,11 @@ class CartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: mainAppBar(text: 'My cart'),
+      appBar: mainAppBar(text: 'Shopping Cart'),
       body: const CartListView(),
       bottomNavigationBar: bottomNavigationBar(
           onTap: () => Navigator.pushNamed(context, '/OrderStatusPage'),
-          text: 'Send order'),
+          text: 'Proceed to checkout'),
     );
   }
 }

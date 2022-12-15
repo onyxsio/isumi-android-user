@@ -63,6 +63,7 @@ class TxtStyle {
   static TextStyle get b6B => b6.copyWith(fontWeight: b);
   static TextStyle get b3B => b3.copyWith(fontWeight: b);
   static TextStyle get b8B => b8.copyWith(fontWeight: sb);
+  static TextStyle get b10B => b12.copyWith(fontWeight: sb);
   //
   static TextStyle get h14B => h14.copyWith(fontWeight: b);
   static TextStyle get h9B => h9.copyWith(fontWeight: b);
