@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:remote_data/src/model/customer.dart';
 
 class Orders {
   String? sId;
@@ -168,143 +169,90 @@ class Subvariants {
   }
 }
 
-// !
-class Customer {
-  String? name;
-  Address? address;
-  String? phoneNumber;
-  String? email;
 
-  Customer({this.name, this.address, this.phoneNumber, this.email});
 
-  Customer.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
-    address =
-        json['address'] != null ? Address.fromJson(json['address']) : null;
-    phoneNumber = json['phoneNumber'];
-    email = json['email'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['name'] = name;
-    if (address != null) {
-      data['address'] = address!.toJson();
-    }
-    data['phoneNumber'] = phoneNumber;
-    data['email'] = email;
-    return data;
-  }
-}
-
-// !
-class Address {
-  String? streetAddress;
-  String? city;
-  String? state;
-  String? postalCode;
-
-  Address({this.streetAddress, this.city, this.state, this.postalCode});
-
-  Address.fromJson(Map<String, dynamic> json) {
-    streetAddress = json['streetAddress'];
-    city = json['city'];
-    state = json['state'];
-    postalCode = json['postalCode'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['streetAddress'] = streetAddress;
-    data['city'] = city;
-    data['state'] = state;
-    data['postalCode'] = postalCode;
-    return data;
-  }
-}
-
-Orders demoOrder = Orders(
-  sId: '12',
-  paymetStatus: 'done',
-  date: '2022/02/5',
-  total: '5000',
-  discountedPrice: '522',
-  delivery: '200',
-  currency: 'LKR',
-  items: [
-    Items(
-      name: 'kota gawma',
-      productId: '13454689dsa7d',
-      variants: [
-        Variants(
-          color: '4286319678',
-          subvariants: [
-            Subvariants(
-              size: 'xs',
-              price: '5656',
-              qty: '5',
-            ),
-            Subvariants(
-              size: 'M',
-              price: '2346',
-              qty: '6',
-            ),
-            Subvariants(
-              size: 'S',
-              price: '006',
-              qty: '2',
-            ),
-          ],
-        ),
-      ],
-    ),
-    Items(name: 'kota gawma ahdkadas', productId: '13454689dsa7d', variants: [
-      Variants(
-        color: '4292054086',
-        subvariants: [
-          Subvariants(
-            size: 's',
-            price: '565',
-            qty: '52',
-          ),
-          Subvariants(
-            size: 'xs',
-            price: '956',
-            qty: '5',
-          ),
-        ],
-      ),
-      Variants(
-        color: '4286319678',
-        subvariants: [
-          Subvariants(
-            size: 'xs',
-            price: '5656',
-            qty: '5',
-          ),
-          Subvariants(
-            size: 'M',
-            price: '2346',
-            qty: '6',
-          ),
-          Subvariants(
-            size: 'S',
-            price: '006',
-            qty: '2',
-          ),
-        ],
-      ),
-    ]),
-  ],
-  customer: Customer(
-    name: 'sudesh bandara',
-    phoneNumber: '075 000 0000',
-    email: 'sudesh@gmail.com',
-    address: Address(
-      postalCode: '22032',
-      state: 'central',
-      city: 'Hatton',
-      streetAddress: 'No 88,Kalaweldeniya road,',
-    ),
-  ),
-);
+// Orders demoOrder = Orders(
+//   sId: '12',
+//   paymetStatus: 'done',
+//   date: '2022/02/5',
+//   total: '5000',
+//   discountedPrice: '522',
+//   delivery: '200',
+//   currency: 'LKR',
+//   items: [
+//     Items(
+//       name: 'kota gawma',
+//       productId: '13454689dsa7d',
+//       variants: [
+//         Variants(
+//           color: '4286319678',
+//           subvariants: [
+//             Subvariants(
+//               size: 'xs',
+//               price: '5656',
+//               qty: '5',
+//             ),
+//             Subvariants(
+//               size: 'M',
+//               price: '2346',
+//               qty: '6',
+//             ),
+//             Subvariants(
+//               size: 'S',
+//               price: '006',
+//               qty: '2',
+//             ),
+//           ],
+//         ),
+//       ],
+//     ),
+//     Items(name: 'kota gawma ahdkadas', productId: '13454689dsa7d', variants: [
+//       Variants(
+//         color: '4292054086',
+//         subvariants: [
+//           Subvariants(
+//             size: 's',
+//             price: '565',
+//             qty: '52',
+//           ),
+//           Subvariants(
+//             size: 'xs',
+//             price: '956',
+//             qty: '5',
+//           ),
+//         ],
+//       ),
+//       Variants(
+//         color: '4286319678',
+//         subvariants: [
+//           Subvariants(
+//             size: 'xs',
+//             price: '5656',
+//             qty: '5',
+//           ),
+//           Subvariants(
+//             size: 'M',
+//             price: '2346',
+//             qty: '6',
+//           ),
+//           Subvariants(
+//             size: 'S',
+//             price: '006',
+//             qty: '2',
+//           ),
+//         ],
+//       ),
+//     ]),
+//   ],
+//   customer: Customer(
+//     name: 'sudesh bandara',
+//     phoneNumber: '075 000 0000',
+//     email: 'sudesh@gmail.com',
+//     address: Address(
+//       postalCode: '22032',
+//       state: 'central',
+//       city: 'Hatton',
+//       streetAddress: 'No 88,Kalaweldeniya road,',
+//     ),
+//   ),
+// );

@@ -79,12 +79,12 @@ class _SignUpButton extends StatelessWidget {
             : MainButton(
                 onTap: () {
                   // TODO validation
-                  // context.read<SignUpCubit>().emailChanged(email.text);
+                  context.read<SignUpCubit>().emailChanged(email.text);
                   // context.read<SignUpCubit>().phoneChanged(password.text);
-                  // context.read<SignUpCubit>().passwordChanged(password.text);
-                  // context
-                  //     .read<SignUpCubit>()
-                  //     .confirmedPasswordChanged(rePassword.text);
+                  context.read<SignUpCubit>().passwordChanged(password.text);
+                  context
+                      .read<SignUpCubit>()
+                      .confirmedPasswordChanged(rePassword.text);
 
                   // if (state.status.isValidated) {
                   context.read<SignUpCubit>().signUpFormSubmitted();
@@ -101,8 +101,7 @@ class _SignINButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       key: const Key('loginForm'),
-      onPressed: () => Navigator.of(context)
-          .pushNamedAndRemoveUntil('/LoginPage', (route) => false),
+      onPressed: () => Navigator.pop(context),
       child: RichText(
         text: TextSpan(children: [
           TextSpan(text: 'Already have an account? ', style: TxtStyle.b5),

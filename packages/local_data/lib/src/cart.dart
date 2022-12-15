@@ -3,7 +3,7 @@ final String tableCart = 'cart';
 class CartFields {
   static final List<String> values = [
     /// Add all fields
-    id, name, quantity, price, color, size
+    id, name, quantity, price, color, size, pid, createdTime
   ];
 
   static final String id = '_id';
@@ -12,15 +12,21 @@ class CartFields {
   static final String size = 'size';
   static final String color = 'color';
   static final String price = 'price';
+  static final String pid = 'pid';
+  static final String createdTime = 'createdTime';
+  static final String image = 'image';
 }
 
 class Cart {
-  final String? id;
+  final int? id;
+  final String pid;
   final String size;
   final String quantity;
   final String name;
   final String color;
   final String price;
+  final String image;
+  final DateTime createdTime;
 
   const Cart({
     this.id,
@@ -29,15 +35,21 @@ class Cart {
     required this.name,
     required this.color,
     required this.price,
+    required this.pid,
+    required this.image,
+    required this.createdTime,
   });
 
   Cart copy({
-    String? id,
+    int? id,
     String? size,
     String? quantity,
     String? name,
     String? color,
     String? price,
+    String? pid,
+    String? image,
+    DateTime? createdTime,
   }) =>
       Cart(
         id: id ?? this.id,
@@ -46,15 +58,21 @@ class Cart {
         name: name ?? this.name,
         color: color ?? this.color,
         price: price ?? this.price,
+        pid: pid ?? this.pid,
+        image: image ?? this.image,
+        createdTime: createdTime ?? this.createdTime,
       );
 
   static Cart fromJson(Map<String, Object?> json) => Cart(
-        id: json[CartFields.id] as String?,
+        id: json[CartFields.id] as int?,
         size: json[CartFields.size] as String,
         quantity: json[CartFields.quantity] as String,
         name: json[CartFields.name] as String,
         color: json[CartFields.color] as String,
         price: json[CartFields.price] as String,
+        image: json[CartFields.image] as String,
+        pid: json[CartFields.pid] as String,
+        createdTime: DateTime.parse(json[CartFields.createdTime] as String),
       );
 
   Map<String, Object?> toJson() => {
@@ -64,5 +82,8 @@ class Cart {
         CartFields.quantity: quantity,
         CartFields.color: color,
         CartFields.price: price,
+        CartFields.image: image,
+        CartFields.pid: pid,
+        CartFields.createdTime: createdTime.toIso8601String(),
       };
 }

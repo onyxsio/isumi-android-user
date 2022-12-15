@@ -33,12 +33,12 @@ class NowOrderListCard extends StatelessWidget {
               children: [
                 Text('To:', style: TxtStyle.b5B),
                 SizedBox(width: 3.w),
-                Expanded(
-                  child: Text(
-                    '${order.customer!.address!.streetAddress!} ${order.customer!.address!.city} ${order.customer!.address!.postalCode}',
-                    style: TxtStyle.b3,
-                  ),
-                ),
+                // Expanded(
+                //   child: Text(
+                //     '${order.customer!.address!.streetAddress!} ${order.customer!.address!.city} ${order.customer!.address!.postalCode}',
+                //     style: TxtStyle.b3,
+                //   ),
+                // ),
               ],
             )
           ],

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:local_database/src/cart.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -29,39 +31,35 @@ class DBSetup {
     final idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
     final textType = 'TEXT NOT NULL';
 
-    await db.execute('''
-CREATE TABLE $tableCart ( 
-  ${CartFields.id} $idType, 
-  ${CartFields.size} $textType,
-  ${CartFields.quantity} $textType,
-  ${CartFields.name} $textType,
-  ${CartFields.color} $textType,
-  ${CartFields.price} $textType
-  )
-''');
+    try {
+      await db.execute('''
+              CREATE TABLE $tableCart ( 
+              ${CartFields.id} $idType, 
+              ${CartFields.size} $textType,
+              ${CartFields.quantity} $textType,
+              ${CartFields.name} $textType,
+              ${CartFields.color} $textType,
+              ${CartFields.price} $textType,
+              ${CartFields.pid} $textType,
+              ${CartFields.createdTime} $textType,
+              ${CartFields.image} $textType
+              )
+              ''');
+    } catch (e) {}
   }
 
-  static Future<int> create(Cart note) async {
-    final db = await _database;
-    // final json = note.toJson();
-    // final columns =
-    //     '${NoteFields.title}, ${NoteFields.description}, ${NoteFields.time}';
-    // final values =
-    //     '${json[NoteFields.title]}, ${json[NoteFields.description]}, ${json[NoteFields.time]}';
-    // final id = await db
-    //     .rawInsert('INSERT INTO table_name ($columns) VALUES ($values)');
-
+  static Future<bool> create(Cart note) async {
     try {
-      await db?.insert(tableCart, note.toJson());
-      return 1;
+      await _database?.insert(tableCart, note.toJson());
+      return true;
     } catch (e) {
-      return 0;
+      return false;
     }
   }
 
   Future<Cart> readNote(String id) async {
-    final db = await _database;
-    final maps = await db!.query(
+    // final db = await _database;
+    final maps = await _database!.query(
       tableCart,
       columns: CartFields.values,
       where: '${CartFields.id} = ?',
@@ -75,15 +73,15 @@ CREATE TABLE $tableCart (
     }
   }
 
-  Future<List<Cart>> readAllNotes() async {
-    final db = await _database;
+  static Future<List<Cart>> readAllCarts() async {
+    // final db = await _database;
 
     final orderBy = '${CartFields.id} ASC';
     // final result =
-    //     await db.rawQuery('SELECT * FROM $tableNotes ORDER BY $orderBy');
+    //     await _database!.rawQuery('SELECT * FROM $tableCart ORDER BY $orderBy');
+    //, orderBy: orderBy
 
-    final result = await db!.query(tableCart, orderBy: orderBy);
-
+    final result = await _database!.query(tableCart, orderBy: orderBy);
     return result.map((json) => Cart.fromJson(json)).toList();
   }
 
@@ -108,9 +106,7 @@ CREATE TABLE $tableCart (
     );
   }
 
-  Future close() async {
-    final db = await _database;
-
-    db!.close();
+  static Future close() async {
+    _database!.close();
   }
 }

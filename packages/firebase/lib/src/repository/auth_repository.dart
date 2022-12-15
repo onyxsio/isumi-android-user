@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:cache/cache.dart';
+import 'package:remote_data/remote_data.dart';
 import 'package:remote_data/src/error/failure.dart';
 import 'package:remote_data/src/model/models.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -22,10 +23,10 @@ class AuthRepository {
 
   static const userCacheKey = '__user_cache_key__';
 
-  /// Stream of [User] which will emit the current user when
+  /// Stream of User which will emit the current user when
   /// the authentication state changes.
   ///
-  /// Emits [User.empty] if the user is not authenticated.
+  /// Emits User.empty if the user is not authenticated.
   Stream<User> get user {
     return _firebaseAuth.authStateChanges().map((firebaseUser) {
       final user = firebaseUser == null ? User.empty : firebaseUser.toUser;
@@ -43,10 +44,12 @@ class AuthRepository {
   /// Creates a new user with the provided [email] and [password].
   Future<void> signUp({required String email, required String password}) async {
     try {
-      await _firebaseAuth.createUserWithEmailAndPassword(
+      var newuser = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+
+      await FirestoreRepository.createAccount(newuser.user!);
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw AppFirebaseFailure.fromCode(e.code);
     } catch (_) {
@@ -65,7 +68,7 @@ class AuthRepository {
     }
   }
 
-  /// Signs in with the provided [email] and [password].
+  /// Signs in with the provided email and password.
   ///
   /// Throws a LogInWithEmailAndPasswordFailure] if an exception occurs.
   Future<void> logInWithEmailAndPassword(
@@ -77,7 +80,7 @@ class AuthRepository {
       );
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw AppFirebaseFailure.fromCode(e.code);
-    } catch (_) {
+    } catch (e) {
       throw const AppFirebaseFailure();
     }
   }
@@ -88,27 +91,17 @@ class AuthRepository {
     try {
       late final firebase_auth.AuthCredential credential;
 
-      // if (kIsWeb) {
-      //   final googleProvider = firebase_auth.GoogleAuthProvider();
-      //   final userCredential = await _firebaseAuth.signInWithPopup(
-      //     googleProvider,
-      //   );
-      //   credential = userCredential.credential!;
-      // } else {
       final googleUser = await _googleSignIn.signIn();
       final googleAuth = await googleUser!.authentication;
       credential = firebase_auth.GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
-      // }
 
       await _firebaseAuth.signInWithCredential(credential);
     } on firebase_auth.FirebaseAuthException catch (e) {
-      log(e.code);
       throw AppFirebaseFailure.fromCode(e.code);
     } catch (e) {
-      log(e.toString());
       throw const AppFirebaseFailure();
     }
   }

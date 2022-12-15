@@ -194,7 +194,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
     );
   }
 
-  void createOrder(qty) {
+  void createOrder(qty) async {
     // Items order = Items(
     //   productId: widget.product.sId,
     //   name: widget.product.title,
@@ -214,16 +214,21 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
 
     Cart cart = Cart(
       color: veriants[selectedColor].color!,
-      id: widget.product.sId,
+      pid: widget.product.sId!,
       name: widget.product.title!,
       size: convertToSize(veriants[selectedColor])[selectedSize].size!,
       price: price,
+      image: widget.product.thumbnail!,
+      createdTime: DateTime.now(),
       quantity: qty.toString(),
     );
-    DBSetup.create(cart);
-    DialogBoxes.showAutoCloseDialog(context,
-        type: InfoDialog.successful,
-        message: 'The product has been added to your cart.');
+    await DBSetup.create(cart).then((value) {
+      if (value) {
+        DialogBoxes.showAutoCloseDialog(context,
+            type: InfoDialog.successful,
+            message: 'The product has been added to your cart.');
+      }
+    });
   }
 
   //

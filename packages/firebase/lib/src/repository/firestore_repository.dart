@@ -1,7 +1,7 @@
 // ignore_for_file: depend_on_referenced_packages
 
 import 'dart:developer';
-
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:components/components.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -14,19 +14,41 @@ import 'package:uuid/uuid.dart';
 import 'storage_repository.dart';
 
 class FirestoreRepository {
+  // ! USE
   // Get instance of Firebase Firestore
   static FirebaseFirestore firestore = FirebaseFirestore.instance;
   // Cerate instance of products Database
-  static var productsDB = firestore.collection('products');
-// Cerate instance of products Database
-  static var sellerDB = firestore.collection('seller');
+  static var customerDB = firestore.collection('customers');
   // Stream<QuerySnapshot>
   static var productStream = productsDB.snapshots();
   static var productLimitStream = productsDB.limit(20).snapshots();
+  // ! not used blow line
+  // Cerate instance of products Database
+  static var productsDB = firestore.collection('products');
+  // Cerate instance of products Database
+  static var sellerDB = firestore.collection('seller');
   static var offerDB = firestore.collection('offers');
   static var offerStream = offerDB.snapshots();
   // Stream<QuerySnapshot>
   // static var orderStream = sellerDB.doc('order').snapshots(); .limit(1).
+  // ! USE
+  //
+  static Future<void> createAccount(auth.User user) async {
+    try {
+      String? deviceToken = await FirebaseMessaging.instance.getToken();
+      await customerDB.doc(user.uid).set(demoCustomer
+          .copyWith(
+            email: user.email,
+            id: user.uid,
+            deviceToken: deviceToken,
+          )
+          .toJson());
+    } on FirebaseException catch (e) {
+      throw AppFirebaseFailure.fromCode(e.code);
+    } catch (_) {}
+  }
+
+  // ! not user below
   //
   Future<void> setupDeviceToken() async {
     String? deviceToken = await FirebaseMessaging.instance.getToken();
@@ -98,17 +120,17 @@ class FirestoreRepository {
 
 // ***
 // ! TODO delete this below code
-  static Future<void> setupOrder() async {
-    try {
-      String orderId = const Uuid().v4();
-      // demoOrder
-      sellerDB
-          .doc('overview')
-          .collection('orders')
-          .doc(orderId)
-          .set(demoOrder.toJson());
-    } catch (_) {}
-  }
+  // static Future<void> setupOrder() async {
+  //   try {
+  //     String orderId = const Uuid().v4();
+  //     // demoOrder
+  //     sellerDB
+  //         .doc('overview')
+  //         .collection('orders')
+  //         .doc(orderId)
+  //         .set(demoOrder.toJson());
+  //   } catch (_) {}
+  // }
 
 //! TODO delete this above code
   static Future<void> orderMoveToDelivered(Orders orders) async {
