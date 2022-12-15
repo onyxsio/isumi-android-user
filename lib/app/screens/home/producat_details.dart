@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:isumi/core/util/image.dart';
 import 'package:isumi/core/util/utils.dart';
@@ -53,86 +55,175 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
     bool hasDiscount = (widget.product.price!.discount != null &&
         widget.product.price!.discount!.isNotEmpty);
 
-    return Scaffold(
-      appBar: secondaryAppBar(),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Column(
-          children: [
-            _buildImageSilder(size),
-            if (hasOffer)
-              Container(
-                height: 6.w,
-                alignment: Alignment.centerLeft,
-                padding: EdgeInsets.only(left: 5.w),
-                color: AppColor.error,
-                width: double.infinity,
-                child: Text('super deal',
-                    style: TxtStyle.b6B.copyWith(color: AppColor.white)),
-              ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.w),
-              color: AppColor.white,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  priceTag(hasOffer, hasDiscount),
-                  space,
-                  Row(
+    //     .counterValue;
+    return BlocBuilder<CounterCubit, CounterState>(
+      builder: (context, state) {
+        return Scaffold(
+          appBar: secondaryAppBar(),
+          body: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Column(
+              children: [
+                _buildImageSilder(size),
+                if (hasOffer)
+                  Container(
+                    height: 6.w,
+                    alignment: Alignment.centerLeft,
+                    padding: EdgeInsets.only(left: 5.w),
+                    color: AppColor.error,
+                    width: double.infinity,
+                    child: Text('super deal',
+                        style: TxtStyle.b6B.copyWith(color: AppColor.white)),
+                  ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.w),
+                  color: AppColor.white,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                          child:
-                              Text(widget.product.title!, style: TxtStyle.b8B)),
+                      priceTag(hasOffer, hasDiscount),
+                      space,
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                              child: Text(widget.product.title!,
+                                  style: TxtStyle.b8B)),
+                        ],
+                      ),
+                      space,
+                      reviewAndRating(),
+                      // space,
+                      const Divider(),
+                      space,
+                      Text('Select color', style: TxtStyle.b5B),
+                      space,
+                      _buildColorGrid(),
+
+                      space, const Divider(),
+                      Text('Select size', style: TxtStyle.b5B),
+                      space,
+                      _buildSizeGrid(),
+                      space,
+                      Text('Only $stock items left', style: TxtStyle.b6),
+                      space,
                     ],
                   ),
-                  space,
-                  reviewAndRating(),
-                  // space,
-                  const Divider(),
-
-                  space,
-                  Text('Select color', style: TxtStyle.b5B),
-                  space,
-                  _buildColorGrid(),
-
-                  space, const Divider(),
-                  Text('Select size', style: TxtStyle.b5B),
-                  space,
-                  _buildSizeGrid(),
-                  space,
-                  Text('Only $stock items left', style: TxtStyle.b6),
-                  space,
-                ],
-              ),
+                ),
+                space,
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.w),
+                  color: AppColor.white,
+                  child: DropChild(
+                    title: 'Shipping details',
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text('Delivery Price: ', style: TxtStyle.b5B),
+                            Text(widget.product.shipping!.deliveryPrice!,
+                                style: TxtStyle.reviews),
+                          ],
+                        ),
+                        SizedBox(height: 2.w),
+                        Row(
+                          children: [
+                            Text(widget.product.shipping!.returnDays!,
+                                style: TxtStyle.b5B),
+                            Text(' days easy return ', style: TxtStyle.reviews),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                space,
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.w),
+                  color: AppColor.white,
+                  child: DropChild(
+                    title: 'Specifications',
+                    child: Text(widget.product.description!,
+                        style: TxtStyle.reviews),
+                  ),
+                ),
+                space,
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.w),
+                  color: AppColor.white,
+                  child: DropChild(
+                      title: 'Ratings & Reciews',
+                      child: widget.product.rivews!.reviewRating != null
+                          ? ListView(
+                              children: widget.product.rivews!.reviewRating!
+                                  .map((e) => ListTile(
+                                        title: Text(e.author!,
+                                            style: TxtStyle.reviews),
+                                        subtitle: Text(e.description!,
+                                            style: TxtStyle.reviews),
+                                      ))
+                                  .toList())
+                          : const SizedBox()),
+                ),
+                space,
+              ],
             ),
-            space,
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.w),
-              color: AppColor.white,
-              child: DropChild(
-                title: 'Specifications',
-                child:
-                    Text(widget.product.description!, style: TxtStyle.reviews),
-              ),
+          ),
+          // bottomNavigationBar: _buildBottomNavigationBar(context),
+          bottomNavigationBar: Container(
+            padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.w),
+            decoration: BoxDeco.deco_2,
+            child: Row(
+              children: [
+                CounterSlider(quantity: stock),
+                SizedBox(width: 4.w),
+                Expanded(
+                    child: MainButton(
+                        onTap: () {
+                          createOrder(state.counterValue);
+                        },
+                        text: 'Add to cart'))
+              ],
             ),
-          ],
-        ),
-      ),
-      // bottomNavigationBar: _buildBottomNavigationBar(context),
-      bottomNavigationBar: Container(
-        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.w),
-        decoration: BoxDeco.deco_2,
-        child: Row(
-          children: [
-            CounterSlider(quantity: stock),
-            SizedBox(width: 4.w),
-            Expanded(child: MainButton(onTap: () {}, text: 'Add to cart'))
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
+  }
+
+  void createOrder(qty) {
+    // Items order = Items(
+    //   productId: widget.product.sId,
+    //   name: widget.product.title,
+    //   variants: [
+    //     Variants(
+    //       color: veriants[selectedColor].color!,
+    //       subvariants: [
+    //         Subvariants(
+    //           size: convertToSize(veriants[selectedColor])[selectedSize].size!,
+    //           price: price,
+    //           qty: qty.toString(),
+    //         ),
+    //       ],
+    //     ),
+    //   ],
+    // );
+
+    Cart cart = Cart(
+      color: veriants[selectedColor].color!,
+      id: widget.product.sId,
+      name: widget.product.title!,
+      size: convertToSize(veriants[selectedColor])[selectedSize].size!,
+      price: price,
+      quantity: qty.toString(),
+    );
+    DBSetup.create(cart);
+    DialogBoxes.showAutoCloseDialog(context,
+        type: InfoDialog.successful,
+        message: 'The product has been added to your cart.');
   }
 
   //
@@ -210,39 +301,39 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
     );
   }
 
-  Container _buildBottomNavigationBar(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.w),
-      decoration: BoxDeco.deco_2,
-      // color: AppColor.black,
-      child: Row(
-        children: [
-          Expanded(
-              child: ImageWithTextButton(
-                  image: AppIcon.trash,
-                  buttonGradient: AppColor.friewatchGradient,
-                  onTap: () async {
-                    await FirestoreRepository.deleteProduct(widget.product.sId!)
-                        .then((value) => Navigator.pop(context));
-                  },
-                  text: 'Delete')),
-          SizedBox(width: 4.w),
-          Expanded(
-              child: ImageWithTextButton(
-                  image: AppIcon.edit,
-                  buttonGradient: AppColor.frostGradient,
-                  onTap: () {
-                    Navigator.pushNamed(
-                      context,
-                      '/ProductUpdate',
-                      arguments: widget.product,
-                    );
-                  },
-                  text: 'Edit'))
-        ],
-      ),
-    );
-  }
+  // Container _buildBottomNavigationBar(BuildContext context) {
+  //   return Container(
+  //     padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.w),
+  //     decoration: BoxDeco.deco_2,
+  //     // color: AppColor.black,
+  //     child: Row(
+  //       children: [
+  //         Expanded(
+  //             child: ImageWithTextButton(
+  //                 image: AppIcon.trash,
+  //                 buttonGradient: AppColor.friewatchGradient,
+  //                 onTap: () async {
+  //                   await FirestoreRepository.deleteProduct(widget.product.sId!)
+  //                       .then((value) => Navigator.pop(context));
+  //                 },
+  //                 text: 'Delete')),
+  //         SizedBox(width: 4.w),
+  //         Expanded(
+  //             child: ImageWithTextButton(
+  //                 image: AppIcon.edit,
+  //                 buttonGradient: AppColor.frostGradient,
+  //                 onTap: () {
+  //                   Navigator.pushNamed(
+  //                     context,
+  //                     '/ProductUpdate',
+  //                     arguments: widget.product,
+  //                   );
+  //                 },
+  //                 text: 'Edit'))
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget priceTag(hasOffer, hasDiscount) {
     return Row(

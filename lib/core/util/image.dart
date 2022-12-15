@@ -1,6 +1,9 @@
 class AppImage {
   static const String logo = 'assets/images/logo.png';
   static const String demoQrcode = 'assets/images/qrcode.png';
+  static const String ok = 'assets/images/ok.png';
+  static const String error = 'assets/images/error.png';
+  static const String stop = 'assets/images/stop.png';
 }
 
 class AppIcon {
