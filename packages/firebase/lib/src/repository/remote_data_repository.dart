@@ -12,10 +12,7 @@ class FirebaseService {
     // Initialize the Notification Service
     await NotificationService.initializeFirebase();
     //
-    await FirestoreRepository().setupDeviceToken();
+    await FirestoreRepository.setupDeviceToken();
     //
-    // await FirestoreRepository().setupDashboard(emptyDash);
-    // final authRepo = AuthRepository();
-    // await authRepo.user.first;
   }
 }

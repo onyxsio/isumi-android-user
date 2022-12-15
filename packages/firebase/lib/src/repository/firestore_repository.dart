@@ -19,12 +19,13 @@ class FirestoreRepository {
   static FirebaseFirestore firestore = FirebaseFirestore.instance;
   // Cerate instance of products Database
   static var customerDB = firestore.collection('customers');
+  // Cerate instance of products Database
+  static var productsDB = firestore.collection('products');
   // Stream<QuerySnapshot>
   static var productStream = productsDB.snapshots();
   static var productLimitStream = productsDB.limit(20).snapshots();
   // ! not used blow line
-  // Cerate instance of products Database
-  static var productsDB = firestore.collection('products');
+
   // Cerate instance of products Database
   static var sellerDB = firestore.collection('seller');
   static var offerDB = firestore.collection('offers');
@@ -48,27 +49,47 @@ class FirestoreRepository {
     } catch (_) {}
   }
 
-  // ! not user below
   //
-  Future<void> setupDeviceToken() async {
+  static Future<void> setupDeviceToken() async {
+    final user = auth.FirebaseAuth.instance.currentUser;
     String? deviceToken = await FirebaseMessaging.instance.getToken();
-    // Dashboard dashboard = Dashboard();
+
     try {
-      sellerDB
-          .doc('admin_data')
-          .get()
-          .then((DocumentSnapshot documentSnapshot) {
+      customerDB.doc(user!.uid).get().then((DocumentSnapshot documentSnapshot) {
         if (documentSnapshot.exists) {
-          sellerDB.doc('admin_data').update({'deviceToken': deviceToken});
-        } else {
-          sellerDB.doc('admin_data').set({'deviceToken': deviceToken});
-          sellerDB.doc('overview').set(emptyDash.toJson());
-          sellerDB.doc('overview').collection('orders');
-          // sellerDB.doc('order').set({'orders': []});
+          customerDB.doc(user.uid).update({'deviceToken': deviceToken});
         }
       });
     } catch (_) {}
   }
+
+  static Future<String> setupQuantity(Cart data) async {
+    String stock = '';
+    try {
+      await productsDB
+          .doc(data.pid)
+          .get()
+          .then((DocumentSnapshot documentSnapshot) {
+        if (documentSnapshot.exists) {
+          Product product = Product.fromSnap(documentSnapshot);
+
+          for (var variant in product.variant!) {
+            if (variant.color!.contains(data.color)) {
+              for (var subvariant in variant.subvariant!) {
+                if (subvariant.size!.contains(data.size)) {
+                  stock = subvariant.stock.toString();
+                }
+              }
+            }
+          }
+        }
+      });
+      return stock;
+    } catch (_) {
+      return stock;
+    }
+  }
+  // ! not user below
 
   // !
 

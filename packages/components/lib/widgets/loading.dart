@@ -59,4 +59,19 @@ class AppLoading {
       ),
     ),
   );
+
+  static Widget cartimage = Shimmer(
+    linearGradient: AppColor.shimmerGradient,
+    child: ShimmerLoading(
+      isLoading: true,
+      child: Container(
+        height: 25.w,
+        width: 15.w,
+        decoration: BoxDecoration(
+          color: AppColor.shimmerLight,
+          borderRadius: BorderRadius.circular(5),
+        ),
+      ),
+    ),
+  );
 }

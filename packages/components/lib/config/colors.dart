@@ -25,7 +25,7 @@ class AppColor {
   static Color gray1 = const Color(0XFFA5A5BA);
   static Color gray2 = const Color(0XFF666687);
   static Color divider = const Color(0XFFEAEAEF);
-
+  static Color gray3 = const Color(0XFFC0C0CF);
   static Color shimmerLight = AppColor.black.withOpacity(0.04);
   //const Color() #1488CC
   // static LinearGradient shimmerGradient = const LinearGradient(
