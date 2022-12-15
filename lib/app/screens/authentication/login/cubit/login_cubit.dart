@@ -8,30 +8,26 @@ class LoginCubit extends Cubit<LoginState> {
 
   final AuthRepository _authRepo;
 
-  // void emailChanged(String value) {
-  //   final email = Email.dirty(value);
-  //   emit(
-  //     state.copyWith(
-  //       email: email,
-  //       status: Formz.validate([email, state.password]),
-  //     ),
-  //   );
-  //   log(value);
-  //   log(email.invalid.toString());
-  //   log('object 1');
-  // }
+  void emailChanged(String value) {
+    final email = Email.dirty(value);
+    emit(
+      state.copyWith(
+        email: email,
+        status: Formz.validate([email, state.password]),
+      ),
+    );
+  }
 
-  // void passwordChanged(String value) {
-  //   final password = Password.dirty(value);
-  //   log(password.invalid.toString());
-  //   emit(
-  //     state.copyWith(
-  //       password: password,
-  //       status: Formz.validate([state.email, password]),
-  //     ),
-  //   );
-  //   log('object 2');
-  // }
+  void passwordChanged(String value) {
+    final password = Password.dirty(value);
+
+    emit(
+      state.copyWith(
+        password: password,
+        status: Formz.validate([state.email, password]),
+      ),
+    );
+  }
 
   Future<void> logInWithCredentials() async {
     // log(state.status.isValidated.toString());

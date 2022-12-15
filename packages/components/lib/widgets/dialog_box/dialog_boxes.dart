@@ -54,4 +54,4 @@ class DialogBoxes {
 
 enum InfoDialog { successful, error, warning }
 
-enum AlertDialog { successful, error, warning }
+// enum AlertType { successful, error, warning }

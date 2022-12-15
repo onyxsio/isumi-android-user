@@ -186,8 +186,8 @@ class _LoginButton extends StatelessWidget {
             : MainButton(
                 onTap: () {
                   // TODO validation
-                  // context.read<LoginCubit>().emailChanged(email.text);
-                  // context.read<LoginCubit>().passwordChanged(password.text);
+                  context.read<LoginCubit>().emailChanged(email.text);
+                  context.read<LoginCubit>().passwordChanged(password.text);
                   context.read<LoginCubit>().logInWithCredentials();
                 },
                 text: 'Get Started');
@@ -230,8 +230,7 @@ class _SignUpButton extends StatelessWidget {
     // final theme = Theme.of(context);
     return TextButton(
       key: const Key('loginForm_createAccount'),
-      onPressed: () => Navigator.of(context)
-          .pushNamedAndRemoveUntil('/SignUpPage', (route) => false),
+      onPressed: () => Navigator.of(context).pushNamed('/SignUpPage'),
       child: RichText(
         text: TextSpan(children: [
           TextSpan(

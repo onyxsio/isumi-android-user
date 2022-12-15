@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:isumi/app/screens/authentication/forgotPass/view/forgot_page.dart';
 import 'package:isumi/app/screens/authentication/login/login.dart';
 import 'package:isumi/app/screens/authentication/sign_up/view/sign_up_page.dart';
+import 'package:isumi/app/screens/cart/view/checkout.dart';
+import 'package:isumi/app/screens/cart/view/order_status_page.dart';
+import 'package:isumi/app/screens/cart/view/shipping_addres.dart';
 import 'package:isumi/app/screens/home/producat_details.dart';
 // import 'package:isumi/app/screens/Order/view/bill_generate_page.dart';
 // import 'package:isumi/app/screens/Order/view/order_details.dart';
@@ -18,8 +21,8 @@ class RouteGenerator {
     final arguments = settings?.arguments;
     switch (settings?.name) {
       // SpalshPage MainPage
-      // case '/':
-      //   return createRoute(child: const SpalshPage());
+      case '/':
+        return OpenAndFadeTransition(const Scaffold());
 
       case '/SignUpPage':
         return OpenAndFadeTransition(const SignUpPage());
@@ -46,11 +49,12 @@ class RouteGenerator {
       case '/ProductDetails':
         Product product = arguments as Product;
         return OpenAndFadeTransition(ProductDetailsPage(product: product));
-      // case '/ProductUpdate':
-      //   Product product = arguments as Product;
-      //   return createRoute(child: ProductUpdatePage(product: product));
-      // case '/ProductAdd':
-      //   return createRoute(child: const ProductAddPage());
+      case '/OrderStatusPage':
+        return OpenAndFadeTransition(const OrderStatusPage());
+      case '/ShippingAddressPage':
+        return OpenAndFadeTransition(const ShippingAddressPage());
+      case '/CheckOutPage':
+        return OpenAndFadeTransition(const CheckOutPage());
       default:
         // If there is no such named route in the switch statement
         return _errorRoute();
