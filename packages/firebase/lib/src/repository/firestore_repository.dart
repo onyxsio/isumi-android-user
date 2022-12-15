@@ -22,7 +22,7 @@ class FirestoreRepository {
   static var sellerDB = firestore.collection('seller');
   // Stream<QuerySnapshot>
   static var productStream = productsDB.snapshots();
-  static var productLimitStream = productsDB.limit(10).snapshots();
+  static var productLimitStream = productsDB.limit(20).snapshots();
   static var offerDB = firestore.collection('offers');
   static var offerStream = offerDB.snapshots();
   // Stream<QuerySnapshot>
@@ -193,14 +193,15 @@ class FirestoreRepository {
         rivews: rivews,
         images: photoUrls,
       );
-      productsDB.doc(productId).set(modifiyProduct.toJson()).then((value) =>
-          DialogBoxes.showAutoCloseDialog(context,
-              type: InfoDialog.successful,
-              message: 'It was successfully uploaded !'));
+      productsDB.doc(productId).set(modifiyProduct.toJson());
+      // .then((value) =>
+      // DialogBoxes.showAutoCloseDialog(context,
+      //     type: InfoDialog.successful,
+      //     message: 'It was successfully uploaded !'));
     } on FirebaseException catch (e) {
       var msg = AppFirebaseFailure.fromCode(e.code);
-      DialogBoxes.showAutoCloseDialog(context,
-          type: InfoDialog.error, message: msg.message);
+      // DialogBoxes.showAutoCloseDialog(context,
+      //     type: InfoDialog.error, message: msg.message);
       //  DialogBoxes.showAutoCloseDialog(context);
 
     } catch (_) {}
@@ -268,15 +269,3 @@ class FirestoreRepository {
     }
   }
 }
-
-// class MyOrder {
-//   final List orders;
-//   MyOrder({required this.orders});
-
-//   static MyOrder formJson(data) {
-//     return MyOrder(orders: data['newOrder']);
-//   }
-
-//   Map<String, dynamic> toJson() => {"newOrder": orders};
-// }
-//

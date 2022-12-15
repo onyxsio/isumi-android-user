@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:isumi/core/util/image.dart';
 import 'package:onyxsio/onyxsio.dart';
-
 import 'widgets/ad_carousel_slider.dart';
 import 'widgets/product_card.dart';
 import 'widgets/search_header_delegate.dart';
@@ -52,7 +51,10 @@ class _HomePageState extends State<HomePage> {
 
               List<Product> weightData =
                   snapshot.data!.docs.map((e) => Product.fromSnap(e)).toList();
-
+              // return AppLoading.productList;
+              if (weightData.isEmpty) {
+                return AppLoading.productList;
+              }
               return _buildProductList(weightData);
             },
           ),

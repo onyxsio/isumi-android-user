@@ -68,6 +68,7 @@ class TxtStyle {
   static TextStyle get h9B => h9.copyWith(fontWeight: b);
   //
   static TextStyle get l7 => lableFont.copyWith(fontSize: 14.sp);
+  static TextStyle get l5 => lableFont.copyWith(fontSize: 12.sp);
   //
   static TextStyle get menuSelected =>
       bodyFont.copyWith(fontWeight: b, color: AppColor.menuSelected);

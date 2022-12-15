@@ -16,5 +16,7 @@ class Onyxsio {
     await LocalDB.init();
     // Initialize the Stripe
     await PaymentGate.init();
+    //
+    await DBSetup.database;
   }
 }

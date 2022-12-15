@@ -27,4 +27,11 @@ class AppBoxShadow {
       offset: const Offset(-2, -2),
     )
   ];
+
+  static List<BoxShadow> arletbox = [
+    BoxShadow(
+        color: AppColor.black.withOpacity(0.2),
+        offset: const Offset(0, 10),
+        blurRadius: 10),
+  ];
 }

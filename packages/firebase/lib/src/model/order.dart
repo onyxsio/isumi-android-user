@@ -82,6 +82,10 @@ class Orders {
 class Items {
   String? productId;
   String? name;
+  // String? color;
+  // String? size;
+  // String? quantity;
+
   List<Variants>? variants;
 
   Items({this.productId, this.name, this.variants});
@@ -89,18 +93,26 @@ class Items {
   Items.fromJson(Map<String, dynamic> json) {
     productId = json['productId'];
     name = json['name'];
-    if (json['variants'] != null) {
-      variants = <Variants>[];
-      json['variants'].forEach((v) {
-        variants!.add(Variants.fromJson(v));
-      });
-    }
+    // color = json['color'];
+    // size = json['size'];
+    // quantity = json['quantity'];
+
+    // if (json['variants'] != null) {
+    //   variants = <Variants>[];
+    //   json['variants'].forEach((v) {
+    //     variants!.add(Variants.fromJson(v));
+    //   });
+    // }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['productId'] = productId;
     data['name'] = name;
+    // data['color'] = color;
+    // data['size'] = size;
+    // data['quantity'] = quantity;
+
     if (variants != null) {
       data['variants'] = variants!.map((v) => v.toJson()).toList();
     }
