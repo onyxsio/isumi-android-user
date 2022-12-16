@@ -1,11 +1,10 @@
 library remote_data;
 
-export 'src/repository/remote_data_repository.dart';
+export 'src/service.dart';
 export 'src/model/models.dart';
 export 'src/error/failure.dart';
-export 'src/core/core.dart';
-export 'src/repository/fcm_provider.dart';
-export 'src/repository/notification_service.dart';
+export 'src/notification/fcm_provider.dart';
+export 'src/notification/notification_service.dart';
 export 'package:firebase_messaging/firebase_messaging.dart';
 
 export 'src/widget/dashboard.dart';

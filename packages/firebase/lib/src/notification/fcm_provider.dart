@@ -67,13 +67,15 @@ class FCMProvider with ChangeNotifier {
   }
 
   static Future<void> backgroundHandler(RemoteMessage message) async {
-    messageCount++;
-    Stream<RemoteMessage> stream = FirebaseMessaging.onMessageOpenedApp;
-    // FlutterAppBadger.updateBadgeCount(messageCount);
-    stream.listen((RemoteMessage event) async {
-      if (event.data.isNotEmpty) {
-        await Navigator.of(FCMProvider._context!).pushNamed('/ProductAdd');
-      }
-    });
+    try {
+      messageCount++;
+      Stream<RemoteMessage> stream = FirebaseMessaging.onMessageOpenedApp;
+      // FlutterAppBadger.updateBadgeCount(messageCount);
+      stream.listen((RemoteMessage event) async {
+        if (event.data.isNotEmpty) {
+          await Navigator.of(FCMProvider._context!).pushNamed('/ProductAdd');
+        }
+      });
+    } catch (_) {}
   }
 }

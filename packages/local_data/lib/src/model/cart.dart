@@ -3,7 +3,7 @@ final String tableCart = 'cart';
 class CartFields {
   static final List<String> values = [
     /// Add all fields
-    id, name, quantity, price, color, size, pid, createdTime
+    id, name, quantity, price, color, size, pid, createdTime, currency
   ];
 
   static final String id = '_id';
@@ -15,6 +15,7 @@ class CartFields {
   static final String pid = 'pid';
   static final String createdTime = 'createdTime';
   static final String image = 'image';
+  static final String currency = 'currency';
 }
 
 class Cart {
@@ -26,6 +27,7 @@ class Cart {
   final String color;
   final String price;
   final String image;
+  final String currency;
   final DateTime createdTime;
 
   const Cart({
@@ -37,6 +39,7 @@ class Cart {
     required this.price,
     required this.pid,
     required this.image,
+    required this.currency,
     required this.createdTime,
   });
 
@@ -50,6 +53,7 @@ class Cart {
     String? pid,
     String? image,
     DateTime? createdTime,
+    String? currency,
   }) =>
       Cart(
         id: id ?? this.id,
@@ -60,6 +64,7 @@ class Cart {
         price: price ?? this.price,
         pid: pid ?? this.pid,
         image: image ?? this.image,
+        currency: currency ?? this.currency,
         createdTime: createdTime ?? this.createdTime,
       );
 
@@ -71,6 +76,7 @@ class Cart {
         color: json[CartFields.color] as String,
         price: json[CartFields.price] as String,
         image: json[CartFields.image] as String,
+        currency: json[CartFields.currency] as String,
         pid: json[CartFields.pid] as String,
         createdTime: DateTime.parse(json[CartFields.createdTime] as String),
       );
@@ -84,6 +90,7 @@ class Cart {
         CartFields.price: price,
         CartFields.image: image,
         CartFields.pid: pid,
+        CartFields.currency: currency,
         CartFields.createdTime: createdTime.toIso8601String(),
       };
 }

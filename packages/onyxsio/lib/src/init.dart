@@ -17,6 +17,6 @@ class Onyxsio {
     // Initialize the Stripe
     await PaymentGate.init();
     //
-    await DBSetup.database;
+    await SQFLiteDB.database;
   }
 }

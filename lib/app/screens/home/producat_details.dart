@@ -221,8 +221,9 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       image: widget.product.thumbnail!,
       createdTime: DateTime.now(),
       quantity: qty.toString(),
+      currency: widget.product.price!.currency!,
     );
-    await DBSetup.create(cart).then((value) {
+    await SQFLiteDB.create(cart).then((value) {
       if (value) {
         DialogBoxes.showAutoCloseDialog(context,
             type: InfoDialog.successful,

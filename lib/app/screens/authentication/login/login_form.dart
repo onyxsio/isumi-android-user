@@ -185,7 +185,6 @@ class _LoginButton extends StatelessWidget {
             ? const CircularProgressIndicator()
             : MainButton(
                 onTap: () {
-                  // TODO validation
                   context.read<LoginCubit>().emailChanged(email.text);
                   context.read<LoginCubit>().passwordChanged(password.text);
                   context.read<LoginCubit>().logInWithCredentials();
@@ -227,7 +226,6 @@ class _GoogleLoginButton extends StatelessWidget {
 class _SignUpButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // final theme = Theme.of(context);
     return TextButton(
       key: const Key('loginForm_createAccount'),
       onPressed: () => Navigator.of(context).pushNamed('/SignUpPage'),

@@ -1,18 +1,10 @@
-import 'dart:developer';
-
-import 'package:local_database/src/cart.dart';
+import 'package:local_database/src/model/cart.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
-class DBSetup {
+class SQFLiteDB {
   static Database? _database;
 
-  // static Future<Database> get database async {
-  //   if (_database != null) return _database!;
-
-  //   _database = await _initDB('user.db');
-  //   return _database!;
-  // }
   static Future<Database> get database async {
     if (_database != null) return _database!;
 
@@ -42,7 +34,8 @@ class DBSetup {
               ${CartFields.price} $textType,
               ${CartFields.pid} $textType,
               ${CartFields.createdTime} $textType,
-              ${CartFields.image} $textType
+              ${CartFields.image} $textType,
+              ${CartFields.currency} $textType
               )
               ''');
     } catch (e) {}
@@ -57,8 +50,7 @@ class DBSetup {
     }
   }
 
-  Future<Cart> readNote(String id) async {
-    // final db = await _database;
+  static Future<Cart> readOne(String id) async {
     final maps = await _database!.query(
       tableCart,
       columns: CartFields.values,
@@ -73,26 +65,19 @@ class DBSetup {
     }
   }
 
-  static Future<List<Cart>> readAllCarts() async {
-    // final db = await _database;
-
+  static Future<List<Cart>> readAllData() async {
     final orderBy = '${CartFields.id} ASC';
-    // final result =
-    //     await _database!.rawQuery('SELECT * FROM $tableCart ORDER BY $orderBy');
-    //, orderBy: orderBy
-
     final result = await _database!.query(tableCart, orderBy: orderBy);
     return result.map((json) => Cart.fromJson(json)).toList();
   }
 
-  Future<int> update(Cart note) async {
+  static Future<int> update(Cart cart) async {
     final db = await _database;
-
     return db!.update(
       tableCart,
-      note.toJson(),
+      cart.toJson(),
       where: '${CartFields.id} = ?',
-      whereArgs: [note.id],
+      whereArgs: [cart.id],
     );
   }
 

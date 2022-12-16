@@ -15,11 +15,13 @@ class NotificationService {
       NotificationService._firebaseMessaging ?? FirebaseMessaging.instance;
 
   static Future<void> initializeFirebase() async {
-    await Firebase.initializeApp();
-    NotificationService._firebaseMessaging = FirebaseMessaging.instance;
-    await NotificationService.initializeLocalNotifications();
-    await FCMProvider.onMessage();
-    await NotificationService.onBackgroundMsg();
+    try {
+      await Firebase.initializeApp();
+      NotificationService._firebaseMessaging = FirebaseMessaging.instance;
+      await NotificationService.initializeLocalNotifications();
+      await FCMProvider.onMessage();
+      await NotificationService.onBackgroundMsg();
+    } catch (_) {}
   }
 
   Future<String?> getDeviceToken() async =>
