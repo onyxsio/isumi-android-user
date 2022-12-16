@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:isumi/core/util/image.dart';
 import 'package:onyxsio/onyxsio.dart';
 
 class EndPage extends StatelessWidget {

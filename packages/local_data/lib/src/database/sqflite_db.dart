@@ -81,6 +81,15 @@ class SQFLiteDB {
     );
   }
 
+  static Future<int> updateQuantity(int id, String value) async {
+    return _database!.update(
+      tableCart,
+      {'${CartFields.quantity}': value},
+      where: '$id = ?',
+      whereArgs: [id],
+    );
+  }
+
   static Future<int> delete(int id) async {
     final db = await _database;
 
