@@ -1,9 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:remote_data/remote_data.dart';
-export 'auth_repository.dart';
-export 'firestore_repository.dart';
-export 'storage_repository.dart';
-export 'message.dart';
+export 'repository/auth_repository.dart';
+export 'repository/firestore_repository.dart';
+export 'repository/storage_repository.dart';
+export 'notification/message.dart';
 
 class FirebaseService {
   static Future<void> init() async {

@@ -1,18 +1,20 @@
-enum ResultStatus {
-  successful,
-  invalid,
-  undefined,
-}
+import 'dart:developer';
 
-class Failure {
-  // Use something like "int code;" if you want to translate error messages
-  final String message;
+// enum ResultStatus {
+//   successful,
+//   invalid,
+//   undefined,
+// }
 
-  Failure(this.message);
+// class Failure {
+//   // Use something like "int code;" if you want to translate error messages
+//   final String message;
 
-  @override
-  String toString() => message;
-}
+//   Failure(this.message);
+
+//   @override
+//   String toString() => message;
+// }
 
 //   static handleException(e) {
 //     ResultStatus status;
@@ -61,7 +63,28 @@ class AppFirebaseFailure implements Exception {
   /// Create an authentication message
 
   factory AppFirebaseFailure.fromCode(String code) {
+    log(code);
     switch (code) {
+      case 'UNAVAILABLE':
+        return const AppFirebaseFailure(
+          'The server is overloaded.',
+        );
+      case 'INTERNAL':
+        return const AppFirebaseFailure(
+          'An unknown internal error occurred.',
+        );
+      case 'THIRD_PARTY_AUTH_ERROR':
+        return const AppFirebaseFailure(
+          'Auth key was invalid or missing',
+        );
+      case 'UNSPECIFIED_ERROR':
+        return const AppFirebaseFailure(
+          'No more information is available about this error.',
+        );
+      case 'INVALID_ARGUMENT':
+        return const AppFirebaseFailure(
+          'Request parameters were invalid.',
+        );
       case 'no-app':
         return const AppFirebaseFailure(
           'No Firebase App',

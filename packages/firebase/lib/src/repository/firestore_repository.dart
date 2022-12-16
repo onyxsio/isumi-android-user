@@ -45,7 +45,7 @@ class FirestoreRepository {
           )
           .toJson());
     } on FirebaseException catch (e) {
-      throw AppFirebaseFailure.fromCode(e.code);
+      AppFirebaseFailure.fromCode(e.code);
     } catch (_) {}
   }
 
@@ -60,6 +60,8 @@ class FirestoreRepository {
           customerDB.doc(user.uid).update({'deviceToken': deviceToken});
         }
       });
+    } on FirebaseException catch (e) {
+      AppFirebaseFailure.fromCode(e.code);
     } catch (_) {}
   }
 
@@ -109,9 +111,9 @@ class FirestoreRepository {
         'valid': offers.expirationDate,
         'products': productDB
       });
-    } catch (e) {
-      log(e.toString());
-    }
+    } on FirebaseException catch (e) {
+      AppFirebaseFailure.fromCode(e.code);
+    } catch (_) {}
   }
 
   static Future<void> deleteOffer(String id) async {

@@ -49,13 +49,6 @@ class FireMessage {
           ])
         });
       }
-      // !
-      // sellerDB.doc('admin_data').update({
-      //   'newOrder': FieldValue.arrayUnion([const Uuid().v1()])
-      // });
-      // String token =
-      //     "eL7qUddHT4-lMqoif_SJnX:APA91bEk-wrs8UVgJ2OYmnNP_akkh94rRCaPWTSBY4MvAhgbIkSJlN_6k5ZoPcN2p6c8XLG1QYB_lSX0JNhyQKNPYKYMqThwg2edCTH-ZBNLB8MkW8Z5XbFC2Ma3CB2tx-Q4VcfQLJxA";
-
     } catch (_) {}
   }
 }
