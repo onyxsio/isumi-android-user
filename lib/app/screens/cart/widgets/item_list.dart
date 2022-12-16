@@ -1,59 +1,57 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:isumi/core/util/image.dart';
 import 'package:onyxsio/onyxsio.dart';
 
-class CartListView extends StatefulWidget {
-  const CartListView({Key? key}) : super(key: key);
+// class CartListView extends StatefulWidget {
+//   const CartListView({Key? key}) : super(key: key);
 
-  @override
-  State<CartListView> createState() => _CartListViewState();
-}
+//   @override
+//   State<CartListView> createState() => _CartListViewState();
+// }
 
-class _CartListViewState extends State<CartListView> {
-  bool isLoading = false;
-  List<Cart> carts = [];
+// class _CartListViewState extends State<CartListView> {
+//   bool isLoading = false;
+//   List<Cart> carts = [];
 
-  String quantity = '0';
-  @override
-  void initState() {
-    refreshCartData();
-    super.initState();
-  }
+//   String quantity = '0';
+//   @override
+//   void initState() {
+//     refreshCartData();
+//     super.initState();
+//   }
 
-  Future refreshCartData() async {
-    setState(() => isLoading = true);
-    carts = await SQFLiteDB.readAllData();
-    setState(() => isLoading = false);
-  }
+//   Future refreshCartData() async {
+//     setState(() => isLoading = true);
+//     carts = await SQFLiteDB.readAllData();
+//     setState(() => isLoading = false);
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    // TODO loading indegater
-    return isLoading
-        ? const CircularProgressIndicator()
-        : carts.isEmpty
-            ? Center(
-                child: Text(
-                  'Your Shopping Cart Is Empty.',
-                  style: TxtStyle.b8,
-                ),
-              )
-            : _buildItemList();
-  }
+//   @override
+//   Widget build(BuildContext context) {
+//     // TODO loading indegater
+//     return isLoading
+//         ? const CircularProgressIndicator()
+//         : carts.isEmpty
+//             ? Center(
+//                 child: Text(
+//                   'Your Shopping Cart Is Empty.',
+//                   style: TxtStyle.b8,
+//                 ),
+//               )
+//             : _buildItemList();
+//   }
 
-  Widget _buildItemList() {
-    return ListView.builder(
-      physics: const BouncingScrollPhysics(),
-      itemCount: carts.length,
-      padding: EdgeInsets.fromLTRB(5.w, 5.w, 5.w, 0),
-      itemBuilder: (context, index) {
-        return ItemListView(cart: carts[index], onDelete: refreshCartData);
-      },
-    );
-  }
-}
+//   Widget _buildItemList() {
+//     return ListView.builder(
+//       physics: const BouncingScrollPhysics(),
+//       itemCount: carts.length,
+//       padding: EdgeInsets.fromLTRB(5.w, 5.w, 5.w, 0),
+//       itemBuilder: (context, index) {
+//         return ItemListView(cart: carts[index], onDelete: refreshCartData);
+//       },
+//     );
+//   }
+// }
 
 class ItemListView extends StatefulWidget {
   final Cart cart;
@@ -67,6 +65,7 @@ class ItemListView extends StatefulWidget {
 
 class _ItemListViewState extends State<ItemListView> {
   String stock = '';
+  int quantity = 0;
   @override
   void initState() {
     getQuantity();
@@ -78,6 +77,7 @@ class _ItemListViewState extends State<ItemListView> {
     // if (mounted) return;
     setState(() {
       stock = result;
+      quantity = int.parse(widget.cart.quantity);
     });
   }
 
@@ -86,7 +86,7 @@ class _ItemListViewState extends State<ItemListView> {
     return Stack(
       children: [
         background(),
-        _buildItemCard(context),
+        _buildItemCard(),
       ],
     );
   }
@@ -147,7 +147,7 @@ class _ItemListViewState extends State<ItemListView> {
     );
   }
 
-  Dismissible _buildItemCard(BuildContext context) {
+  Dismissible _buildItemCard() {
     // getQuantity(carts[index]);
     return Dismissible(
       key: UniqueKey(),
@@ -182,7 +182,8 @@ class _ItemListViewState extends State<ItemListView> {
       children: [
         InkWell(
           onTap: () {
-            // TODO
+            if (int.parse(stock) > quantity) setState(() => quantity++);
+            SQFLiteDB.updateQuantity(widget.cart.id!, quantity.toString());
           },
           child: CircleAvatar(
             radius: 4.w,
@@ -190,10 +191,11 @@ class _ItemListViewState extends State<ItemListView> {
             child: Icon(Icons.add, color: AppColor.white, size: 4.w),
           ),
         ),
-        Text(widget.cart.quantity, style: TxtStyle.b8),
+        Text(quantity.toString(), style: TxtStyle.b8),
         InkWell(
           onTap: () {
-            // TODO
+            if (1 < quantity) setState(() => quantity--);
+            SQFLiteDB.updateQuantity(widget.cart.id!, quantity.toString());
           },
           child: CircleAvatar(
             radius: 4.w,

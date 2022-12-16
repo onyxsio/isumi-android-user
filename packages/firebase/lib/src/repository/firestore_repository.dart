@@ -91,6 +91,22 @@ class FirestoreRepository {
       return stock;
     }
   }
+
+  static Future<Customer> getCustomer() async {
+    try {
+      final user = auth.FirebaseAuth.instance.currentUser;
+      var customer = await customerDB.doc(user!.uid).get();
+      return Customer.fromDocumentSnapshot(customer);
+    } on FirebaseException catch (e) {
+      AppFirebaseFailure.fromCode(e.code);
+      return Customer();
+    } catch (_) {
+      return Customer();
+    }
+  }
+
+  // customerDB
+
   // ! not user below
 
   // !
@@ -189,16 +205,6 @@ class FirestoreRepository {
   }
 
 // !
-  //
-  Future<void> setupDashboard(Dashboard dashboard) async {
-    try {
-      sellerDB.doc('overview').get().then((DocumentSnapshot documentSnapshot) {
-        if (!documentSnapshot.exists) {
-          sellerDB.doc('overview').set(dashboard.toJson());
-        }
-      });
-    } catch (_) {}
-  }
 
   //
   // Upload a new Product to products Database
@@ -300,17 +306,6 @@ class FirestoreRepository {
     } catch (_) {
       DialogBoxes.showAutoCloseDialog(context,
           type: InfoDialog.error, message: 'An unknown exception occurred.');
-    }
-  }
-
-  // Delete Product
-  static Future<void> deleteProduct(String pId) async {
-    try {
-      await productsDB.doc(pId).delete();
-    } on FirebaseException catch (e) {
-      throw AppFirebaseFailure.fromCode(e.code);
-    } catch (_) {
-      throw const AppFirebaseFailure();
     }
   }
 }

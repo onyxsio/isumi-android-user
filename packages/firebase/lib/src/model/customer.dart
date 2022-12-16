@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:remote_data/src/model/product.dart';
 import 'package:uuid/uuid.dart';
 
@@ -56,7 +57,43 @@ class Customer {
           review: review ?? this.review,
           createdAt: createdAt ?? this.createdAt,
           deviceToken: deviceToken ?? this.deviceToken);
-
+//
+  Customer.fromDocumentSnapshot(DocumentSnapshot snap) {
+    Map<String, dynamic> json = snap.data() as Map<String, dynamic>;
+    id = json['id'];
+    email = json['email'];
+    photoUrls = json['photoUrls'];
+    name = json['name'];
+    scanCode = json['scanCode'];
+    phone = json['phone'];
+    if (json['address'] != null) {
+      address = <Address>[];
+      json['address'].forEach((v) {
+        address!.add(Address.fromJson(v));
+      });
+    }
+    if (json['cart'] != null) {
+      cart = <Product>[];
+      json['cart'].forEach((v) {
+        cart!.add(Product.fromJson(v));
+      });
+    }
+    if (json['wishlist'] != null) {
+      wishlist = <Product>[];
+      json['wishlist'].forEach((v) {
+        wishlist!.add(Product.fromJson(v));
+      });
+    }
+    if (json['review'] != null) {
+      review = <Review>[];
+      json['review'].forEach((v) {
+        review!.add(Review.fromJson(v));
+      });
+    }
+    createdAt = json['created_at'];
+    deviceToken = json['deviceToken'];
+  }
+//
   Customer.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     email = json['email'];

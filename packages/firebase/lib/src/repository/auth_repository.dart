@@ -1,12 +1,12 @@
 import 'dart:async';
-import 'dart:developer';
+// import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:cache/cache.dart';
 import 'package:remote_data/remote_data.dart';
-import 'package:remote_data/src/error/failure.dart';
-import 'package:remote_data/src/model/models.dart';
+// import 'package:remote_data/src/error/failure.dart';
+// import 'package:remote_data/src/model/models.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+// import 'package:flutter/foundation.dart' show kIsWeb;
 
 class AuthRepository {
   AuthRepository({
@@ -41,7 +41,7 @@ class AuthRepository {
     return _cache.read<User>(key: userCacheKey) ?? User.empty;
   }
 
-  /// Creates a new user with the provided [email] and [password].
+  /// Creates a new user with the provided email] and password].
   Future<void> signUp({required String email, required String password}) async {
     try {
       var newuser = await _firebaseAuth.createUserWithEmailAndPassword(
@@ -57,7 +57,7 @@ class AuthRepository {
     }
   }
 
-  /// Creates a new user with the provided [email] and [password].
+  /// Creates a new user with the provided email] and password].
   Future<void> forgotPassword({required String email}) async {
     try {
       await _firebaseAuth.sendPasswordResetEmail(email: email);
@@ -107,7 +107,7 @@ class AuthRepository {
   }
 
   /// Signs out the current user which will emit
-  /// User.empty] from the [user] Stream.
+  /// User.empty] from the user] Stream.
   ///
   /// Throws a LogOutFailure] if an exception occurs.
   Future<void> logOut() async {
