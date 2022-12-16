@@ -75,7 +75,7 @@ class _ItemListViewState extends State<ItemListView> {
 
   Future<void> getQuantity() async {
     var result = await FirestoreRepository.setupQuantity(widget.cart);
-    if (mounted) return;
+    // if (mounted) return;
     setState(() {
       stock = result;
     });

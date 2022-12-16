@@ -185,7 +185,6 @@ class _LoginButton extends StatelessWidget {
             ? const CircularProgressIndicator()
             : MainButton(
                 onTap: () {
-                  // TODO validation
                   context.read<LoginCubit>().emailChanged(email.text);
                   context.read<LoginCubit>().passwordChanged(password.text);
                   context.read<LoginCubit>().logInWithCredentials();

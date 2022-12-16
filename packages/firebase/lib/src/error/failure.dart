@@ -63,7 +63,6 @@ class AppFirebaseFailure implements Exception {
   /// Create an authentication message
 
   factory AppFirebaseFailure.fromCode(String code) {
-    log(code);
     switch (code) {
       case 'UNAVAILABLE':
         return const AppFirebaseFailure(
