@@ -91,6 +91,22 @@ class FirestoreRepository {
       return stock;
     }
   }
+
+  static Future<Customer> getCustomer() async {
+    try {
+      final user = auth.FirebaseAuth.instance.currentUser;
+      var customer = await customerDB.doc(user!.uid).get();
+      return Customer.fromDocumentSnapshot(customer);
+    } on FirebaseException catch (e) {
+      AppFirebaseFailure.fromCode(e.code);
+      return Customer();
+    } catch (_) {
+      return Customer();
+    }
+  }
+
+  // customerDB
+
   // ! not user below
 
   // !

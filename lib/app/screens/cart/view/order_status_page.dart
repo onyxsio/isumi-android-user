@@ -12,16 +12,18 @@ class OrderStatusPage extends StatefulWidget {
 
 class _OrderStatusPageState extends State<OrderStatusPage> {
   List<Cart> carts = [];
+  late Customer customer;
   bool isLoading = false;
   String currency = '';
   double total = 0.0;
   @override
   void initState() {
-    refreshCartData();
+    getCartData();
+    getCustomerData();
     super.initState();
   }
 
-  Future refreshCartData() async {
+  Future<void> getCartData() async {
     setState(() => isLoading = true);
     carts = await SQFLiteDB.readAllData();
 
@@ -30,7 +32,13 @@ class _OrderStatusPageState extends State<OrderStatusPage> {
     }
     currency = carts[0].currency;
     setState(() => isLoading = false);
-    log(total.toString());
+  }
+
+  Future<void> getCustomerData() async {
+    setState(() => isLoading = true);
+    customer = await FirestoreRepository.getCustomer();
+    setState(() => isLoading = false);
+    log(customer.address!.toString());
   }
 
   @override
@@ -57,7 +65,7 @@ class _OrderStatusPageState extends State<OrderStatusPage> {
           onTap: () async {
             // Navigator.pushNamed(context, '/CheckOutPage');
             var text = await PaymentGate.onPayment(
-              email: 'email@test9889.com',
+              email: customer.email!,
               amount: total,
               context: context,
             );
@@ -83,12 +91,12 @@ class _OrderStatusPageState extends State<OrderStatusPage> {
           initiallyExpanded: true,
           title: Text(
             'Order list and prices',
-            style: TxtStyle.h3,
+            style: TxtStyle.h5,
           ),
           children: <Widget>[
             Container(height: 1, color: AppColor.divider),
             SizedBox(height: 4.w),
-            priceTag('Items Total', '500'),
+            priceTag('Items Total', total.toString()),
             SizedBox(height: 2.w),
             priceTag('Delivery charges', '50'),
             SizedBox(height: 2.w),
@@ -101,12 +109,9 @@ class _OrderStatusPageState extends State<OrderStatusPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Total Amount',
-                  style: TxtStyle.h3.copyWith(color: const Color(0XFF4A4A6A)),
-                ),
+                Text('Total Amount', style: TxtStyle.b5B),
                 Text('$currency $total',
-                    style: TxtStyle.h2.copyWith(color: AppColor.orange)),
+                    style: TxtStyle.b5B.copyWith(color: AppColor.orange)),
               ],
             ),
           ],
@@ -144,17 +149,16 @@ class _OrderStatusPageState extends State<OrderStatusPage> {
           initiallyExpanded: true,
           // iconColor: errorColor,
           // collapsedIconColor: errorColor,
-          title: Text('Delivery information', style: TxtStyle.h3),
+          title: Text('Delivery information', style: TxtStyle.h5),
           children: <Widget>[
             Container(height: 1, color: AppColor.divider),
-            const SizedBox(height: 20),
-            Text(
-              '25 rue Robert Latouche, Nice, 06200, Côte D’azur, France: ',
-              style: TxtStyle.l1,
-            ),
-            const SizedBox(height: 20),
+            SizedBox(height: 5.w),
+            customer.address!.isEmpty
+                ? Text('Please add your billing address.', style: TxtStyle.l3)
+                : Text(customer.address![0].streetAddress!, style: TxtStyle.l1),
+            SizedBox(height: 5.w),
             Container(height: 1, color: AppColor.divider),
-            const SizedBox(height: 15),
+            SizedBox(height: 5.w),
             GestureDetector(
               onTap: () {
                 Navigator.pushNamed(context, '/ShippingAddressPage');
@@ -165,7 +169,7 @@ class _OrderStatusPageState extends State<OrderStatusPage> {
                   const Icon(Icons.add),
                   SizedBox(width: 5.w),
                   Text('Change or add a new address',
-                      style: TxtStyle.b1.copyWith(color: AppColor.yellow)),
+                      style: TxtStyle.b5.copyWith(color: AppColor.yellow)),
                 ],
               ),
             ),
