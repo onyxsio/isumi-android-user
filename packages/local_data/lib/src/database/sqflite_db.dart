@@ -23,7 +23,7 @@ class SQFLiteDB {
   static Future _createDB(Database db, int version) async {
     final idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
     final textType = 'TEXT NOT NULL';
-    final boolType = 'BOOLEAN NOT NULL';
+    // final boolType = 'BOOLEAN NOT NULL';
     try {
       await db.execute('''
               CREATE TABLE $tableCart ( 
@@ -46,7 +46,7 @@ class SQFLiteDB {
               ${AddressFields.state} $textType,
               ${AddressFields.name} $textType,
               ${AddressFields.streetAddress} $textType,
-              ${AddressFields.isSelected} $boolType,
+              ${AddressFields.uid} $textType,
               ${AddressFields.postalCode} $textType,
               ${AddressFields.createdTime} $textType
               )
@@ -103,16 +103,6 @@ class SQFLiteDB {
     );
   }
 
-  static Future<int> delete(int id) async {
-    final db = await _database;
-
-    return await db!.delete(
-      tableCart,
-      where: '${CartFields.id} = ?',
-      whereArgs: [id],
-    );
-  }
-
   // static Future close() async {
   //   _database!.close();
   // }
@@ -130,5 +120,22 @@ class SQFLiteDB {
     final orderBy = '${AddressFields.id} ASC';
     final result = await _database!.query(tableAddress, orderBy: orderBy);
     return result.map((json) => LAddress.fromJson(json)).toList();
+  }
+
+  static Future<int> updateAddress(LAddress value) async {
+    return _database!.update(
+      tableAddress,
+      value.toJson(),
+      where: '${AddressFields.id} = ?',
+      whereArgs: [value.id],
+    );
+  }
+
+  static Future<int> delete(int id) async {
+    return await _database!.delete(
+      tableAddress,
+      where: '${AddressFields.id} = ?',
+      whereArgs: [id],
+    );
   }
 }

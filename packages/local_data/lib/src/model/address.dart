@@ -3,7 +3,7 @@ final String tableAddress = 'address';
 class AddressFields {
   static final List<String> values = [
     /// Add all fields
-    id, name, state, streetAddress, city, postalCode, isSelected, createdTime
+    id, name, state, streetAddress, city, postalCode, uid, createdTime
   ];
 
   static final String id = '_id';
@@ -12,7 +12,7 @@ class AddressFields {
   static final String streetAddress = 'streetAddress';
   static final String city = 'city';
   static final String postalCode = 'postalCode';
-  static final String isSelected = 'isSelected';
+  static final String uid = 'uid';
   static final String createdTime = 'createdTime';
 }
 
@@ -23,7 +23,7 @@ class LAddress {
   final String streetAddress;
   final String name;
   final String postalCode;
-  final bool isSelected;
+  final String uid;
   final DateTime createdTime;
 
   const LAddress({
@@ -33,7 +33,7 @@ class LAddress {
     required this.name,
     required this.streetAddress,
     required this.postalCode,
-    required this.isSelected,
+    required this.uid,
     required this.createdTime,
   });
 
@@ -43,7 +43,7 @@ class LAddress {
     String? city,
     String? name,
     String? streetAddress,
-    bool? isSelected,
+    String? uid,
     String? postalCode,
     DateTime? createdTime,
   }) =>
@@ -53,7 +53,7 @@ class LAddress {
         city: city ?? this.city,
         name: name ?? this.name,
         streetAddress: streetAddress ?? this.streetAddress,
-        isSelected: isSelected ?? this.isSelected,
+        uid: uid ?? this.uid,
         postalCode: postalCode ?? this.postalCode,
         createdTime: createdTime ?? this.createdTime,
       );
@@ -65,7 +65,7 @@ class LAddress {
         name: json[AddressFields.name] as String,
         streetAddress: json[AddressFields.streetAddress] as String,
         postalCode: json[AddressFields.postalCode] as String,
-        isSelected: json[AddressFields.isSelected] == 1,
+        uid: json[AddressFields.uid] as String,
         createdTime: DateTime.parse(json[AddressFields.createdTime] as String),
       );
 
@@ -76,7 +76,7 @@ class LAddress {
         AddressFields.city: city,
         AddressFields.streetAddress: streetAddress,
         AddressFields.postalCode: postalCode,
-        AddressFields.isSelected: isSelected ? 1 : 0,
+        AddressFields.uid: uid,
         AddressFields.createdTime: createdTime.toIso8601String(),
       };
 }

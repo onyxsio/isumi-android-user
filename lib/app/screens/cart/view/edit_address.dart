@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:isumi/app/models/ship_to.dart';
 import 'package:onyxsio/onyxsio.dart';
 
 class EditAddress extends StatefulWidget {
-  final ShipTo? shipTo;
+  final LAddress? shipTo;
+
   const EditAddress({Key? key, this.shipTo}) : super(key: key);
 
   @override
@@ -19,16 +19,16 @@ class _EditAddressState extends State<EditAddress> {
 
   @override
   void initState() {
+    if (!mounted) return;
     checkAvailableData();
     super.initState();
   }
 
   checkAvailableData() {
     if (widget.shipTo != null) {
-      if (mounted) return;
       setState(() {
         name.text = widget.shipTo!.name;
-        street.text = widget.shipTo!.street;
+        street.text = widget.shipTo!.streetAddress;
         city.text = widget.shipTo!.city;
         postalCode.text = widget.shipTo!.postalCode;
         state.text = widget.shipTo!.state;
@@ -55,24 +55,80 @@ class _EditAddressState extends State<EditAddress> {
           )),
       bottomNavigationBar: Padding(
         padding: EdgeInsets.symmetric(horizontal: 5.w).copyWith(bottom: 3.h),
-        child: MainButton(text: 'Save Address', onTap: addDataTODatabase),
+        child: MainButton(
+            text: 'Save Address',
+            onTap: () {
+              if (widget.shipTo != null) {
+                updateAnAddress();
+              } else {
+                addDataTODatabase();
+              }
+            }),
       ),
     );
   }
 
   void addDataTODatabase() async {
+    String uId = const Uuid().v1();
     Address address = Address(
       name: name.text,
+      uid: uId,
       streetAddress: street.text,
       state: state.text,
       city: city.text,
       postalCode: postalCode.text,
     );
+    LAddress laddress = LAddress(
+      name: name.text,
+      uid: uId,
+      streetAddress: street.text,
+      state: state.text,
+      city: city.text,
+      createdTime: DateTime.now(),
+      postalCode: postalCode.text,
+    );
+
+    await SQFLiteDB.createAddress(laddress);
+
     await FirestoreRepository.setupAddress(address).then((value) {
       if (value == 'done') {
         DBox.autoClose(context,
             type: InfoDialog.successful,
             message: 'The address has been saved successfully.');
+        clear();
+      } else {
+        DBox.autoClose(context, type: InfoDialog.error, message: value);
+      }
+    });
+  }
+
+  void updateAnAddress() async {
+    Address address = Address(
+      name: name.text,
+      uid: widget.shipTo!.uid,
+      streetAddress: street.text,
+      state: state.text,
+      city: city.text,
+      postalCode: postalCode.text,
+    );
+    LAddress laddress = LAddress(
+      name: name.text,
+      id: widget.shipTo!.id,
+      uid: widget.shipTo!.uid,
+      streetAddress: street.text,
+      state: state.text,
+      city: city.text,
+      createdTime: DateTime.now(),
+      postalCode: postalCode.text,
+    );
+
+    await SQFLiteDB.updateAddress(laddress);
+
+    await FirestoreRepository.setupAddress(address).then((value) {
+      if (value == 'done') {
+        DBox.autoClose(context,
+            type: InfoDialog.successful,
+            message: 'The address has been updated successfully.');
         clear();
       } else {
         DBox.autoClose(context, type: InfoDialog.error, message: value);

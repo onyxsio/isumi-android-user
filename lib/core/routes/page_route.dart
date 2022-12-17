@@ -58,7 +58,7 @@ class RouteGenerator {
       case '/CheckOutPage':
         return OpenAndFadeTransition(const CheckOutPage());
       case '/EditAddress':
-        ShipTo? shipTo = arguments as ShipTo?;
+        LAddress? shipTo = arguments as LAddress?;
         return OpenAndFadeTransition(EditAddress(shipTo: shipTo));
       default:
         // If there is no such named route in the switch statement

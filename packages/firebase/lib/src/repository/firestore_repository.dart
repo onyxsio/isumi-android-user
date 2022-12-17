@@ -12,6 +12,7 @@ import 'package:remote_data/src/error/failure.dart';
 import 'package:remote_data/src/model/models.dart';
 import 'package:uuid/uuid.dart';
 import 'storage_repository.dart';
+import 'package:google_sign_in/google_sign_in.dart' as gs;
 
 class FirestoreRepository {
   // ! USE
@@ -24,6 +25,8 @@ class FirestoreRepository {
   // Stream<QuerySnapshot>
   static var productStream = productsDB.snapshots();
   static var productLimitStream = productsDB.limit(20).snapshots();
+
+  // static var customerStream = customerDB.doc().snapshots();
   // ! not used blow line
 
   // Cerate instance of products Database
@@ -33,6 +36,11 @@ class FirestoreRepository {
   // Stream<QuerySnapshot>
   // static var orderStream = sellerDB.doc('order').snapshots(); .limit(1).
   // ! USE
+  // static setupcustomerStream() async {
+  //   final user = auth.FirebaseAuth.instance.currentUser;
+  //   return customerDB.doc(user!.uid).snapshots();
+  // }
+
   //
   static Future<void> createAccount(auth.User user) async {
     try {
@@ -41,6 +49,21 @@ class FirestoreRepository {
           .copyWith(
             email: user.email,
             id: user.uid,
+            deviceToken: deviceToken,
+          )
+          .toJson());
+    } on FirebaseException catch (e) {
+      AppFirebaseFailure.fromCode(e.code);
+    } catch (_) {}
+  }
+
+  static Future<void> createAccountGoogle(gs.GoogleSignInAccount user) async {
+    try {
+      String? deviceToken = await FirebaseMessaging.instance.getToken();
+      await customerDB.doc(user.id).set(demoCustomer
+          .copyWith(
+            email: user.email,
+            id: user.id,
             deviceToken: deviceToken,
           )
           .toJson());
