@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:isumi/core/util/image.dart';
 import 'package:isumi/core/util/utils.dart';
 import 'package:onyxsio/onyxsio.dart';
 
@@ -19,14 +20,14 @@ class _OrderStatusPageState extends State<OrderStatusPage> {
   @override
   void initState() {
     getCartData();
-    getCustomerData();
+    // getCustomerData();
     super.initState();
   }
 
   Future<void> getCartData() async {
     setState(() => isLoading = true);
     carts = await SQFLiteDB.readAllData();
-
+    customer = await FirestoreRepository.getCustomer();
     for (var item in carts) {
       total = total + (double.parse(item.price) * int.parse(item.quantity));
     }
@@ -34,29 +35,31 @@ class _OrderStatusPageState extends State<OrderStatusPage> {
     setState(() => isLoading = false);
   }
 
-  Future<void> getCustomerData() async {
-    setState(() => isLoading = true);
-    customer = await FirestoreRepository.getCustomer();
-    setState(() => isLoading = false);
-    log(customer.address!.toString());
-  }
+  // Future<void> getCustomerData() async {
+  //   setState(() => isLoading = true);
+  //   customer = await FirestoreRepository.getCustomer();
+  //   setState(() => isLoading = false);
+  //   log(customer.address!.toString());
+  // }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: appBar(text: 'Your order status'),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        padding: EdgeInsets.symmetric(horizontal: 5.w).copyWith(top: 5.w),
-        child: Column(
-          children: [
-            _buildTopList(theme),
-            SizedBox(height: 5.w),
-            _buildBottomList(theme, context),
-          ],
-        ),
-      ),
+      body: isLoading
+          ? const Center(child: HRDots())
+          : SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              padding: EdgeInsets.symmetric(horizontal: 5.w).copyWith(top: 5.w),
+              child: Column(
+                children: [
+                  _buildTopList(theme),
+                  SizedBox(height: 5.w),
+                  _buildBottomList(theme, context),
+                ],
+              ),
+            ),
       bottomNavigationBar: Padding(
         padding: EdgeInsets.symmetric(horizontal: 5.w).copyWith(bottom: 3.h),
         // TODO change button
@@ -89,29 +92,26 @@ class _OrderStatusPageState extends State<OrderStatusPage> {
         child: ExpansionTile(
           tilePadding: EdgeInsets.zero,
           initiallyExpanded: true,
-          title: Text(
-            'Order list and prices',
-            style: TxtStyle.h5,
-          ),
+          title: Text('Order list and prices', style: TxtStyle.h7B),
           children: <Widget>[
-            Container(height: 1, color: AppColor.divider),
+            Container(height: 0.5, color: AppColor.divider),
             SizedBox(height: 4.w),
             priceTag('Items Total', total.toString()),
             SizedBox(height: 2.w),
-            priceTag('Delivery charges', '50'),
+            priceTag('Delivery charges', '50.2'),
             SizedBox(height: 2.w),
-            priceTag('Discount', '0'),
-            SizedBox(height: 2.w),
-            priceTag('Tax', '0'),
+            priceTag('Discount', '0.0'),
+            // SizedBox(height: 2.w),
+            // priceTag('Tax', '0.2'),
             SizedBox(height: 4.w),
-            Container(height: 1, color: AppColor.divider),
+            Container(height: 0.5, color: AppColor.divider),
             SizedBox(height: 4.w),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Total Amount', style: TxtStyle.b5B),
-                Text('$currency $total',
-                    style: TxtStyle.b5B.copyWith(color: AppColor.orange)),
+                Text('Total Amount', style: TxtStyle.b6B),
+                Text(Utils.currency(name: currency, amount: total),
+                    style: TxtStyle.b8B.copyWith(color: AppColor.orange)),
               ],
             ),
           ],
@@ -124,11 +124,9 @@ class _OrderStatusPageState extends State<OrderStatusPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          title,
-          style: TxtStyle.h3.copyWith(color: AppColor.lightBlack),
-        ),
-        Text(cost, style: TxtStyle.h3),
+        Text(title, style: TxtStyle.h5),
+        Text(Utils.currency(name: currency, amount: double.parse(cost)),
+            style: TxtStyle.b5B),
       ],
     );
   }
@@ -147,34 +145,56 @@ class _OrderStatusPageState extends State<OrderStatusPage> {
         child: ExpansionTile(
           tilePadding: EdgeInsets.zero,
           initiallyExpanded: true,
-          // iconColor: errorColor,
-          // collapsedIconColor: errorColor,
-          title: Text('Delivery information', style: TxtStyle.h5),
+          title: Text('Delivery information', style: TxtStyle.h7B),
           children: <Widget>[
-            Container(height: 1, color: AppColor.divider),
+            Container(height: 0.5, color: AppColor.divider),
             SizedBox(height: 5.w),
-            customer.address!.isEmpty
-                ? Text('Please add your billing address.', style: TxtStyle.l3)
-                : Text(customer.address![0].streetAddress!, style: TxtStyle.l1),
+            customer.address!.streetAddress!.isEmpty
+                ? _addNewShippingAdderss(context)
+                : Text(customer.address!.streetAddress!, style: TxtStyle.l3),
             SizedBox(height: 5.w),
-            Container(height: 1, color: AppColor.divider),
+            if (customer.address!.streetAddress!.isNotEmpty)
+              _updateShippingAdderss(context),
+            // Container(height: 0.5, color: AppColor.divider),
             SizedBox(height: 5.w),
-            GestureDetector(
-              onTap: () {
-                Navigator.pushNamed(context, '/ShippingAddressPage');
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const Icon(Icons.add),
-                  SizedBox(width: 5.w),
-                  Text('Change or add a new address',
-                      style: TxtStyle.b5.copyWith(color: AppColor.yellow)),
-                ],
-              ),
-            ),
           ],
         ),
+      ),
+    );
+  }
+
+  GestureDetector _addNewShippingAdderss(context) {
+    return GestureDetector(
+      onTap: () {
+        // Navigator.pushNamed(context, '/ShippingAddressPage');
+        Navigator.pushNamed(context, '/EditAddress');
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          const Icon(Icons.add),
+          SizedBox(width: 5.w),
+          Text('Please add your shipping address.',
+              style: TxtStyle.b5.copyWith(color: AppColor.yellow)),
+        ],
+      ),
+    );
+  }
+
+  GestureDetector _updateShippingAdderss(context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.pushNamed(context, '/ShippingAddressPage');
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text('Change the shipping address.',
+              style: TxtStyle.b6.copyWith(color: AppColor.yellow)),
+          // SizedBox(width: 5.w),
+          SvgPicture.asset(AppIcon.edit, color: AppColor.yellow),
+        ],
       ),
     );
   }

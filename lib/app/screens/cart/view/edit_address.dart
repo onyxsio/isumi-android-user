@@ -55,14 +55,37 @@ class _EditAddressState extends State<EditAddress> {
           )),
       bottomNavigationBar: Padding(
         padding: EdgeInsets.symmetric(horizontal: 5.w).copyWith(bottom: 3.h),
-        child: MainButton(
-          text: 'Save Address',
-          onTap: () {
-            // TODO
-          },
-        ),
+        child: MainButton(text: 'Save Address', onTap: addDataTODatabase),
       ),
     );
+  }
+
+  void addDataTODatabase() async {
+    Address address = Address(
+      name: name.text,
+      streetAddress: street.text,
+      state: state.text,
+      city: city.text,
+      postalCode: postalCode.text,
+    );
+    await FirestoreRepository.setupAddress(address).then((value) {
+      if (value == 'done') {
+        DBox.autoClose(context,
+            type: InfoDialog.successful,
+            message: 'The address has been saved successfully.');
+        clear();
+      } else {
+        DBox.autoClose(context, type: InfoDialog.error, message: value);
+      }
+    });
+  }
+
+  void clear() {
+    name.clear();
+    city.clear();
+    postalCode.clear();
+    street.clear();
+    state.clear();
   }
 }
 
