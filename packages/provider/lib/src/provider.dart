@@ -43,7 +43,7 @@ class AppProviders extends StatelessWidget {
                   return KeyboardUnfocus(
                     child: MaterialApp(
                       debugShowCheckedModeBanner: false,
-                      title: 'User App',
+                      title: 'Isumi',
                       theme: AppTheme.themeData(state.isDarkThemeOn, context),
                       home: WapperPage(state: appstate.status),
                       onGenerateRoute: (settings) =>

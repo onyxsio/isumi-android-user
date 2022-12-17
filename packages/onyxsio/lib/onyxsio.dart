@@ -11,7 +11,7 @@ export 'package:form_inputs/form_inputs.dart';
 export 'package:local_database/local_db.dart';
 // export 'package:local_database/';
 // export 'package:theme/theme.dart';
-// export 'package:permission_handle/permission.dart';
+// export 'package:firebase_auth/firebase_auth.dart';
 
 export 'package:flutter_svg/flutter_svg.dart';
 export 'package:cached_network_image/cached_network_image.dart';

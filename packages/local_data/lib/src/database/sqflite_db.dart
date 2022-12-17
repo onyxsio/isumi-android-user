@@ -23,7 +23,7 @@ class SQFLiteDB {
   static Future _createDB(Database db, int version) async {
     final idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
     final textType = 'TEXT NOT NULL';
-    final boolType = 'BOOLEAN NOT NULL';
+    // final boolType = 'BOOLEAN NOT NULL';
     try {
       await db.execute('''
               CREATE TABLE $tableCart ( 
@@ -46,7 +46,7 @@ class SQFLiteDB {
               ${AddressFields.state} $textType,
               ${AddressFields.name} $textType,
               ${AddressFields.streetAddress} $textType,
-              ${AddressFields.isSelected} $boolType,
+              ${AddressFields.uid} $textType,
               ${AddressFields.postalCode} $textType,
               ${AddressFields.createdTime} $textType
               )
@@ -130,5 +130,32 @@ class SQFLiteDB {
     final orderBy = '${AddressFields.id} ASC';
     final result = await _database!.query(tableAddress, orderBy: orderBy);
     return result.map((json) => LAddress.fromJson(json)).toList();
+  }
+
+  static Future<int> updateAddressUse(LAddress value) async {
+    // await _database!.rawUpdate(
+    //     'UPDATE $tableAddress SET ${AddressFields.isSelected} = ?', [0]);
+
+    // await _database!
+    //     .update(tableAddress, value.copy(isSelected: false).toJson());
+    return _database!.update(
+      tableAddress,
+      value.toJson(),
+      where: '${AddressFields.id} = ?',
+      whereArgs: [value.id],
+    );
+    // await _database!.update(tableAddress, {'${AddressFields.isSelected}': 0});
+
+    // Update some record
+    // return await _database!.rawUpdate(
+    //     'UPDATE $tableAddress SET ${AddressFields.isSelected} = ? WHERE $value.id = ?',
+    //     [value, value.id]);
+
+    // return _database!.update(
+    //   tableAddress,
+    //   {'${AddressFields.isSelected}': value},
+    //   where: '$id = ?',
+    //   whereArgs: [id],
+    // );
   }
 }

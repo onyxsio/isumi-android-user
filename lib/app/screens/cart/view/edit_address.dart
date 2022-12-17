@@ -4,6 +4,7 @@ import 'package:onyxsio/onyxsio.dart';
 
 class EditAddress extends StatefulWidget {
   final ShipTo? shipTo;
+
   const EditAddress({Key? key, this.shipTo}) : super(key: key);
 
   @override
@@ -61,13 +62,25 @@ class _EditAddressState extends State<EditAddress> {
   }
 
   void addDataTODatabase() async {
+    String uId = const Uuid().v1();
     Address address = Address(
       name: name.text,
+      uid: uId,
       streetAddress: street.text,
       state: state.text,
       city: city.text,
       postalCode: postalCode.text,
     );
+    LAddress laddress = LAddress(
+      name: name.text,
+      uid: uId,
+      streetAddress: street.text,
+      state: state.text,
+      city: city.text,
+      createdTime: DateTime.now(),
+      postalCode: postalCode.text,
+    );
+    await SQFLiteDB.createAddress(laddress);
     await FirestoreRepository.setupAddress(address).then((value) {
       if (value == 'done') {
         DBox.autoClose(context,

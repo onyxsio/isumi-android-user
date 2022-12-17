@@ -146,16 +146,16 @@ class _OrderStatusPageState extends State<OrderStatusPage> {
           tilePadding: EdgeInsets.zero,
           initiallyExpanded: true,
           title: Text('Delivery information', style: TxtStyle.h7B),
+          expandedCrossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(height: 0.5, color: AppColor.divider),
             SizedBox(height: 5.w),
             customer.address!.streetAddress!.isEmpty
                 ? _addNewShippingAdderss(context)
-                : Text(customer.address!.streetAddress!, style: TxtStyle.l3),
+                : Text(customer.address!.streetAddress!, style: TxtStyle.l5),
             SizedBox(height: 5.w),
             if (customer.address!.streetAddress!.isNotEmpty)
               _updateShippingAdderss(context),
-            // Container(height: 0.5, color: AppColor.divider),
             SizedBox(height: 5.w),
           ],
         ),
@@ -167,7 +167,8 @@ class _OrderStatusPageState extends State<OrderStatusPage> {
     return GestureDetector(
       onTap: () {
         // Navigator.pushNamed(context, '/ShippingAddressPage');
-        Navigator.pushNamed(context, '/EditAddress');
+        Navigator.pushNamed(context, '/EditAddress')
+            .then((_) => setState(() {}));
       },
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,

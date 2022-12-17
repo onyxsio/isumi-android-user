@@ -188,15 +188,21 @@ class Address {
   String? name;
   String? state;
   String? postalCode;
-
+  String? uid;
   Address(
-      {this.name, this.streetAddress, this.city, this.state, this.postalCode});
+      {this.name,
+      this.streetAddress,
+      this.city,
+      this.state,
+      this.postalCode,
+      this.uid});
 
   Address.fromJson(Map<String, dynamic> json) {
     streetAddress = json['streetAddress'];
     city = json['city'];
     name = json['name'];
     state = json['state'];
+    uid = json['uid'];
     postalCode = json['postalCode'];
   }
 
@@ -206,6 +212,7 @@ class Address {
     data['city'] = city;
     data['name'] = name;
     data['state'] = state;
+    data['uid'] = uid;
     data['postalCode'] = postalCode;
     return data;
   }
@@ -221,6 +228,7 @@ Customer demoCustomer = Customer(
   phone: "",
   scanCode: "",
   address: Address(
+    uid: '',
     state: '',
     streetAddress: '',
     postalCode: '',

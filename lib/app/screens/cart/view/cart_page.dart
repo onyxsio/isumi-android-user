@@ -31,7 +31,7 @@ class _CartPageState extends State<CartPage> {
     return Scaffold(
       appBar: mainAppBar(text: 'Shopping Cart'),
       body: isLoading
-          ? const CircularProgressIndicator()
+          ? const Center(child: HRDots())
           : carts.isEmpty
               ? Center(
                   child: Text(

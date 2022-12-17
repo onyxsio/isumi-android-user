@@ -54,10 +54,9 @@ class _ResetButton extends StatelessWidget {
       buildWhen: (previous, current) => previous.status != current.status,
       builder: (context, state) {
         return state.status.isSubmissionInProgress
-            ? const CircularProgressIndicator()
+            ? const HRDots()
             : MainButton(
                 onTap: () {
-                  // TODO validation
                   context.read<ForgotCubit>().passwordReset();
                 },
                 text: 'Reset');

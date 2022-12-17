@@ -24,7 +24,7 @@ class TxtStyle {
       );
   static TextStyle get lableFont => TextStyle(
         fontFamily: Fonts.body,
-        color: AppColor.menuUnselect,
+        color: AppColor.gray2,
       );
   //
   static TextStyle get b1 => bodyFont.copyWith(fontSize: 8.sp);
@@ -70,8 +70,19 @@ class TxtStyle {
   static TextStyle get h9B => h9.copyWith(fontWeight: b);
   static TextStyle get h14B => h14.copyWith(fontWeight: b);
   //
-  static TextStyle get l7 => lableFont.copyWith(fontSize: 14.sp);
+  static TextStyle get l2 => lableFont.copyWith(fontSize: 9.sp);
   static TextStyle get l5 => lableFont.copyWith(fontSize: 12.sp);
+  static TextStyle get l7 => lableFont.copyWith(fontSize: 14.sp);
+  //  used 3
+
+  // static TextStyle get l1B => l2.copyWith(fontWeight: b);
+  // static TextStyle get l3 => b5.copyWith(color: AppColor.gray2);
+  // static TextStyle get l5B => l5.copyWith(fontWeight: b);
+//
+  static TextStyle get error => b3.copyWith(color: AppColor.error);
+  // static TextStyle get l3 => b5.copyWith(color: AppColor.gray2);
+  static TextStyle get h4L => h4.copyWith(color: AppColor.gray2, fontWeight: l);
+  static TextStyle get h5L => h5.copyWith(color: AppColor.text, fontWeight: l);
   //
   static TextStyle get menuSelected =>
       bodyFont.copyWith(fontWeight: b, color: AppColor.menuSelected);
@@ -132,14 +143,4 @@ class TxtStyle {
 // Used 3
   static TextStyle get settinSubTitle =>
       b5.copyWith(color: AppColor.menuUnselect);
-//  used 3
-  static TextStyle get l1 => b2.copyWith(color: AppColor.gray2);
-  static TextStyle get l1B => l1.copyWith(fontWeight: b);
-  static TextStyle get l3 => b5.copyWith(color: AppColor.gray2);
-  static TextStyle get l3B => l3.copyWith(fontWeight: b);
-//
-  static TextStyle get error => b3.copyWith(color: AppColor.error);
-  // static TextStyle get l3 => b5.copyWith(color: AppColor.gray2);
-  static TextStyle get h4L => h4.copyWith(color: AppColor.gray2, fontWeight: l);
-  static TextStyle get h5L => h5.copyWith(color: AppColor.text, fontWeight: l);
 }

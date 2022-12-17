@@ -98,7 +98,9 @@ class AuthRepository {
         idToken: googleAuth.idToken,
       );
 
-      await _firebaseAuth.signInWithCredential(credential);
+      var user = await _firebaseAuth.signInWithCredential(credential);
+      // googleUser.
+      await FirestoreRepository.createAccount(user.user!);
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw AppFirebaseFailure.fromCode(e.code);
     } catch (e) {

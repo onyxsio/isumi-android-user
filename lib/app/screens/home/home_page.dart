@@ -91,7 +91,7 @@ class _HomePageState extends State<HomePage> {
       title: Row(
         children: [
           SvgPicture.asset(AppIcon.location),
-          Text('Deliver to Gram Bistro', style: TxtStyle.l3),
+          Text('Deliver to Gram Bistro', style: TxtStyle.l5),
         ],
       ),
       actions: const [MenuButton()],
