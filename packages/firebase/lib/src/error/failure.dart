@@ -1,11 +1,3 @@
-import 'dart:developer';
-
-// enum ResultStatus {
-//   successful,
-//   invalid,
-//   undefined,
-// }
-
 // class Failure {
 //   // Use something like "int code;" if you want to translate error messages
 //   final String message;

@@ -1,7 +1,4 @@
-import 'dart:developer';
-
 import 'package:onyxsio/onyxsio.dart';
-// import 'package:onyxsio/app/authentication/sign_up/view/sign_up_form.dart';
 part 'sign_up_state.dart';
 
 class SignUpCubit extends Cubit<SignUpState> {
@@ -22,22 +19,6 @@ class SignUpCubit extends Cubit<SignUpState> {
       ),
     );
   }
-
-  // void phoneChanged(String value) {
-  //   final phone = PhoneNumber.dirty(value);
-
-  //   emit(
-  //     state.copyWith(
-  //       phoneNumber: phone,
-  //       status: Formz.validate([
-  //         phone,
-  //         state.email,
-  //         state.password,
-  //         state.confirmedPassword,
-  //       ]),
-  //     ),
-  //   );
-  // }
 
   void passwordChanged(String value) {
     final password = Password.dirty(value);

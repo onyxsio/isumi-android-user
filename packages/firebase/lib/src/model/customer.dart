@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:remote_data/src/model/product.dart';
-import 'package:uuid/uuid.dart';
 
 class Customer {
   String? id;

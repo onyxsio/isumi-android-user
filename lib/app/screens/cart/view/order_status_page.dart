@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:isumi/core/util/image.dart';
 import 'package:isumi/core/util/utils.dart';
 import 'package:onyxsio/onyxsio.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 
 class OrderStatusPage extends StatefulWidget {
   const OrderStatusPage({Key? key}) : super(key: key);
@@ -12,35 +13,28 @@ class OrderStatusPage extends StatefulWidget {
 }
 
 class _OrderStatusPageState extends State<OrderStatusPage> {
+  final user = auth.FirebaseAuth.instance.currentUser;
   List<Cart> carts = [];
-  late Customer customer;
   bool isLoading = false;
   String currency = '';
   double total = 0.0;
   @override
   void initState() {
     getCartData();
-    // getCustomerData();
+
     super.initState();
   }
 
   Future<void> getCartData() async {
     setState(() => isLoading = true);
     carts = await SQFLiteDB.readAllData();
-    customer = await FirestoreRepository.getCustomer();
+    // customer = await FirestoreRepository.getCustomer();
     for (var item in carts) {
       total = total + (double.parse(item.price) * int.parse(item.quantity));
     }
     currency = carts[0].currency;
     setState(() => isLoading = false);
   }
-
-  // Future<void> getCustomerData() async {
-  //   setState(() => isLoading = true);
-  //   customer = await FirestoreRepository.getCustomer();
-  //   setState(() => isLoading = false);
-  //   log(customer.address!.toString());
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -67,12 +61,19 @@ class _OrderStatusPageState extends State<OrderStatusPage> {
           text: Utils.currency(name: currency, amount: total),
           onTap: () async {
             // Navigator.pushNamed(context, '/CheckOutPage');
-            var text = await PaymentGate.onPayment(
-              email: customer.email!,
+
+            await PaymentGate.onPayment(
+              email: user!.email!,
               amount: total,
               context: context,
-            );
-            log(text.toString());
+            ).then((value) {
+              if (value == 'successful') {
+                // .pushNamed(context, '/EndPage');
+                Navigator.pushReplacementNamed(context, '/EndPage');
+              } else {
+                DBox.autoClose(context, type: InfoDialog.error, message: value);
+              }
+            });
           },
         ),
       ),
@@ -132,35 +133,51 @@ class _OrderStatusPageState extends State<OrderStatusPage> {
   }
 
   Widget _buildBottomList(theme, context) {
-    return Container(
-      padding: EdgeInsets.all(4.w),
-      decoration: BoxDeco.deco_2,
-      child: Theme(
-        data: theme.copyWith(
-          dividerColor: Colors.transparent,
-          iconTheme: IconThemeData(color: AppColor.yellow),
-          expansionTileTheme:
-              ExpansionTileThemeData(iconColor: AppColor.yellow),
-        ),
-        child: ExpansionTile(
-          tilePadding: EdgeInsets.zero,
-          initiallyExpanded: true,
-          title: Text('Delivery information', style: TxtStyle.h7B),
-          expandedCrossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(height: 0.5, color: AppColor.divider),
-            SizedBox(height: 5.w),
-            customer.address!.streetAddress!.isEmpty
-                ? _addNewShippingAdderss(context)
-                : Text(customer.address!.streetAddress!, style: TxtStyle.l5),
-            SizedBox(height: 5.w),
-            if (customer.address!.streetAddress!.isNotEmpty)
-              _updateShippingAdderss(context),
-            SizedBox(height: 5.w),
-          ],
-        ),
-      ),
-    );
+    return StreamBuilder<DocumentSnapshot>(
+        stream: FirestoreRepository.customerDB.doc(user!.uid).snapshots(),
+        builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          if (snapshot.hasError) {
+            return const Center(child: HRDots());
+          }
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: HRDots());
+          }
+          Map<String, dynamic> data =
+              snapshot.data!.data() as Map<String, dynamic>;
+
+          Customer customer = Customer.fromJson(data);
+          return Container(
+            padding: EdgeInsets.all(4.w),
+            decoration: BoxDeco.deco_2,
+            child: Theme(
+              data: theme.copyWith(
+                dividerColor: Colors.transparent,
+                iconTheme: IconThemeData(color: AppColor.yellow),
+                expansionTileTheme:
+                    ExpansionTileThemeData(iconColor: AppColor.yellow),
+              ),
+              child: ExpansionTile(
+                tilePadding: EdgeInsets.zero,
+                initiallyExpanded: true,
+                title: Text('Delivery information', style: TxtStyle.h7B),
+                expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container(height: 0.5, color: AppColor.divider),
+                  SizedBox(height: 5.w),
+                  customer.address!.streetAddress!.isEmpty
+                      ? _addNewShippingAdderss(context)
+                      : Text(customer.address!.streetAddress!,
+                          style: TxtStyle.l5),
+                  SizedBox(height: 5.w),
+                  if (customer.address!.streetAddress!.isNotEmpty)
+                    _updateShippingAdderss(context),
+                  SizedBox(height: 5.w),
+                ],
+              ),
+            ),
+          );
+        });
   }
 
   GestureDetector _addNewShippingAdderss(context) {

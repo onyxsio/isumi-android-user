@@ -1,7 +1,7 @@
-// import 'package:intl/intl.dart';
 import 'dart:io';
+import 'package:components/custom/curruncy.dart';
 
-import 'package:onyxsio/onyxsio.dart';
+// import 'package:onyxsio/onyxsio.dart';
 
 class AppCIcon {
   static const String menu = 'assets/icons/menu.svg';
@@ -17,8 +17,6 @@ class AppCIcon {
 }
 
 class Utils {
-  // static formatPrice(double price) => '\$ ${price.toStringAsFixed(2)}';
-  // static formatDate(DateTime date) => DateFormat.yMd().format(date);
   static currency({name, amount}) => CurrencyFormat.simpleCurrency(
         locale: Platform.localeName,
         name: name,

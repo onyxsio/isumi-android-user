@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:isumi/app/screens/cart/widgets/credit_card.dart';
 import 'package:isumi/app/screens/cart/widgets/credit_cards_ui.dart';
-import 'package:isumi/core/util/image.dart';
 import 'package:onyxsio/onyxsio.dart';
 
 class CheckOutPage extends StatelessWidget {
@@ -42,7 +41,7 @@ class CheckOutPage extends StatelessWidget {
                           },
                           child: Text('Add a new card',
                               style:
-                                  TxtStyle.b1.copyWith(color: AppColor.yellow)),
+                                  TxtStyle.b5.copyWith(color: AppColor.yellow)),
                         ),
                       ],
                     ),
@@ -185,7 +184,7 @@ class DontHaveCard extends StatelessWidget {
                 Icon(Icons.add, color: AppColor.yellow),
                 SizedBox(width: 5.w),
                 Text('Add a new card',
-                    style: TxtStyle.b1.copyWith(color: AppColor.yellow)),
+                    style: TxtStyle.b3.copyWith(color: AppColor.yellow)),
               ],
             ),
           ),

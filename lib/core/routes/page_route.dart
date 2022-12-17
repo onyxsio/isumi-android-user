@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:isumi/app/models/ship_to.dart';
 import 'package:isumi/app/screens/authentication/forgotPass/view/forgot_page.dart';
 import 'package:isumi/app/screens/authentication/login/login.dart';
 import 'package:isumi/app/screens/authentication/sign_up/view/sign_up_page.dart';
 import 'package:isumi/app/screens/cart/view/checkout.dart';
 import 'package:isumi/app/screens/cart/view/edit_address.dart';
+import 'package:isumi/app/screens/cart/view/end_page.dart';
 import 'package:isumi/app/screens/cart/view/order_status_page.dart';
 import 'package:isumi/app/screens/cart/view/shipping_addres.dart';
 import 'package:isumi/app/screens/home/producat_details.dart';
+import 'package:isumi/app/screens/main_page.dart';
 // import 'package:isumi/app/screens/Order/view/bill_generate_page.dart';
 // import 'package:isumi/app/screens/Order/view/order_details.dart';
 // import 'package:isumi/app/screens/home/offer_page.dart';
@@ -35,8 +36,8 @@ class RouteGenerator {
         return OpenAndFadeTransition(const ForgotPassPage());
       // case '/SendArlet':
       //   return createRoute(child: const SendArlet());
-      // case '/MainPage':
-      //   return createRoute(child: const MainPage());
+      case '/MainPage':
+        return createRoute(child: const MainPage());
 
       // case '/OrderDetails':
       //   Orders order = arguments as Orders;
@@ -60,6 +61,8 @@ class RouteGenerator {
       case '/EditAddress':
         LAddress? shipTo = arguments as LAddress?;
         return OpenAndFadeTransition(EditAddress(shipTo: shipTo));
+      case '/EndPage':
+        return OpenAndFadeTransition(const EndPage());
       default:
         // If there is no such named route in the switch statement
         return _errorRoute();

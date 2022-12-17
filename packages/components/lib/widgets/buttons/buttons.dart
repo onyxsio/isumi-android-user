@@ -164,9 +164,7 @@ class CheckBoxButton extends StatelessWidget {
           activeColor: AppColor.black2,
           onChanged: onChanged,
           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          visualDensity: const VisualDensity(
-            horizontal: -4,
-          ),
+          visualDensity: const VisualDensity(horizontal: -4),
         ),
         SizedBox(width: 2.w),
         Text(
