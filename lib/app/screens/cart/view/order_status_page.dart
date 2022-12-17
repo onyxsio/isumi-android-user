@@ -167,8 +167,7 @@ class _OrderStatusPageState extends State<OrderStatusPage> {
     return GestureDetector(
       onTap: () {
         // Navigator.pushNamed(context, '/ShippingAddressPage');
-        Navigator.pushNamed(context, '/EditAddress')
-            .then((_) => setState(() {}));
+        Navigator.pushNamed(context, '/EditAddress').then((_) => getCartData());
       },
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,

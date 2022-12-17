@@ -103,16 +103,6 @@ class SQFLiteDB {
     );
   }
 
-  static Future<int> delete(int id) async {
-    final db = await _database;
-
-    return await db!.delete(
-      tableCart,
-      where: '${CartFields.id} = ?',
-      whereArgs: [id],
-    );
-  }
-
   // static Future close() async {
   //   _database!.close();
   // }
@@ -132,30 +122,20 @@ class SQFLiteDB {
     return result.map((json) => LAddress.fromJson(json)).toList();
   }
 
-  static Future<int> updateAddressUse(LAddress value) async {
-    // await _database!.rawUpdate(
-    //     'UPDATE $tableAddress SET ${AddressFields.isSelected} = ?', [0]);
-
-    // await _database!
-    //     .update(tableAddress, value.copy(isSelected: false).toJson());
+  static Future<int> updateAddress(LAddress value) async {
     return _database!.update(
       tableAddress,
       value.toJson(),
       where: '${AddressFields.id} = ?',
       whereArgs: [value.id],
     );
-    // await _database!.update(tableAddress, {'${AddressFields.isSelected}': 0});
+  }
 
-    // Update some record
-    // return await _database!.rawUpdate(
-    //     'UPDATE $tableAddress SET ${AddressFields.isSelected} = ? WHERE $value.id = ?',
-    //     [value, value.id]);
-
-    // return _database!.update(
-    //   tableAddress,
-    //   {'${AddressFields.isSelected}': value},
-    //   where: '$id = ?',
-    //   whereArgs: [id],
-    // );
+  static Future<int> delete(int id) async {
+    return await _database!.delete(
+      tableAddress,
+      where: '${AddressFields.id} = ?',
+      whereArgs: [id],
+    );
   }
 }

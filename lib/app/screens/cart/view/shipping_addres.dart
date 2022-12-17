@@ -15,7 +15,7 @@ class _ShippingAddressPageState extends State<ShippingAddressPage> {
   final user = auth.FirebaseAuth.instance.currentUser;
   bool isLoading = false;
   int isClick = 0;
-  late Customer customer;
+  // late Customer customer;
   List<LAddress> address = [];
   @override
   void initState() {
@@ -26,8 +26,7 @@ class _ShippingAddressPageState extends State<ShippingAddressPage> {
   Future<void> getAddress() async {
     setState(() => isLoading = true);
     address = await SQFLiteDB.readAllAddress();
-    customer = await FirestoreRepository.getCustomer();
-
+    // customer = await FirestoreRepository.getCustomer();
     setState(() => isLoading = false);
   }
 
@@ -47,7 +46,7 @@ class _ShippingAddressPageState extends State<ShippingAddressPage> {
                   padding: EdgeInsets.all(5.w),
                   itemCount: address.length,
                   itemBuilder: (context, index) {
-                    return _listTile(context, address[index], index, false);
+                    return _listTile(context, address[index], index);
                   },
                   // children: address.map((e) => _listTile(context, e)).toList(),
                 ),
@@ -73,29 +72,54 @@ class _ShippingAddressPageState extends State<ShippingAddressPage> {
     );
   }
 
-  Widget _listTile(
-      BuildContext context, LAddress address, int index, bool idWhat) {
-    return Container(
-      padding: EdgeInsets.all(4.w),
-      margin: EdgeInsets.only(bottom: 5.w),
-      decoration: BoxDeco.deco_2,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          titleRow(address.name, context),
-          SizedBox(height: 2.w),
-          const Divider(),
-          SizedBox(height: 2.w),
-          Text(
-              '${address.streetAddress},${address.city},${address.state},${address.postalCode}',
-              style: TxtStyle.l5),
-          SizedBox(height: 2.w),
-          const Divider(),
-          SizedBox(height: 2.w),
-          usedAddress(index, address),
-          // UsedAddress(address: address, index: index),
-        ],
+  Widget _listTile(BuildContext context, LAddress address, int index) {
+    return FocusedMenuHolder(
+      menuContent: menuContent(address),
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Container(
+          padding: EdgeInsets.all(4.w),
+          margin: EdgeInsets.only(bottom: 5.w),
+          decoration: BoxDeco.deco_2,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              titleRow(address.name, context, address),
+              SizedBox(height: 2.w),
+              const Divider(),
+              SizedBox(height: 2.w),
+              Text(
+                  '${address.streetAddress},${address.city},${address.state},${address.postalCode}',
+                  style: TxtStyle.l5),
+              SizedBox(height: 2.w),
+              const Divider(),
+              SizedBox(height: 2.w),
+              usedAddress(index, address),
+              // UsedAddress(address: address, index: index),
+            ],
+          ),
+        ),
       ),
+    );
+  }
+
+  Widget menuContent(LAddress address) {
+    return Padding(
+      padding: EdgeInsets.all(5.w),
+      child: GestureDetector(
+          onTap: () async {
+            await SQFLiteDB.delete(address.id!)
+                .then((_) => Navigator.pop(context));
+            getAddress();
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SvgPicture.asset(AppIcon.trash, color: AppColor.error),
+              SizedBox(width: 2.w),
+              Text('Delete', style: TxtStyle.itemDelete),
+            ],
+          )),
     );
   }
 
@@ -103,6 +127,13 @@ class _ShippingAddressPageState extends State<ShippingAddressPage> {
     return StreamBuilder<DocumentSnapshot>(
         stream: FirestoreRepository.customerDB.doc(user!.uid).snapshots(),
         builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          if (snapshot.hasError) {
+            return const Center(child: HRDots());
+          }
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: HRDots());
+          }
           Map<String, dynamic> data =
               snapshot.data!.data() as Map<String, dynamic>;
           return InkWell(
@@ -145,15 +176,15 @@ class _ShippingAddressPageState extends State<ShippingAddressPage> {
     await FirestoreRepository.setupAddress(address);
   }
 
-  Row titleRow(String name, BuildContext context) {
+  Row titleRow(String name, BuildContext context, LAddress value) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(name, maxLines: 1, style: TxtStyle.h6),
         GestureDetector(
           onTap: () {
-            Navigator.pushNamed(context, '/EditAddress')
-                .then((_) => setState(() {}));
+            Navigator.pushNamed(context, '/EditAddress', arguments: value)
+                .then((_) => getAddress());
           },
           child: SvgPicture.asset(AppIcon.edit),
         )
