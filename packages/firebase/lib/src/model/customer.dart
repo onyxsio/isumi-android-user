@@ -9,7 +9,7 @@ class Customer {
   String? scanCode;
   String? phone;
   String? photoUrls;
-  List<Address>? address;
+  Address? address;
   List<Product>? cart;
   List<Product>? wishlist;
   List<Review>? review;
@@ -37,7 +37,7 @@ class Customer {
     String? scanCode,
     String? phone,
     String? photoUrls,
-    List<Address>? address,
+    Address? address,
     List<Product>? cart,
     List<Product>? wishlist,
     List<Review>? review,
@@ -67,10 +67,7 @@ class Customer {
     scanCode = json['scanCode'];
     phone = json['phone'];
     if (json['address'] != null) {
-      address = <Address>[];
-      json['address'].forEach((v) {
-        address!.add(Address.fromJson(v));
-      });
+      address = Address.fromJson(json['address']);
     }
     if (json['cart'] != null) {
       cart = <Product>[];
@@ -102,10 +99,7 @@ class Customer {
     scanCode = json['scanCode'];
     phone = json['phone'];
     if (json['address'] != null) {
-      address = <Address>[];
-      json['address'].forEach((v) {
-        address!.add(Address.fromJson(v));
-      });
+      address = Address.fromJson(json['address']);
     }
     if (json['cart'] != null) {
       cart = <Product>[];
@@ -138,7 +132,7 @@ class Customer {
     data['scanCode'] = scanCode;
     data['phone'] = phone;
     if (address != null) {
-      data['address'] = address!.map((v) => v.toJson()).toList();
+      data['address'] = address!.toJson();
     }
     if (cart != null) {
       data['cart'] = cart!.map((v) => v.toJson()).toList();
@@ -191,14 +185,17 @@ class Review {
 class Address {
   String? streetAddress;
   String? city;
+  String? name;
   String? state;
   String? postalCode;
 
-  Address({this.streetAddress, this.city, this.state, this.postalCode});
+  Address(
+      {this.name, this.streetAddress, this.city, this.state, this.postalCode});
 
   Address.fromJson(Map<String, dynamic> json) {
     streetAddress = json['streetAddress'];
     city = json['city'];
+    name = json['name'];
     state = json['state'];
     postalCode = json['postalCode'];
   }
@@ -207,6 +204,7 @@ class Address {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['streetAddress'] = streetAddress;
     data['city'] = city;
+    data['name'] = name;
     data['state'] = state;
     data['postalCode'] = postalCode;
     return data;
@@ -222,7 +220,13 @@ Customer demoCustomer = Customer(
   photoUrls: "",
   phone: "",
   scanCode: "",
-  address: [],
+  address: Address(
+    state: '',
+    streetAddress: '',
+    postalCode: '',
+    city: '',
+    name: '',
+  ),
   cart: [],
   review: [],
   deviceToken: "",

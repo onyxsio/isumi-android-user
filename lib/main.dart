@@ -10,12 +10,6 @@ void main() async {
 }
 
 
-//  var text = await PaymentGate.onPayment(
-//                   email: 'email@test9889.com',
-//                   amount: 522,
-//                   context: context,
-//                 );
-
 // clothstore.jp@gmail.com
 // JpC987456
 // JpC987456@J

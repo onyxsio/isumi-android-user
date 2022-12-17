@@ -105,6 +105,23 @@ class FirestoreRepository {
     }
   }
 
+  static Future<String> setupAddress(Address address) async {
+    final user = auth.FirebaseAuth.instance.currentUser;
+
+    try {
+      customerDB.doc(user!.uid).get().then((DocumentSnapshot documentSnapshot) {
+        if (documentSnapshot.exists) {
+          customerDB.doc(user.uid).update({'address': address.toJson()});
+        }
+      });
+      return 'done';
+    } on FirebaseException catch (e) {
+      return AppFirebaseFailure.fromCode(e.code).message;
+    } catch (_) {
+      return const AppFirebaseFailure().message;
+    }
+  }
+
   // customerDB
 
   // ! not user below
@@ -296,15 +313,14 @@ class FirestoreRepository {
       );
 
       productsDB.doc(product.sId).update(newProduct.toJson()).then((value) =>
-          DialogBoxes.showAutoCloseDialog(context,
+          DBox.autoClose(context,
               type: InfoDialog.successful,
               message: 'It was successfully updated !'));
     } on FirebaseException catch (e) {
       var msg = AppFirebaseFailure.fromCode(e.code);
-      DialogBoxes.showAutoCloseDialog(context,
-          type: InfoDialog.error, message: msg.message);
+      DBox.autoClose(context, type: InfoDialog.error, message: msg.message);
     } catch (_) {
-      DialogBoxes.showAutoCloseDialog(context,
+      DBox.autoClose(context,
           type: InfoDialog.error, message: 'An unknown exception occurred.');
     }
   }

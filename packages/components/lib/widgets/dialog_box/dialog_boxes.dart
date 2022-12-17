@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'auto_close.dart';
 
-class DialogBoxes {
+class DBox {
   // static BuildContext? _context;
 
   // static void setContext(BuildContext context) =>
   //     AutoCloseDialog._context = context;
 
-  static void showAutoCloseDialog(BuildContext context,
+  static void autoClose(BuildContext context,
           {required String message, required InfoDialog type}) async =>
       await showDialog(
           context: context,
@@ -19,7 +19,7 @@ class DialogBoxes {
             );
           });
   //
-  static void showAutoCloseDialogWithAnimation(BuildContext context) {
+  static void autoCloseWithAnimation(BuildContext context) {
     showGeneralDialog(
       context: context,
       barrierDismissible: false,

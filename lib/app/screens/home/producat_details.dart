@@ -225,7 +225,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
     );
     await SQFLiteDB.create(cart).then((value) {
       if (value) {
-        DialogBoxes.showAutoCloseDialog(context,
+        DBox.autoClose(context,
             type: InfoDialog.successful,
             message: 'The product has been added to your cart.');
       }

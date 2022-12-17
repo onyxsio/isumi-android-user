@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:isumi/app/models/ship_to.dart';
 import 'package:isumi/app/screens/authentication/forgotPass/view/forgot_page.dart';
 import 'package:isumi/app/screens/authentication/login/login.dart';
 import 'package:isumi/app/screens/authentication/sign_up/view/sign_up_page.dart';
 import 'package:isumi/app/screens/cart/view/checkout.dart';
+import 'package:isumi/app/screens/cart/view/edit_address.dart';
 import 'package:isumi/app/screens/cart/view/order_status_page.dart';
 import 'package:isumi/app/screens/cart/view/shipping_addres.dart';
 import 'package:isumi/app/screens/home/producat_details.dart';
@@ -55,6 +57,9 @@ class RouteGenerator {
         return OpenAndFadeTransition(const ShippingAddressPage());
       case '/CheckOutPage':
         return OpenAndFadeTransition(const CheckOutPage());
+      case '/EditAddress':
+        ShipTo? shipTo = arguments as ShipTo?;
+        return OpenAndFadeTransition(EditAddress(shipTo: shipTo));
       default:
         // If there is no such named route in the switch statement
         return _errorRoute();
