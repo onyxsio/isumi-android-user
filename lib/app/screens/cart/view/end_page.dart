@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:isumi/core/util/image.dart';
 import 'package:onyxsio/onyxsio.dart';
 
 class EndPage extends StatelessWidget {
@@ -6,11 +7,12 @@ class EndPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final drawer = Provider.of<DrawerProvider>(context);
     return Scaffold(
       body: Stack(
         alignment: Alignment.center,
         children: [
-          // SvgPicture.asset(AppIcon.cong),
+          SvgPicture.asset(AppImage.cong),
           Align(
             alignment: const Alignment(0, 0.5),
             child: Column(
@@ -18,13 +20,13 @@ class EndPage extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'Congrats! Your Order has \nbeen placed',
+                  'Congrats! Your Order has been placed!',
                   textAlign: TextAlign.center,
-                  style: TxtStyle.h3,
+                  style: TxtStyle.h8,
                 ),
                 SizedBox(height: 4.5.w),
                 Text('Thank you for your payment!',
-                    textAlign: TextAlign.center, style: TxtStyle.l5),
+                    textAlign: TextAlign.center, style: TxtStyle.l7),
               ],
             ),
           ),
@@ -32,7 +34,9 @@ class EndPage extends StatelessWidget {
       ),
       bottomNavigationBar: bottomNavigationBar(
         onTap: () {
-          Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+          drawer.dispose();
+          Navigator.pushNamedAndRemoveUntil(
+              context, '/MainPage', (route) => false);
         },
         text: 'Back to home',
       ),

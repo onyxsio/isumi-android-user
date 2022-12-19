@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:remote_data/src/model/customer.dart';
 
 class Orders {
-  String? sId;
+  String? oId;
   String? date;
   String? currency;
   List<Items>? items;
@@ -15,7 +15,7 @@ class Orders {
   Orders(
       {this.items,
       this.total,
-      this.sId,
+      this.oId,
       this.date,
       this.currency,
       this.delivery,
@@ -25,7 +25,7 @@ class Orders {
 //
   Orders.fromFirebaseJson(DocumentSnapshot snap) {
     Map<String, dynamic> json = snap.data() as Map<String, dynamic>;
-    sId = json['_id'];
+    oId = json['_id'];
     date = json['date'];
     currency = json['currency'];
     delivery = json['delivery'];
@@ -43,7 +43,7 @@ class Orders {
   }
 //
   Orders.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
+    oId = json['_id'];
     date = json['date'];
     currency = json['currency'];
     delivery = json['delivery'];
@@ -62,7 +62,7 @@ class Orders {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['_id'] = sId;
+    data['_id'] = oId;
     data['currency'] = currency;
     data['date'] = date;
     data['delivery'] = delivery;
@@ -81,23 +81,66 @@ class Orders {
 
 // ! Items
 class Items {
+  String? id;
   String? productId;
+  String? sellerId;
   String? name;
-  // String? color;
-  // String? size;
-  // String? quantity;
+  String? color;
+  String? size;
+  String? quantity;
+  String? image;
+  String? price;
+  String? currency;
+  // List<Variants>? variants;
 
-  List<Variants>? variants;
-
-  Items({this.productId, this.name, this.variants});
+  Items({
+    this.sellerId,
+    this.id,
+    this.productId,
+    this.name,
+    this.image,
+    this.price,
+    this.color,
+    this.quantity,
+    this.size,
+    this.currency,
+  });
+  Items copyWith({
+    String? productId,
+    String? sellerId,
+    String? id,
+    String? name,
+    String? color,
+    String? size,
+    String? quantity,
+    String? image,
+    String? price,
+    String? currency,
+  }) =>
+      Items(
+        productId: productId ?? this.productId,
+        id: id ?? this.id,
+        sellerId: sellerId ?? this.sellerId,
+        name: name ?? this.name,
+        color: color ?? this.color,
+        size: size ?? this.size,
+        quantity: quantity ?? this.quantity,
+        image: image ?? this.image,
+        price: price ?? this.price,
+        currency: currency ?? this.currency,
+      );
 
   Items.fromJson(Map<String, dynamic> json) {
     productId = json['productId'];
+    sellerId = json['sellerId'];
+    id = json['id'];
+    currency = json['currency'];
     name = json['name'];
-    // color = json['color'];
-    // size = json['size'];
-    // quantity = json['quantity'];
-
+    color = json['color'];
+    size = json['size'];
+    quantity = json['quantity'];
+    image = json['image'];
+    price = json['price'];
     // if (json['variants'] != null) {
     //   variants = <Variants>[];
     //   json['variants'].forEach((v) {
@@ -109,65 +152,69 @@ class Items {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['productId'] = productId;
+    data['id'] = id;
+    data['sellerId'] = sellerId;
+    data['currency'] = currency;
     data['name'] = name;
-    // data['color'] = color;
-    // data['size'] = size;
-    // data['quantity'] = quantity;
-
-    if (variants != null) {
-      data['variants'] = variants!.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
-}
-
-class Variants {
-  String? color;
-  List<Subvariants>? subvariants;
-
-  Variants({this.color, this.subvariants});
-
-  Variants.fromJson(Map<String, dynamic> json) {
-    color = json['color'];
-    if (json['subvariants'] != null) {
-      subvariants = <Subvariants>[];
-      json['subvariants'].forEach((v) {
-        subvariants!.add(Subvariants.fromJson(v));
-      });
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
     data['color'] = color;
-    if (subvariants != null) {
-      data['subvariants'] = subvariants!.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
-}
-
-class Subvariants {
-  String? size;
-  String? qty;
-  String? price;
-
-  Subvariants({this.size, this.qty, this.price});
-
-  Subvariants.fromJson(Map<String, dynamic> json) {
-    size = json['size'];
-    qty = json['qty'];
-    price = json['price'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
     data['size'] = size;
-    data['qty'] = qty;
+    data['quantity'] = quantity;
     data['price'] = price;
+    data['image'] = image;
+    // if (variants != null) {
+    //   data['variants'] = variants!.map((v) => v.toJson()).toList();
+    // }
     return data;
   }
 }
+
+// class Variants {
+//   String? color;
+//   List<Subvariants>? subvariants;
+
+//   Variants({this.color, this.subvariants});
+
+//   Variants.fromJson(Map<String, dynamic> json) {
+//     color = json['color'];
+//     if (json['subvariants'] != null) {
+//       subvariants = <Subvariants>[];
+//       json['subvariants'].forEach((v) {
+//         subvariants!.add(Subvariants.fromJson(v));
+//       });
+//     }
+//   }
+
+//   Map<String, dynamic> toJson() {
+//     final Map<String, dynamic> data = <String, dynamic>{};
+//     data['color'] = color;
+//     if (subvariants != null) {
+//       data['subvariants'] = subvariants!.map((v) => v.toJson()).toList();
+//     }
+//     return data;
+//   }
+// }
+
+// class Subvariants {
+//   String? size;
+//   String? qty;
+//   String? price;
+
+//   Subvariants({this.size, this.qty, this.price});
+
+//   Subvariants.fromJson(Map<String, dynamic> json) {
+//     size = json['size'];
+//     qty = json['qty'];
+//     price = json['price'];
+//   }
+
+//   Map<String, dynamic> toJson() {
+//     final Map<String, dynamic> data = <String, dynamic>{};
+//     data['size'] = size;
+//     data['qty'] = qty;
+//     data['price'] = price;
+//     return data;
+//   }
+// }
 
 
 

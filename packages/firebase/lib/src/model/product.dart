@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Product {
   String? sId;
+  String? sellerId;
   String? title;
   String? qrCode;
   String? description;
@@ -44,10 +45,12 @@ class Product {
     this.images,
     this.suggestion,
     this.taxes,
+    this.sellerId,
   });
 
   Product copyWith({
     String? sId,
+    String? sellerId,
     String? title,
     String? description,
     String? qrCode,
@@ -69,6 +72,7 @@ class Product {
   }) {
     return Product(
       sId: sId ?? this.sId,
+      sellerId: sellerId ?? this.sellerId,
       title: title ?? this.title,
       qrCode: qrCode ?? this.qrCode,
       description: description ?? this.description,
@@ -94,6 +98,7 @@ class Product {
   Product.fromSnap(DocumentSnapshot snap) {
     Map<String, dynamic> json = snap.data() as Map<String, dynamic>;
     sId = json['_id'];
+    sellerId = json['sellerId'];
     title = json['title'];
     qrCode = json['qrCode'];
     description = json['description'];
@@ -142,6 +147,7 @@ class Product {
     sId = json['_id'];
     title = json['title'];
     qrCode = json['qrCode'];
+    sellerId = json['sellerId'];
     description = json['description'];
     productCategory = json['productCategory'];
     productGroup = json['productGroup'];
@@ -187,6 +193,7 @@ class Product {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['_id'] = sId;
     data['title'] = title;
+    data['sellerId'] = sellerId;
     data['qrCode'] = qrCode;
     data['description'] = description;
     data['productCategory'] = productCategory;

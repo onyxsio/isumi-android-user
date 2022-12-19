@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
 import 'package:isumi/core/util/image.dart';
@@ -58,7 +57,8 @@ class _ShippingAddressPageState extends State<ShippingAddressPage> {
     return FloatingActionButton(
       onPressed: () {
         if (address.length < 3) {
-          Navigator.pushNamed(context, '/EditAddress');
+          Navigator.pushNamed(context, '/EditAddress')
+              .then((_) => getAddress());
         } else {
           DBox.autoClose(
             context,

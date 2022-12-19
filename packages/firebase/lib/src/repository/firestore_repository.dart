@@ -1,6 +1,6 @@
 // ignore_for_file: depend_on_referenced_packages
-
 import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:components/components.dart';
@@ -22,6 +22,7 @@ class FirestoreRepository {
   static var customerDB = firestore.collection('customers');
   // Cerate instance of products Database
   static var productsDB = firestore.collection('products');
+  static var sellerDB = firestore.collection('sellers');
   // Stream<QuerySnapshot>
   static var productStream = productsDB.snapshots();
   static var productLimitStream = productsDB.limit(20).snapshots();
@@ -30,7 +31,7 @@ class FirestoreRepository {
   // ! not used blow line
 
   // Cerate instance of products Database
-  static var sellerDB = firestore.collection('seller');
+
   static var offerDB = firestore.collection('offers');
   static var offerStream = offerDB.snapshots();
   // Stream<QuerySnapshot>
@@ -57,20 +58,20 @@ class FirestoreRepository {
     } catch (_) {}
   }
 
-  static Future<void> createAccountGoogle(gs.GoogleSignInAccount user) async {
-    try {
-      String? deviceToken = await FirebaseMessaging.instance.getToken();
-      await customerDB.doc(user.id).set(demoCustomer
-          .copyWith(
-            email: user.email,
-            id: user.id,
-            deviceToken: deviceToken,
-          )
-          .toJson());
-    } on FirebaseException catch (e) {
-      AppFirebaseFailure.fromCode(e.code);
-    } catch (_) {}
-  }
+  // static Future<void> createAccountGoogle(gs.GoogleSignInAccount user) async {
+  //   try {
+  //     String? deviceToken = await FirebaseMessaging.instance.getToken();
+  //     await customerDB.doc(user.id).set(demoCustomer
+  //         .copyWith(
+  //           email: user.email,
+  //           id: user.id,
+  //           deviceToken: deviceToken,
+  //         )
+  //         .toJson());
+  //   } on FirebaseException catch (e) {
+  //     AppFirebaseFailure.fromCode(e.code);
+  //   } catch (_) {}
+  // }
 
   //
   static Future<void> setupDeviceToken() async {
@@ -88,20 +89,20 @@ class FirestoreRepository {
     } catch (_) {}
   }
 
-  static Future<String> setupQuantity(Cart data) async {
+  static Future<String> setupQuantity(Items item) async {
     String stock = '';
     try {
       await productsDB
-          .doc(data.pid)
+          .doc(item.productId)
           .get()
           .then((DocumentSnapshot documentSnapshot) {
         if (documentSnapshot.exists) {
           Product product = Product.fromSnap(documentSnapshot);
 
           for (var variant in product.variant!) {
-            if (variant.color!.contains(data.color)) {
+            if (variant.color!.contains(item.color!)) {
               for (var subvariant in variant.subvariant!) {
-                if (subvariant.size!.contains(data.size)) {
+                if (subvariant.size!.contains(item.size!)) {
                   stock = subvariant.stock.toString();
                 }
               }
@@ -145,8 +146,84 @@ class FirestoreRepository {
     }
   }
 
-  // customerDB
+// Add items for cart
+  static Future<void> addToCart(Items item) async {
+    final user = auth.FirebaseAuth.instance.currentUser;
+    try {
+      // await customerDB.doc(user!.uid).update({
+      //   'cart': FieldValue.arrayUnion([item.toJson()])
+      // });
+      String cartId = const Uuid().v4();
+      await customerDB
+          .doc(user!.uid)
+          .collection('cart')
+          .doc(cartId)
+          .set(item.copyWith(id: cartId).toJson());
+    } catch (e) {
+      log(e.toString());
+    }
+  }
 
+  static Future<void> removeCart(String id) async {
+    final user = auth.FirebaseAuth.instance.currentUser;
+    try {
+      await customerDB.doc(user!.uid).collection('cart').doc(id).delete();
+      // String orderId = const Uuid().v4();
+      // await customerDB.doc(user!.uid).update({
+      //   'cart': FieldValue.arrayRemove([item.toJson()])
+      // });
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  static Future<void> quantityUpdate(String value, String id) async {
+    final user = auth.FirebaseAuth.instance.currentUser;
+
+    try {
+      await customerDB
+          .doc(user!.uid)
+          .collection('cart')
+          .doc(id)
+          .update({'quantity': value});
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  // customerDB
+  static Future<void> setupOrder(Orders order) async {
+    try {
+      String orderId = const Uuid().v4();
+
+      for (var item in order.items!) {
+        await sellerDB
+            .doc(item.sellerId)
+            .collection('orders')
+            .doc(orderId)
+            .set(order.toJson());
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  static Future<void> deleteCart() async {
+    final user = auth.FirebaseAuth.instance.currentUser;
+    try {
+      customerDB
+          .doc(user!.uid)
+          .collection('cart')
+          .get()
+          .then((QuerySnapshot querySnapshot) {
+        for (var doc in querySnapshot.docs) {
+          customerDB.doc(user.uid).collection('cart').doc(doc.id).delete();
+        }
+      });
+    } catch (e) {
+      log(e.toString());
+    }
+  }
   // ! not user below
 
   // !
@@ -219,13 +296,13 @@ class FirestoreRepository {
       await sellerDB
           .doc('overview')
           .collection('orders')
-          .doc(orders.sId)
+          .doc(orders.oId)
           .delete();
       //
       sellerDB
           .doc('overview')
           .collection('delivered')
-          .doc(orders.sId)
+          .doc(orders.oId)
           .set(orders.toJson());
       //
     } on FirebaseException catch (e) {

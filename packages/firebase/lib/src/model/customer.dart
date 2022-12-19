@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:remote_data/remote_data.dart';
 import 'package:remote_data/src/model/product.dart';
-import 'package:uuid/uuid.dart';
 
 class Customer {
   String? id;
@@ -10,7 +10,7 @@ class Customer {
   String? phone;
   String? photoUrls;
   Address? address;
-  List<Product>? cart;
+  List<Items>? cart;
   List<Product>? wishlist;
   List<Review>? review;
   String? createdAt;
@@ -38,7 +38,7 @@ class Customer {
     String? phone,
     String? photoUrls,
     Address? address,
-    List<Product>? cart,
+    List<Items>? cart,
     List<Product>? wishlist,
     List<Review>? review,
     String? createdAt,
@@ -70,9 +70,9 @@ class Customer {
       address = Address.fromJson(json['address']);
     }
     if (json['cart'] != null) {
-      cart = <Product>[];
+      cart = <Items>[];
       json['cart'].forEach((v) {
-        cart!.add(Product.fromJson(v));
+        cart!.add(Items.fromJson(v));
       });
     }
     if (json['wishlist'] != null) {
@@ -102,9 +102,9 @@ class Customer {
       address = Address.fromJson(json['address']);
     }
     if (json['cart'] != null) {
-      cart = <Product>[];
+      cart = <Items>[];
       json['cart'].forEach((v) {
-        cart!.add(Product.fromJson(v));
+        cart!.add(Items.fromJson(v));
       });
     }
     if (json['wishlist'] != null) {

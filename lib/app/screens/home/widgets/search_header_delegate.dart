@@ -68,9 +68,4 @@ class SearchScreen extends o.SearchDelegate<String> {
   Widget buildSuggestions(BuildContext context) {
     return FetchingItems(query: query);
   }
-
-  @override
-  Widget buildFilter(BuildContext context) {
-    return const Text('Filters');
-  }
 }

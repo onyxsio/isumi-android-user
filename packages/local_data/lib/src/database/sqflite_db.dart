@@ -25,20 +25,20 @@ class SQFLiteDB {
     final textType = 'TEXT NOT NULL';
     // final boolType = 'BOOLEAN NOT NULL';
     try {
-      await db.execute('''
-              CREATE TABLE $tableCart ( 
-              ${CartFields.id} $idType, 
-              ${CartFields.size} $textType,
-              ${CartFields.quantity} $textType,
-              ${CartFields.name} $textType,
-              ${CartFields.color} $textType,
-              ${CartFields.price} $textType,
-              ${CartFields.pid} $textType,
-              ${CartFields.createdTime} $textType,
-              ${CartFields.image} $textType,
-              ${CartFields.currency} $textType
-              )
-              ''');
+      // await db.execute('''
+      //         CREATE TABLE $tableCart (
+      //         ${CartFields.id} $idType,
+      //         ${CartFields.size} $textType,
+      //         ${CartFields.quantity} $textType,
+      //         ${CartFields.name} $textType,
+      //         ${CartFields.color} $textType,
+      //         ${CartFields.price} $textType,
+      //         ${CartFields.pid} $textType,
+      //         ${CartFields.createdTime} $textType,
+      //         ${CartFields.image} $textType,
+      //         ${CartFields.currency} $textType
+      //         )
+      //         ''');
       await db.execute('''
               CREATE TABLE $tableAddress ( 
               ${AddressFields.id} $idType, 

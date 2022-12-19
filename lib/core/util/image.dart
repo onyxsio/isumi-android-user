@@ -4,6 +4,7 @@ class AppImage {
   static const String ok = 'assets/images/ok.png';
   static const String error = 'assets/images/error.png';
   static const String stop = 'assets/images/stop.png';
+  static const String cong = 'assets/images/cong.svg';
 }
 
 class AppIcon {

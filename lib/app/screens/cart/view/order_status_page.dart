@@ -1,46 +1,45 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:isumi/app/screens/cart/view/end_page.dart';
 import 'package:isumi/core/util/image.dart';
 import 'package:isumi/core/util/utils.dart';
 import 'package:onyxsio/onyxsio.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 
 class OrderStatusPage extends StatefulWidget {
-  const OrderStatusPage({Key? key}) : super(key: key);
-
+  const OrderStatusPage({Key? key, required this.carts}) : super(key: key);
+  final List<DocumentSnapshot> carts;
   @override
   State<OrderStatusPage> createState() => _OrderStatusPageState();
 }
 
 class _OrderStatusPageState extends State<OrderStatusPage> {
-  List<Cart> carts = [];
+  final user = auth.FirebaseAuth.instance.currentUser;
+  List<Items> orderitems = [];
   late Customer customer;
-  bool isLoading = false;
-  String currency = '';
+  bool isLoading = false, isEmptyAddress = true;
+  String currency = 'JPY';
   double total = 0.0;
   @override
   void initState() {
     getCartData();
-    // getCustomerData();
+
     super.initState();
   }
 
   Future<void> getCartData() async {
     setState(() => isLoading = true);
-    carts = await SQFLiteDB.readAllData();
-    customer = await FirestoreRepository.getCustomer();
-    for (var item in carts) {
-      total = total + (double.parse(item.price) * int.parse(item.quantity));
+    //   carts = await SQFLiteDB.readAllData();
+    //   // customer = await FirestoreRepository.getCustomer();
+    for (var items in widget.carts) {
+      Map<String, dynamic> data = items.data()! as Map<String, dynamic>;
+      Items item = Items.fromJson(data);
+      orderitems.add(item);
+      total = total + (double.parse(item.price!) * int.parse(item.quantity!));
     }
-    currency = carts[0].currency;
+    //   currency = carts[0].currency;
     setState(() => isLoading = false);
   }
-
-  // Future<void> getCustomerData() async {
-  //   setState(() => isLoading = true);
-  //   customer = await FirestoreRepository.getCustomer();
-  //   setState(() => isLoading = false);
-  //   log(customer.address!.toString());
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -64,19 +63,46 @@ class _OrderStatusPageState extends State<OrderStatusPage> {
         padding: EdgeInsets.symmetric(horizontal: 5.w).copyWith(bottom: 3.h),
         // TODO change button
         child: MainButton(
-          text: Utils.currency(name: currency, amount: total),
-          onTap: () async {
-            // Navigator.pushNamed(context, '/CheckOutPage');
-            var text = await PaymentGate.onPayment(
-              email: customer.email!,
-              amount: total,
-              context: context,
-            );
-            log(text.toString());
-          },
+          text: 'pay now',
+          onTap: setupOrder,
         ),
       ),
     );
+  }
+
+  void setupOrder() async {
+    // Navigator.pushNamed(context, '/CheckOutPage');
+    if (!isEmptyAddress) {
+      // log(isEmptyAddress.toString());
+      //  Map<String, dynamic> data = widget..data()! as Map<String, dynamic>;
+      // List<Items> orderitems =
+      Orders order = Orders(
+        items: orderitems,
+        date: DateTime.now().toIso8601String(),
+        currency: currency,
+        delivery: '0',
+        discountedPrice: '0',
+        customer: customer,
+        total: total.toString(),
+      );
+      await PaymentGate.onPayment(
+        email: user!.email!,
+        amount: total,
+        context: context,
+      ).then((value) {
+        if (value == 'successful') {
+          // Send Order To seller
+          FirestoreRepository.setupOrder(order);
+          // Delete All Cart
+          FirestoreRepository.deleteCart();
+          Navigator.push(context,
+              MaterialPageRoute(builder: (builder) => const EndPage()));
+          // Navigator.pushReplacementNamed(context, '/EndPage');
+        } else {
+          DBox.autoClose(context, type: InfoDialog.error, message: value);
+        }
+      });
+    }
   }
 
   Widget _buildTopList(theme) {
@@ -132,42 +158,57 @@ class _OrderStatusPageState extends State<OrderStatusPage> {
   }
 
   Widget _buildBottomList(theme, context) {
-    return Container(
-      padding: EdgeInsets.all(4.w),
-      decoration: BoxDeco.deco_2,
-      child: Theme(
-        data: theme.copyWith(
-          dividerColor: Colors.transparent,
-          iconTheme: IconThemeData(color: AppColor.yellow),
-          expansionTileTheme:
-              ExpansionTileThemeData(iconColor: AppColor.yellow),
-        ),
-        child: ExpansionTile(
-          tilePadding: EdgeInsets.zero,
-          initiallyExpanded: true,
-          title: Text('Delivery information', style: TxtStyle.h7B),
-          expandedCrossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(height: 0.5, color: AppColor.divider),
-            SizedBox(height: 5.w),
-            customer.address!.streetAddress!.isEmpty
-                ? _addNewShippingAdderss(context)
-                : Text(customer.address!.streetAddress!, style: TxtStyle.l5),
-            SizedBox(height: 5.w),
-            if (customer.address!.streetAddress!.isNotEmpty)
-              _updateShippingAdderss(context),
-            SizedBox(height: 5.w),
-          ],
-        ),
-      ),
-    );
+    return StreamBuilder<DocumentSnapshot>(
+        stream: FirestoreRepository.customerDB.doc(user!.uid).snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return const Center(child: HRDots());
+          }
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: HRDots());
+          }
+          Map<String, dynamic> data =
+              snapshot.data!.data() as Map<String, dynamic>;
+          customer = Customer.fromJson(data);
+          isEmptyAddress = customer.address!.streetAddress!.isEmpty;
+          return Container(
+            padding: EdgeInsets.all(4.w),
+            decoration: BoxDeco.deco_2,
+            child: Theme(
+              data: theme.copyWith(
+                dividerColor: Colors.transparent,
+                iconTheme: IconThemeData(color: AppColor.yellow),
+                expansionTileTheme:
+                    ExpansionTileThemeData(iconColor: AppColor.yellow),
+              ),
+              child: ExpansionTile(
+                tilePadding: EdgeInsets.zero,
+                initiallyExpanded: true,
+                title: Text('Delivery information', style: TxtStyle.h7B),
+                expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container(height: 0.5, color: AppColor.divider),
+                  SizedBox(height: 5.w),
+                  isEmptyAddress
+                      ? _addNewShippingAdderss(context)
+                      : Text(customer.address!.streetAddress!,
+                          style: TxtStyle.l5),
+                  SizedBox(height: 5.w),
+                  if (!isEmptyAddress) _updateShippingAdderss(context),
+                  SizedBox(height: 5.w),
+                ],
+              ),
+            ),
+          );
+        });
   }
 
   GestureDetector _addNewShippingAdderss(context) {
     return GestureDetector(
       onTap: () {
         // Navigator.pushNamed(context, '/ShippingAddressPage');
-        Navigator.pushNamed(context, '/EditAddress').then((_) => getCartData());
+        Navigator.pushNamed(context, '/EditAddress').then((_) {});
       },
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,

@@ -1,12 +1,9 @@
 import 'package:app_provider/app_provider.dart';
-import 'package:app_provider/src/cubit/quantity/counter_cubit.dart';
 import 'package:components/components.dart';
 import 'package:flutter/material.dart';
 import 'package:isumi/auth.dart';
 import 'package:isumi/core/routes/page_route.dart';
 import 'package:remote_data/remote_data.dart';
-// import 'package:isumi/app/screens/auth.dart';
-// import 'package:isumi/core/routes/page_route.dart';
 import 'bloc/app_bloc.dart';
 import 'theme/app_theme.dart';
 import 'theme/cubit/theme_cubit.dart';

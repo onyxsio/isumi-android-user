@@ -7,14 +7,18 @@ class CartFields {
   ];
 
   static final String id = '_id';
+
   static final String name = 'name';
+  static final String pid = 'pid';
+
   static final String quantity = 'quantity';
   static final String size = 'size';
   static final String color = 'color';
   static final String price = 'price';
-  static final String pid = 'pid';
-  static final String createdTime = 'createdTime';
+
   static final String image = 'image';
+
+  static final String createdTime = 'createdTime';
   static final String currency = 'currency';
 }
 
