@@ -22,7 +22,7 @@ class NowOrderListCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
-                    child: Text('Order No: ${order.sId}',
+                    child: Text('Order No: ${order.oId}',
                         maxLines: 1, style: TxtStyle.b5B)),
                 Text(order.date!, style: TxtStyle.h4L),
               ],

@@ -208,25 +208,40 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
     //     ),
     //   ],
     // );
-
-    Cart cart = Cart(
+    // Orders order = Orders(
+    //   items:
+    // );
+    Items item = Items(
+      productId: widget.product.sId!,
+      sellerId: widget.product.sellerId,
       color: veriants[selectedColor].color!,
-      pid: widget.product.sId!,
       name: widget.product.title!,
-      size: convertToSize(veriants[selectedColor])[selectedSize].size!,
       price: price,
       image: widget.product.thumbnail!,
-      createdTime: DateTime.now(),
       quantity: qty.toString(),
       currency: widget.product.price!.currency!,
+      size: convertToSize(veriants[selectedColor])[selectedSize].size!,
     );
-    await SQFLiteDB.create(cart).then((value) {
-      if (value) {
-        DBox.autoClose(context,
-            type: InfoDialog.successful,
-            message: 'The product has been added to your cart.');
-      }
-    });
+
+    await FirestoreRepository.addToCart(item);
+    // Cart cart = Cart(
+    //   color: veriants[selectedColor].color!,
+    //   pid: widget.product.sId!,
+    //   name: widget.product.title!,
+    //   size: convertToSize(veriants[selectedColor])[selectedSize].size!,
+    //   price: price,
+    //   image: widget.product.thumbnail!,
+    //   createdTime: DateTime.now(),
+    //   quantity: qty.toString(),
+    //   currency: widget.product.price!.currency!,
+    // );
+    // await SQFLiteDB.create(cart).then((value) {
+    //   if (value) {
+    //     DBox.autoClose(context,
+    //         type: InfoDialog.successful,
+    //         message: 'The product has been added to your cart.');
+    //   }
+    // });
   }
 
   //

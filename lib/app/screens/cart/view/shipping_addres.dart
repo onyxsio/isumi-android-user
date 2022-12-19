@@ -57,7 +57,8 @@ class _ShippingAddressPageState extends State<ShippingAddressPage> {
     return FloatingActionButton(
       onPressed: () {
         if (address.length < 3) {
-          Navigator.pushNamed(context, '/EditAddress');
+          Navigator.pushNamed(context, '/EditAddress')
+              .then((_) => getAddress());
         } else {
           DBox.autoClose(
             context,

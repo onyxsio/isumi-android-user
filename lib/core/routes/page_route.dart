@@ -53,7 +53,8 @@ class RouteGenerator {
         Product product = arguments as Product;
         return OpenAndFadeTransition(ProductDetailsPage(product: product));
       case '/OrderStatusPage':
-        return OpenAndFadeTransition(const OrderStatusPage());
+        dynamic data = arguments as dynamic;
+        return OpenAndFadeTransition(OrderStatusPage(carts: data));
       case '/ShippingAddressPage':
         return OpenAndFadeTransition(const ShippingAddressPage());
       case '/CheckOutPage':

@@ -2,62 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:isumi/core/util/image.dart';
 import 'package:onyxsio/onyxsio.dart';
 
-// class CartListView extends StatefulWidget {
-//   const CartListView({Key? key}) : super(key: key);
-
-//   @override
-//   State<CartListView> createState() => _CartListViewState();
-// }
-
-// class _CartListViewState extends State<CartListView> {
-//   bool isLoading = false;
-//   List<Cart> carts = [];
-
-//   String quantity = '0';
-//   @override
-//   void initState() {
-//     refreshCartData();
-//     super.initState();
-//   }
-
-//   Future refreshCartData() async {
-//     setState(() => isLoading = true);
-//     carts = await SQFLiteDB.readAllData();
-//     setState(() => isLoading = false);
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     // TODO loading indegater
-//     return isLoading
-//         ? const CircularProgressIndicator()
-//         : carts.isEmpty
-//             ? Center(
-//                 child: Text(
-//                   'Your Shopping Cart Is Empty.',
-//                   style: TxtStyle.b8,
-//                 ),
-//               )
-//             : _buildItemList();
-//   }
-
-//   Widget _buildItemList() {
-//     return ListView.builder(
-//       physics: const BouncingScrollPhysics(),
-//       itemCount: carts.length,
-//       padding: EdgeInsets.fromLTRB(5.w, 5.w, 5.w, 0),
-//       itemBuilder: (context, index) {
-//         return ItemListView(cart: carts[index], onDelete: refreshCartData);
-//       },
-//     );
-//   }
-// }
-
 class ItemListView extends StatefulWidget {
-  final Cart cart;
-  final Function() onDelete;
-  const ItemListView({Key? key, required this.onDelete, required this.cart})
-      : super(key: key);
+  final DocumentSnapshot cart;
+
+  const ItemListView({Key? key, required this.cart}) : super(key: key);
 
   @override
   State<ItemListView> createState() => _ItemListViewState();
@@ -66,6 +14,7 @@ class ItemListView extends StatefulWidget {
 class _ItemListViewState extends State<ItemListView> {
   String stock = '';
   int quantity = 0;
+  late Items item;
   @override
   void initState() {
     getQuantity();
@@ -73,11 +22,13 @@ class _ItemListViewState extends State<ItemListView> {
   }
 
   Future<void> getQuantity() async {
-    var result = await FirestoreRepository.setupQuantity(widget.cart);
+    Map<String, dynamic> data = widget.cart.data()! as Map<String, dynamic>;
+    item = Items.fromJson(data);
+    var result = await FirestoreRepository.setupQuantity(item);
     // if (mounted) return;
     setState(() {
       stock = result;
-      quantity = int.parse(widget.cart.quantity);
+      quantity = int.parse(item.quantity!);
     });
   }
 
@@ -102,10 +53,10 @@ class _ItemListViewState extends State<ItemListView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Text(widget.cart.name, style: TxtStyle.b6),
+          Text(item.name!, style: TxtStyle.b6),
           if (stock.isNotEmpty)
             TXTHeader.cartListTileSubHeader('Only $stock items left'),
-          TXTHeader.cartListTilePrice(widget.cart.price, widget.cart.currency),
+          TXTHeader.cartListTilePrice(item.price!, item.currency!),
         ],
       ),
     );
@@ -121,9 +72,8 @@ class _ItemListViewState extends State<ItemListView> {
           actions: <Widget>[
             TextButton(
                 onPressed: () async {
-                  await SQFLiteDB.delete(widget.cart.id!)
+                  FirestoreRepository.removeCart(item.id!)
                       .then((value) => Navigator.of(context).pop(true));
-                  widget.onDelete();
                 },
                 child: const Text("Delete")),
             TextButton(
@@ -181,9 +131,9 @@ class _ItemListViewState extends State<ItemListView> {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         InkWell(
-          onTap: () {
+          onTap: () async {
             if (int.parse(stock) > quantity) setState(() => quantity++);
-            SQFLiteDB.updateQuantity(widget.cart.id!, quantity.toString());
+            FirestoreRepository.quantityUpdate(quantity.toString(), item.id!);
           },
           child: CircleAvatar(
             radius: 4.w,
@@ -195,7 +145,8 @@ class _ItemListViewState extends State<ItemListView> {
         InkWell(
           onTap: () {
             if (1 < quantity) setState(() => quantity--);
-            SQFLiteDB.updateQuantity(widget.cart.id!, quantity.toString());
+            FirestoreRepository.quantityUpdate(quantity.toString(), item.id!);
+            // SQFLiteDB.updateQuantity(widget.cart.id!, quantity.toString());
           },
           child: CircleAvatar(
             radius: 4.w,
@@ -213,7 +164,7 @@ class _ItemListViewState extends State<ItemListView> {
 
   CachedNetworkImage _buildCardImage() {
     return CachedNetworkImage(
-      imageUrl: widget.cart.image,
+      imageUrl: item.image!,
       // height: 25.w,
       width: 15.w,
       placeholder: (context, url) => AppLoading.cartimage,

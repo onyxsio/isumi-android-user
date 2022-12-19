@@ -7,6 +7,7 @@ class EndPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final drawer = Provider.of<DrawerProvider>(context);
     return Scaffold(
       body: Stack(
         alignment: Alignment.center,
@@ -33,6 +34,7 @@ class EndPage extends StatelessWidget {
       ),
       bottomNavigationBar: bottomNavigationBar(
         onTap: () {
+          drawer.dispose();
           Navigator.pushNamedAndRemoveUntil(
               context, '/MainPage', (route) => false);
         },
