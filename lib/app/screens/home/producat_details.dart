@@ -192,25 +192,6 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
   }
 
   void createOrder(qty) async {
-    // Items order = Items(
-    //   productId: widget.product.sId,
-    //   name: widget.product.title,
-    //   variants: [
-    //     Variants(
-    //       color: veriants[selectedColor].color!,
-    //       subvariants: [
-    //         Subvariants(
-    //           size: convertToSize(veriants[selectedColor])[selectedSize].size!,
-    //           price: price,
-    //           qty: qty.toString(),
-    //         ),
-    //       ],
-    //     ),
-    //   ],
-    // );
-    // Orders order = Orders(
-    //   items:
-    // );
     Items item = Items(
       productId: widget.product.sId!,
       sellerId: widget.product.sellerId,
@@ -223,25 +204,13 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       size: convertToSize(veriants[selectedColor])[selectedSize].size!,
     );
 
-    await FirestoreRepository.addToCart(item);
-    // Cart cart = Cart(
-    //   color: veriants[selectedColor].color!,
-    //   pid: widget.product.sId!,
-    //   name: widget.product.title!,
-    //   size: convertToSize(veriants[selectedColor])[selectedSize].size!,
-    //   price: price,
-    //   image: widget.product.thumbnail!,
-    //   createdTime: DateTime.now(),
-    //   quantity: qty.toString(),
-    //   currency: widget.product.price!.currency!,
-    // );
-    // await SQFLiteDB.create(cart).then((value) {
-    //   if (value) {
-    //     DBox.autoClose(context,
-    //         type: InfoDialog.successful,
-    //         message: 'The product has been added to your cart.');
-    //   }
-    // });
+    await FirestoreRepository.addToCart(item).then((value) {
+      if (value) {
+        DBox.autoClose(context,
+            type: InfoDialog.successful,
+            message: 'The product has been added to your cart.');
+      }
+    });
   }
 
   //

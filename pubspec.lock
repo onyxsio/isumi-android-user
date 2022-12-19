@@ -36,13 +36,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.8.2"
-  barcode:
-    dependency: transitive
-    description:
-      name: barcode
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.2.3"
   bloc:
     dependency: transitive
     description:
@@ -189,7 +182,7 @@ packages:
       name: dbus
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.7.4"
+    version: "0.7.8"
   equatable:
     dependency: transitive
     description:
@@ -210,7 +203,7 @@ packages:
       name: ffi
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.1"
+    version: "2.0.1"
   file:
     dependency: transitive
     description:
@@ -348,7 +341,7 @@ packages:
       name: flutter_local_notifications_linux
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0"
+    version: "2.0.0"
   flutter_local_notifications_platform_interface:
     dependency: transitive
     description:
@@ -498,7 +491,7 @@ packages:
       name: image_picker_android
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.8.5+3"
+    version: "0.8.5+4"
   image_picker_for_web:
     dependency: transitive
     description:
@@ -512,7 +505,7 @@ packages:
       name: image_picker_ios
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.8.6+1"
+    version: "0.8.6+2"
   image_picker_platform_interface:
     dependency: transitive
     description:
@@ -604,13 +597,6 @@ packages:
       relative: true
     source: path
     version: "1.0.0+1"
-  open_file:
-    dependency: transitive
-    description:
-      name: open_file
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.2.1"
   path:
     dependency: transitive
     description:
@@ -680,7 +666,7 @@ packages:
       name: path_provider_windows
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.7"
+    version: "2.1.3"
   payment_ui:
     dependency: transitive
     description:
@@ -688,13 +674,6 @@ packages:
       relative: true
     source: path
     version: "1.0.0+1"
-  pdf:
-    dependency: transitive
-    description:
-      name: pdf
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.8.4"
   pedantic:
     dependency: transitive
     description:
@@ -744,13 +723,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.0.5"
-  qr:
+  qr_code_scanner:
     dependency: transitive
     description:
-      name: qr
+      name: qr_code_scanner
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.1"
+    version: "1.0.1"
   quiver:
     dependency: transitive
     description:
@@ -909,7 +888,7 @@ packages:
       name: win32
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.6.1"
+    version: "3.1.3"
   xdg_directories:
     dependency: transitive
     description:

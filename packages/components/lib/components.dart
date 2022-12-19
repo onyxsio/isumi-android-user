@@ -16,11 +16,10 @@ export 'package:components/widgets/header/header.dart';
 export 'package:components/widgets/dropdown/checkbox_drop.dart';
 export 'package:components/widgets/dropdown/select_drop_list.dart';
 export 'config/keyboard_unfocus.dart';
-export 'package:components/widgets/Qr/pdf_invoice_api.dart';
-export 'package:components/widgets/Qr/file_handle_api.dart';
 export 'package:intl/intl.dart';
 export 'util/space.dart';
 
+export 'package:qr_code_scanner/qr_code_scanner.dart';
 export 'package:components/custom/curruncy.dart';
 export 'package:carousel_slider/carousel_slider.dart';
 export 'package:components/widgets/buttons/counter_slider.dart';

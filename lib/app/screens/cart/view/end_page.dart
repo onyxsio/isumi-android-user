@@ -34,7 +34,7 @@ class EndPage extends StatelessWidget {
       ),
       bottomNavigationBar: bottomNavigationBar(
         onTap: () {
-          drawer.dispose();
+          // drawer.scafoldKey.
           Navigator.pushNamedAndRemoveUntil(
               context, '/MainPage', (route) => false);
         },

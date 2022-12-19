@@ -49,7 +49,11 @@ class BoxDeco {
     boxShadow: AppBoxShadow.arletbox,
     borderRadius: BorderRadius.circular(16),
   );
-
+  static BoxDecoration deco_9 = BoxDecoration(
+    color: const Color(0XFF3C4B7B),
+    boxShadow: [AppBoxShadow.itemCard],
+    borderRadius: BorderRadius.circular(16),
+  );
   static BoxDecoration deco_1m(hasError) => BoxDecoration(
         color: AppColor.white,
         border: Border.all(

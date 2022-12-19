@@ -80,6 +80,7 @@ class _OrderStatusPageState extends State<OrderStatusPage> {
         items: orderitems,
         date: DateTime.now().toIso8601String(),
         currency: currency,
+        sellerId: orderitems[0].sellerId,
         delivery: '0',
         discountedPrice: '0',
         customer: customer,
@@ -95,9 +96,13 @@ class _OrderStatusPageState extends State<OrderStatusPage> {
           FirestoreRepository.setupOrder(order);
           // Delete All Cart
           FirestoreRepository.deleteCart();
-          Navigator.push(context,
-              MaterialPageRoute(builder: (builder) => const EndPage()));
-          // Navigator.pushReplacementNamed(context, '/EndPage');
+          // Send notification
+          FirestoreRepository.sendOrder(order);
+
+          // Navigator.push(context,
+          //     MaterialPageRoute(builder: (builder) => const EndPage()));
+          Navigator.pushNamedAndRemoveUntil(
+              context, '/EndPage', (route) => false);
         } else {
           DBox.autoClose(context, type: InfoDialog.error, message: value);
         }

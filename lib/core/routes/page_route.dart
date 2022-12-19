@@ -7,6 +7,11 @@ import 'package:isumi/app/screens/cart/view/edit_address.dart';
 import 'package:isumi/app/screens/cart/view/end_page.dart';
 import 'package:isumi/app/screens/cart/view/order_status_page.dart';
 import 'package:isumi/app/screens/cart/view/shipping_addres.dart';
+import 'package:isumi/app/screens/drawer/page/account_setting.dart';
+import 'package:isumi/app/screens/drawer/page/notification_page.dart';
+import 'package:isumi/app/screens/drawer/scan/scan_to_review.dart';
+import 'package:isumi/app/screens/drawer/page/settings_page.dart';
+import 'package:isumi/app/screens/drawer/page/wish_list_page.dart';
 import 'package:isumi/app/screens/home/producat_details.dart';
 import 'package:isumi/app/screens/main_page.dart';
 // import 'package:isumi/app/screens/Order/view/bill_generate_page.dart';
@@ -64,6 +69,20 @@ class RouteGenerator {
         return OpenAndFadeTransition(EditAddress(shipTo: shipTo));
       case '/EndPage':
         return OpenAndFadeTransition(const EndPage());
+      //
+      case '/ScanToReview':
+        return OpenAndFadeTransition(const ScanToReview());
+      case '/AccountSettingsPage':
+        return OpenAndFadeTransition(const AccountSettingsPage());
+      case '/WishListPage':
+        return OpenAndFadeTransition(const WishListPage());
+      case '/SettingsPage':
+        return OpenAndFadeTransition(const SettingsPage());
+      case '/NotificationPage':
+        return OpenAndFadeTransition(const NotificationPage());
+      //
+      // case '/ReviewPage':
+      //   return OpenAndFadeTransition(const ReviewPage());
       default:
         // If there is no such named route in the switch statement
         return _errorRoute();
@@ -102,4 +121,4 @@ Route createRoute({required Widget child}) {
   );
 }
 
-  // routes: {"/": (context) => const NChecking()},
+// routes: {"/": (context) => const NChecking()},
