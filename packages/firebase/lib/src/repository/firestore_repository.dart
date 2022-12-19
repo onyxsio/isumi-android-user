@@ -1,6 +1,7 @@
 // ignore_for_file: depend_on_referenced_packages
+import 'dart:convert';
 import 'dart:developer';
-
+import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:components/components.dart';
@@ -9,7 +10,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:local_database/local_db.dart';
 import 'package:remote_data/src/error/failure.dart';
+import 'package:remote_data/src/key/api_key.dart';
 import 'package:remote_data/src/model/models.dart';
+import 'package:remote_data/src/model/seller.dart';
 import 'package:uuid/uuid.dart';
 import 'storage_repository.dart';
 import 'package:google_sign_in/google_sign_in.dart' as gs;
@@ -147,20 +150,18 @@ class FirestoreRepository {
   }
 
 // Add items for cart
-  static Future<void> addToCart(Items item) async {
+  static Future<bool> addToCart(Items item) async {
     final user = auth.FirebaseAuth.instance.currentUser;
     try {
-      // await customerDB.doc(user!.uid).update({
-      //   'cart': FieldValue.arrayUnion([item.toJson()])
-      // });
       String cartId = const Uuid().v4();
       await customerDB
           .doc(user!.uid)
           .collection('cart')
           .doc(cartId)
           .set(item.copyWith(id: cartId).toJson());
-    } catch (e) {
-      log(e.toString());
+      return true;
+    } catch (_) {
+      return false;
     }
   }
 
@@ -223,6 +224,39 @@ class FirestoreRepository {
     } catch (e) {
       log(e.toString());
     }
+  }
+
+  static Future<void> sendOrder(Orders order) async {
+    try {
+      await sellerDB
+          .doc(order.sellerId)
+          .get()
+          .then((DocumentSnapshot snapshot) async {
+        Seller seller = Seller.fromJsonFirebase(snapshot);
+        await http.post(
+          Uri.parse('https://fcm.googleapis.com/fcm/send'),
+          headers: <String, String>{
+            'Content-Type': 'application/json',
+            'Authorization': serverKey,
+          },
+          body: jsonEncode(
+            <String, dynamic>{
+              'notification': <String, dynamic>{
+                'body': 'A new order has been received',
+                'title': 'You have received a new order'
+              },
+              'priority': 'high',
+              'data': <String, dynamic>{
+                'order': order.toJson(),
+                'id': 'uid',
+                'status': 'order'
+              },
+              "to": seller.deviceToken,
+            },
+          ),
+        );
+      });
+    } catch (_) {}
   }
   // ! not user below
 
@@ -322,106 +356,4 @@ class FirestoreRepository {
   }
 
 // !
-
-  //
-  // Upload a new Product to products Database
-  //
-  static Future<void> addProduct(
-      BuildContext context, Product product, List<XFile>? images) async {
-    // Store Multiple Images urls
-    List<String> photoUrls = [];
-    // Set<String> subv = <String>{};
-    List minPrice = [];
-    // Store sinlgel Images urls
-    // String photoUrl = "";
-    try {
-      // creates unique id based on time
-      String productId = const Uuid().v1();
-      // Find a minimum price in list
-      for (var variant in product.variant!) {
-        for (var subvariant in variant.subvariant!) {
-          minPrice.add(double.parse(subvariant.price!));
-        }
-      }
-      var minimumPrice = minPrice
-          .reduce((value, element) => value < element ? value : element);
-
-      Price price =
-          Price(value: minimumPrice.toString(), currency: LocalDB.getCurrency);
-
-      // upload Singel Image to Firestore, and get Url
-      // photoUrl = await StorageRepository().uploadImages(productId, xfile);
-      Rivews rivews = Rivews(ratingValue: '0', reviewCount: '0');
-      // upload Multiple Images to Firestore, and get Urls
-      photoUrls = await StorageRepository().uploadFiles(images!, productId);
-      var modifiyProduct = product.copyWith(
-        sId: productId,
-        thumbnail: photoUrls[0],
-        price: price,
-        rivews: rivews,
-        images: photoUrls,
-      );
-      productsDB.doc(productId).set(modifiyProduct.toJson());
-      // .then((value) =>
-      // DialogBoxes.showAutoCloseDialog(context,
-      //     type: InfoDialog.successful,
-      //     message: 'It was successfully uploaded !'));
-    } on FirebaseException catch (e) {
-      var msg = AppFirebaseFailure.fromCode(e.code);
-      // DialogBoxes.showAutoCloseDialog(context,
-      //     type: InfoDialog.error, message: msg.message);
-      //  DialogBoxes.showAutoCloseDialog(context);
-
-    } catch (_) {}
-  }
-
-//
-  static Future<void> updateProduct(
-    BuildContext context,
-    Product product,
-    List<XFile>? images,
-    List<Variant> variant,
-    // String discount,
-  ) async {
-    List photoUrls = [];
-    // Set<String> subv = <String>{};
-    List minPrice = [];
-
-    try {
-      if (images!.isNotEmpty) {
-        photoUrls = await StorageRepository().uploadFiles(images, product.sId!);
-      }
-      for (var image in product.images!) {
-        photoUrls.add(image);
-      }
-
-      // Find a minimum price in list
-      for (var variant in product.variant!) {
-        for (var subvariant in variant.subvariant!) {
-          minPrice.add(double.parse(subvariant.price!));
-        }
-      }
-      var minimumPrice = minPrice
-          .reduce((value, element) => value < element ? value : element);
-      Price price =
-          Price(value: minimumPrice.toString(), currency: LocalDB.getCurrency);
-
-      var newProduct = product.copyWith(
-        thumbnail: photoUrls[0],
-        price: price,
-        images: photoUrls,
-      );
-
-      productsDB.doc(product.sId).update(newProduct.toJson()).then((value) =>
-          DBox.autoClose(context,
-              type: InfoDialog.successful,
-              message: 'It was successfully updated !'));
-    } on FirebaseException catch (e) {
-      var msg = AppFirebaseFailure.fromCode(e.code);
-      DBox.autoClose(context, type: InfoDialog.error, message: msg.message);
-    } catch (_) {
-      DBox.autoClose(context,
-          type: InfoDialog.error, message: 'An unknown exception occurred.');
-    }
-  }
 }

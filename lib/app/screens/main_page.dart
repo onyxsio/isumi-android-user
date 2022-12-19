@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:isumi/app/models/bottom_menu.dart';
+import 'package:isumi/app/screens/drawer/drawer.dart';
 import 'package:isumi/core/util/list.dart';
 import 'package:onyxsio/onyxsio.dart';
 
@@ -44,7 +45,7 @@ class _MainPageState extends State<MainPage> {
     final badge = Provider.of<NotificationBadge>(context).badge;
     return Scaffold(
       key: drawer.key,
-      // drawer: const MyDrawer(),
+      drawer: const AppDrawer(),
       body: PageView.builder(
         physics: const NeverScrollableScrollPhysics(),
         controller: controller,

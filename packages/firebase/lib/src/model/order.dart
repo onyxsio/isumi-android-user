@@ -4,6 +4,7 @@ import 'package:remote_data/src/model/customer.dart';
 class Orders {
   String? oId;
   String? date;
+  String? sellerId;
   String? currency;
   List<Items>? items;
   String? total;
@@ -15,6 +16,7 @@ class Orders {
   Orders(
       {this.items,
       this.total,
+      this.sellerId,
       this.oId,
       this.date,
       this.currency,
@@ -27,6 +29,7 @@ class Orders {
     Map<String, dynamic> json = snap.data() as Map<String, dynamic>;
     oId = json['_id'];
     date = json['date'];
+    sellerId = json['sellerId'];
     currency = json['currency'];
     delivery = json['delivery'];
     if (json['items'] != null) {
@@ -46,6 +49,7 @@ class Orders {
     oId = json['_id'];
     date = json['date'];
     currency = json['currency'];
+    sellerId = json['sellerId'];
     delivery = json['delivery'];
     if (json['items'] != null) {
       items = <Items>[];
@@ -63,6 +67,7 @@ class Orders {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['_id'] = oId;
+    data['sellerId'] = sellerId;
     data['currency'] = currency;
     data['date'] = date;
     data['delivery'] = delivery;

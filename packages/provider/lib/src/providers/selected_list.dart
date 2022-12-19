@@ -6,3 +6,9 @@ class SelectedList extends ChangeNotifier {
   void add(Product value) => selectedItems.add(value);
   void remove(Product value) => selectedItems.remove(value);
 }
+
+class ScanPageProvider extends ChangeNotifier {
+  final PageController controller = PageController();
+
+  void jumpTo(int index) => controller.jumpToPage(index);
+}

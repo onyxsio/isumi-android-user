@@ -32,6 +32,7 @@ class AppProviders extends StatelessWidget {
             ChangeNotifierProvider(create: (_) => Validation()),
             ChangeNotifierProvider(create: (_) => NotificationBadge()),
             ChangeNotifierProvider(create: (_) => SelectedList()),
+            ChangeNotifierProvider(create: (_) => ScanPageProvider()),
           ],
           child: BlocBuilder<AppBloc, AppState>(
             builder: (context, appstate) {
