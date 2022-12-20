@@ -24,6 +24,30 @@ class Orders {
       this.paymetStatus,
       this.discountedPrice,
       this.customer});
+  //
+  Orders copyWith({
+    String? oId,
+    String? date,
+    String? sellerId,
+    String? currency,
+    List<Items>? items,
+    String? total,
+    String? paymetStatus,
+    String? discountedPrice,
+    String? delivery,
+    Customer? customer,
+  }) =>
+      Orders(
+          items: items ?? this.items,
+          total: total ?? this.total,
+          sellerId: sellerId ?? this.sellerId,
+          oId: oId ?? this.oId,
+          date: date ?? this.date,
+          currency: currency ?? this.currency,
+          delivery: delivery ?? this.delivery,
+          paymetStatus: paymetStatus ?? this.paymetStatus,
+          discountedPrice: discountedPrice ?? this.discountedPrice,
+          customer: customer ?? this.customer);
 //
   Orders.fromFirebaseJson(DocumentSnapshot snap) {
     Map<String, dynamic> json = snap.data() as Map<String, dynamic>;
@@ -220,8 +244,6 @@ class Items {
 //     return data;
 //   }
 // }
-
-
 
 // Orders demoOrder = Orders(
 //   sId: '12',

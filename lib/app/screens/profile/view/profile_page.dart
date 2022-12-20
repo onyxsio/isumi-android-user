@@ -6,78 +6,105 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = context.select((AppBloc bloc) => bloc.state.user);
     return Scaffold(
       appBar: mainAppBar(text: 'My Profile'),
-      body: Padding(
-        padding: EdgeInsets.all(5.w),
-        child: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.all(4.w),
-              decoration: BoxDeco.deco_2,
-              child: Row(
-                children: [
-                  // CachedNetworkImage(imageUrl: )
+      body: StreamBuilder<DocumentSnapshot>(
+          stream: FirestoreRepository.customerDB.doc(user.id).snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return const Center(child: HRDots());
+            }
 
-                  CachedNetworkImage(
-                    imageUrl: "https://i.stack.imgur.com/l60Hf.png",
-                    imageBuilder: (context, imageProvider) => CircleAvatar(
-                        radius: 6.h, backgroundImage: imageProvider),
-                    placeholder: (context, url) => CircleAvatar(radius: 6.h),
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
-                  ),
-                  // CircleAvatar(radius: 6.h),
-                  SizedBox(width: 5.w),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Sudesh Bandara', style: TxtStyle.h7B),
-                      SizedBox(height: 2.w),
-                      Text('bruno203@gmail.com', style: TxtStyle.l5),
-                    ],
-                  )
-                ],
-              ),
-            ),
-            SizedBox(height: 5.w),
-            Container(
-              padding: EdgeInsets.all(4.w),
-              decoration: BoxDeco.deco_2,
-              child: Column(
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: HRDots());
+            }
+            Map<String, dynamic> data =
+                snapshot.data!.data() as Map<String, dynamic>;
+            Customer customer = Customer.fromJson(data);
+            return Padding(
+              padding: EdgeInsets.all(5.w),
+              child: body(context, customer),
+            );
+          }),
+    );
+  }
+
+  Column body(BuildContext context, Customer customer) {
+    return Column(
+      children: [
+        Container(
+          padding: EdgeInsets.all(4.w),
+          decoration: BoxDeco.deco_2,
+          child: Row(
+            children: [
+              // CachedNetworkImage(imageUrl: )
+
+              CachedNetworkImage(
+                  imageUrl: customer.photoUrls!,
+                  imageBuilder: (context, imageProvider) =>
+                      CircleAvatar(radius: 6.h, backgroundImage: imageProvider),
+                  placeholder: (context, url) => AppLoading.profile,
+                  errorWidget: (context, url, error) => AppLoading.profile),
+              // CircleAvatar(radius: 6.h),
+              SizedBox(width: 5.w),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 5.w),
-                  listTile(
-                    title: 'Shipping Addresses',
-                    subTitle: '03 Addresses',
-                    onTap: () {
-                      Navigator.pushNamed(context, '/ShippingAddressPage');
-                    },
-                  ),
-                  const Divider(),
-                  SizedBox(height: 5.w),
-                  listTile(
-                    title: 'Payment Method',
-                    subTitle: 'You have 2 cards',
-                    onTap: () {
-                      Navigator.pushNamed(context, '/PaymetMethodPage');
-                    },
-                  ),
-                  const Divider(),
-                  SizedBox(height: 5.w),
-                  listTile(
-                    title: 'My reviews',
-                    subTitle: 'Reviews for 5 items',
-                    onTap: () {
-                      Navigator.pushNamed(context, '/ReviewPage');
-                    },
-                  ),
+                  Text(customer.name!, style: TxtStyle.h7B),
+                  SizedBox(height: 2.w),
+                  Text(customer.email!, style: TxtStyle.l5),
                 ],
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
-      ),
+        SizedBox(height: 5.w),
+        Container(
+          padding: EdgeInsets.all(4.w),
+          decoration: BoxDeco.deco_2,
+          child: Column(
+            children: [
+              SizedBox(height: 5.w),
+              listTile(
+                title: 'Account Settings',
+                subTitle: 'Do you want to change your account details?',
+                onTap: () {
+                  Navigator.pushNamed(context, '/AccountSettingsPage');
+                },
+              ),
+              const Divider(),
+              SizedBox(height: 5.w),
+              listTile(
+                title: 'Shipping Addresses',
+                subTitle:
+                    'Do you want to change your shipping address details?',
+                onTap: () {
+                  Navigator.pushNamed(context, '/ShippingAddressPage');
+                },
+              ),
+              const Divider(),
+              SizedBox(height: 5.w),
+              listTile(
+                title: 'Payment Method',
+                subTitle: 'You have 2 cards',
+                onTap: () {
+                  Navigator.pushNamed(context, '/PaymetMethodPage');
+                },
+              ),
+              const Divider(),
+              SizedBox(height: 5.w),
+              listTile(
+                title: 'My reviews',
+                subTitle: 'Reviews for 5 items',
+                onTap: () {
+                  Navigator.pushNamed(context, '/ReviewPage');
+                },
+              ),
+            ],
+          ),
+        )
+      ],
     );
   }
 
@@ -92,13 +119,15 @@ class ProfilePage extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: TxtStyle.h7B),
-                SizedBox(height: 1.w),
-                Text(subTitle, style: TxtStyle.l5),
-              ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title, style: TxtStyle.h7B),
+                  SizedBox(height: 1.w),
+                  Text(subTitle, style: TxtStyle.l3),
+                ],
+              ),
             ),
             Icon(
               Icons.arrow_forward_ios_rounded,

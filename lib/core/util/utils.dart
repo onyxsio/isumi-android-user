@@ -4,8 +4,10 @@ import 'package:onyxsio/onyxsio.dart';
 //
 
 class Utils {
-  static formatPrice(double price) => '\$ ${price.toStringAsFixed(2)}';
-  static formatDate(DateTime date) => DateFormat.yMd().format(date);
+  // static formatPrice(double price) => '\$ ${price.toStringAsFixed(2)}';
+  static formatDate(String date) =>
+      DateFormat.yMd().format(DateTime.parse(date));
+
   static formatDateTime(DateTime date) =>
       DateFormat('yyyy-M-d hh:mm:ss').format(date);
 
@@ -28,5 +30,11 @@ class Utils {
     var cal = ((double.parse(amount) * double.parse(offer)) / 100);
 
     return currency(amount: (double.parse(amount) - cal), name: name);
+  }
+
+  static String orderNumber(String number) {
+    // int idx = number.indexOf("-");
+    // return number.substring(0, idx).trim();
+    return number.split('-').first;
   }
 }

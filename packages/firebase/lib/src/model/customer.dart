@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:remote_data/remote_data.dart';
-import 'package:remote_data/src/model/product.dart';
 
 class Customer {
   String? id;
@@ -10,7 +9,7 @@ class Customer {
   String? phone;
   String? photoUrls;
   Address? address;
-  List<Items>? cart;
+  List<Orders>? order;
   List<Product>? wishlist;
   List<Review>? review;
   String? createdAt;
@@ -24,7 +23,7 @@ class Customer {
       this.scanCode,
       this.phone,
       this.address,
-      this.cart,
+      this.order,
       this.wishlist,
       this.review,
       this.createdAt,
@@ -38,7 +37,7 @@ class Customer {
     String? phone,
     String? photoUrls,
     Address? address,
-    List<Items>? cart,
+    List<Orders>? order,
     List<Product>? wishlist,
     List<Review>? review,
     String? createdAt,
@@ -52,7 +51,7 @@ class Customer {
           scanCode: scanCode ?? this.scanCode,
           phone: phone ?? this.phone,
           address: address ?? this.address,
-          cart: cart ?? this.cart,
+          order: order ?? this.order,
           wishlist: wishlist ?? this.wishlist,
           review: review ?? this.review,
           createdAt: createdAt ?? this.createdAt,
@@ -69,10 +68,10 @@ class Customer {
     if (json['address'] != null) {
       address = Address.fromJson(json['address']);
     }
-    if (json['cart'] != null) {
-      cart = <Items>[];
-      json['cart'].forEach((v) {
-        cart!.add(Items.fromJson(v));
+    if (json['order'] != null) {
+      order = <Orders>[];
+      json['order'].forEach((v) {
+        order!.add(Orders.fromJson(v));
       });
     }
     if (json['wishlist'] != null) {
@@ -101,10 +100,10 @@ class Customer {
     if (json['address'] != null) {
       address = Address.fromJson(json['address']);
     }
-    if (json['cart'] != null) {
-      cart = <Items>[];
-      json['cart'].forEach((v) {
-        cart!.add(Items.fromJson(v));
+    if (json['order'] != null) {
+      order = <Orders>[];
+      json['order'].forEach((v) {
+        order!.add(Orders.fromJson(v));
       });
     }
     if (json['wishlist'] != null) {
@@ -134,8 +133,8 @@ class Customer {
     if (address != null) {
       data['address'] = address!.toJson();
     }
-    if (cart != null) {
-      data['cart'] = cart!.map((v) => v.toJson()).toList();
+    if (order != null) {
+      data['order'] = order!.map((v) => v.toJson()).toList();
     }
     if (wishlist != null) {
       data['wishlist'] = wishlist!.map((v) => v.toJson()).toList();
@@ -224,7 +223,7 @@ Customer demoCustomer = Customer(
   id: "",
   name: "",
   email: "",
-  photoUrls: "",
+  photoUrls: "https://i.stack.imgur.com/l60Hf.png",
   phone: "",
   scanCode: "",
   address: Address(
@@ -235,7 +234,7 @@ Customer demoCustomer = Customer(
     city: '',
     name: '',
   ),
-  cart: [],
+  order: [],
   review: [],
   deviceToken: "",
   createdAt: "",
