@@ -169,10 +169,6 @@ class FirestoreRepository {
     final user = auth.FirebaseAuth.instance.currentUser;
     try {
       await customerDB.doc(user!.uid).collection('cart').doc(id).delete();
-      // String orderId = const Uuid().v4();
-      // await customerDB.doc(user!.uid).update({
-      //   'cart': FieldValue.arrayRemove([item.toJson()])
-      // });
     } catch (e) {
       log(e.toString());
     }
@@ -194,16 +190,20 @@ class FirestoreRepository {
 
   // customerDB
   static Future<void> setupOrder(Orders order) async {
+    final user = auth.FirebaseAuth.instance.currentUser;
     try {
       String orderId = const Uuid().v4();
 
-      for (var item in order.items!) {
-        await sellerDB
-            .doc(item.sellerId)
-            .collection('orders')
-            .doc(orderId)
-            .set(order.toJson());
-      }
+      // for (var item in order.items!) {
+      await sellerDB
+          .doc(order.sellerId)
+          .collection('orders')
+          .doc(orderId)
+          .set(order.copyWith(oId: orderId).toJson());
+      await customerDB.doc(user!.uid).update({
+        'order': FieldValue.arrayUnion([order.copyWith(oId: orderId).toJson()])
+      });
+      // }
     } catch (e) {
       log(e.toString());
     }

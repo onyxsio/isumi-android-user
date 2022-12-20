@@ -59,11 +59,11 @@ class AppDrawer extends StatelessWidget {
                   //     onTap: () {
                   //       Navigator.pushNamed(context, '/');
                   //     }),
-                  DrawerButton(
-                      text: 'Account Settings',
-                      onTap: () {
-                        Navigator.pushNamed(context, '/AccountSettingsPage');
-                      }),
+                  // DrawerButton(
+                  //     text: 'Account Settings',
+                  //     onTap: () {
+                  //       Navigator.pushNamed(context, '/AccountSettingsPage');
+                  //     }),
                   DrawerButton(
                       text: 'Scan to review',
                       onTap: () {

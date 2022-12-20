@@ -14,6 +14,8 @@ import 'package:isumi/app/screens/drawer/page/settings_page.dart';
 import 'package:isumi/app/screens/drawer/page/wish_list_page.dart';
 import 'package:isumi/app/screens/home/producat_details.dart';
 import 'package:isumi/app/screens/main_page.dart';
+import 'package:isumi/app/screens/order/view/order_details.dart';
+import 'package:isumi/app/screens/profile/view/reviews_page.dart';
 // import 'package:isumi/app/screens/Order/view/bill_generate_page.dart';
 // import 'package:isumi/app/screens/Order/view/order_details.dart';
 // import 'package:isumi/app/screens/home/offer_page.dart';
@@ -78,11 +80,14 @@ class RouteGenerator {
         return OpenAndFadeTransition(const WishListPage());
       case '/SettingsPage':
         return OpenAndFadeTransition(const SettingsPage());
+      case '/OrderDetails':
+        Orders order = arguments as Orders;
+        return OpenAndFadeTransition(OrderDetails(order: order));
       case '/NotificationPage':
         return OpenAndFadeTransition(const NotificationPage());
       //
-      // case '/ReviewPage':
-      //   return OpenAndFadeTransition(const ReviewPage());
+      case '/ReviewPage':
+        return OpenAndFadeTransition(const ReviewPage());
       default:
         // If there is no such named route in the switch statement
         return _errorRoute();

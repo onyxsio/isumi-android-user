@@ -13,7 +13,7 @@ class AccountSettingsPage extends StatefulWidget {
 
 class _AccountSettingsPageState extends State<AccountSettingsPage> {
   var emailController = TextEditingController();
-  var passwordController = TextEditingController();
+  // var passwordController = TextEditingController();
   var nameController = TextEditingController();
   var phoneController = TextEditingController();
   Map<String, dynamic> data = {"emoji": "🇯🇵", "code": "+81"};
@@ -21,19 +21,19 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
   // Map<String, dynamic>? dataResult;
   @override
   void initState() {
-    getData();
+    // getData();
     super.initState();
   }
 
-  getData() {
-    // TODO
-    setState(() {
-      emailController.text = "Sudesh Bandara";
-      passwordController.text = '';
-      nameController.text = '';
-      phoneController.text = '';
-    });
-  }
+  // getData() {
+  //   // TODO
+  //   setState(() {
+  //     emailController.text = "Sudesh Bandara";
+  //     // passwordController.text = '';
+  //     nameController.text = '';
+  //     phoneController.text = '';
+  //   });
+  // }
 
   void selectImage() async {
     Uint8List im = await pickImage(ImageSource.gallery);
@@ -87,6 +87,7 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
               style: TxtStyle.b5,
               decoration: const InputDecoration(
                 contentPadding: EdgeInsets.zero,
+                hintText: 'Phone Nubmer',
                 border: InputBorder.none,
               ),
             ),
@@ -103,6 +104,7 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
   void showCuntryPicker() {
     showModalBottomSheet<void>(
       context: context,
+      backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
         return Container(
           height: 20.h,
@@ -133,63 +135,27 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final user = context.select((AppBloc bloc) => bloc.state.user);
     return Scaffold(
       appBar: appBar(text: 'Account settings'),
-      body: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 5.w).copyWith(top: 5.w),
-          physics: const BouncingScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: EdgeInsets.all(4.w),
-                width: double.infinity,
-                decoration: BoxDeco.deco_2,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    CircleAvatar(radius: 10.h),
-                    _image != null
-                        ? CircleAvatar(
-                            radius: 10.h,
-                            backgroundImage: MemoryImage(_image!),
-                          )
-                        : CircleAvatar(
-                            radius: 10.h,
-                            backgroundImage: const NetworkImage('userData['),
-                          ),
-                    CustomPaint(
-                      painter: MyPainter(),
-                      size: Size(10.h, 10.h),
-                    ),
-                    Positioned(
-                      top: 15.h,
-                      child: InkWell(
-                        onTap: selectImage,
-                        child: SvgPicture.asset(
-                          AppIcon.camera,
-                          color: AppColor.white,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              SizedBox(height: 5.w),
-              Text('Personal Information', style: TxtStyle.h7B),
-              SizedBox(height: 2.w),
-              _TextInput(controller: emailController, lable: 'Email'),
-              SizedBox(height: 2.w),
-              _TextInput(controller: nameController, lable: 'Full Name'),
-              SizedBox(height: 2.w),
-              buildPhoneNumber(),
-              SizedBox(height: 2.w),
-              Text('Password', style: TxtStyle.h7B),
-              SizedBox(height: 2.w),
-              _TextInput(controller: passwordController, lable: 'Password'),
-              SizedBox(height: 2.w),
-            ],
-          )),
+      body: StreamBuilder<DocumentSnapshot>(
+          stream: FirestoreRepository.customerDB.doc(user.id).snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return const Center(child: HRDots());
+            }
+
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: HRDots());
+            }
+            Map<String, dynamic> data =
+                snapshot.data!.data() as Map<String, dynamic>;
+            Customer customer = Customer.fromJson(data);
+            emailController.text = customer.email!;
+            phoneController.text = customer.phone!;
+            nameController.text = customer.name!;
+            return body(customer);
+          }),
       bottomNavigationBar: bottomNavigationBar(
         onTap: () {
           // TODO
@@ -197,6 +163,64 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
         text: 'Save changes',
       ),
     );
+  }
+
+  SingleChildScrollView body(Customer customer) {
+    return SingleChildScrollView(
+        padding: EdgeInsets.symmetric(horizontal: 5.w).copyWith(top: 5.w),
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: EdgeInsets.all(4.w),
+              width: double.infinity,
+              decoration: BoxDeco.deco_2,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  CircleAvatar(radius: 10.h),
+                  _image != null
+                      ? CircleAvatar(
+                          radius: 10.h,
+                          backgroundImage: MemoryImage(_image!),
+                        )
+                      : CircleAvatar(
+                          radius: 10.h,
+                          backgroundImage: NetworkImage(customer.photoUrls!),
+                        ),
+                  CustomPaint(
+                    painter: MyPainter(),
+                    size: Size(10.h, 10.h),
+                  ),
+                  Positioned(
+                    top: 15.h,
+                    child: InkWell(
+                      onTap: selectImage,
+                      child: SvgPicture.asset(
+                        AppIcon.camera,
+                        color: AppColor.white,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            SizedBox(height: 5.w),
+            Text('Personal Information', style: TxtStyle.h7B),
+            SizedBox(height: 5.w),
+            _TextInput(controller: emailController, lable: 'Email'),
+            SizedBox(height: 2.w),
+            _TextInput(controller: nameController, lable: 'Full Name'),
+            SizedBox(height: 2.w),
+            buildPhoneNumber(),
+            // SizedBox(height: 2.w),
+            // Text('Password', style: TxtStyle.h7B),
+            // SizedBox(height: 2.w),
+            // _TextInput(controller: passwordController, lable: 'Password'),
+            SizedBox(height: 2.w),
+          ],
+        ));
   }
 }
 
@@ -212,12 +236,15 @@ class _TextInput extends StatelessWidget {
     return Container(
       // height: 13.h,
       padding: EdgeInsets.symmetric(horizontal: 5.w).copyWith(top: 2.w),
+      margin: EdgeInsets.only(bottom: 2.w),
       decoration: BoxDeco.deco_5,
       child: TextFormField(
         controller: controller,
         style: TxtStyle.b5,
-        decoration: const InputDecoration(
+        decoration: InputDecoration(
           contentPadding: EdgeInsets.zero,
+          // label: Text(lable),
+          hintText: lable,
           border: InputBorder.none,
         ),
       ),

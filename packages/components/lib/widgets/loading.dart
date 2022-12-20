@@ -1,5 +1,6 @@
 import 'package:components/components.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class AppLoading {
   //
@@ -71,6 +72,17 @@ class AppLoading {
           color: AppColor.shimmerLight,
           borderRadius: BorderRadius.circular(5),
         ),
+      ),
+    ),
+  );
+  //CircleAvatar(radius: 6.h)
+  static Widget profile = Shimmer(
+    linearGradient: AppColor.shimmerGradient,
+    child: ShimmerLoading(
+      isLoading: true,
+      child: CircleAvatar(
+        radius: 6.h,
+        backgroundColor: AppColor.shimmerLight,
       ),
     ),
   );

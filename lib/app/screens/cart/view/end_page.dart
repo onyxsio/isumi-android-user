@@ -7,7 +7,6 @@ class EndPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final drawer = Provider.of<DrawerProvider>(context);
     return Scaffold(
       body: Stack(
         alignment: Alignment.center,

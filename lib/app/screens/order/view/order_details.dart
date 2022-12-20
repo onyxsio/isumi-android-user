@@ -4,7 +4,8 @@ import 'package:onyxsio/onyxsio.dart';
 import '../widgets/time_line.dart';
 
 class OrderDetails extends StatelessWidget {
-  const OrderDetails({Key? key}) : super(key: key);
+  final Orders order;
+  const OrderDetails({Key? key, required this.order}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
