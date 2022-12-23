@@ -14,7 +14,7 @@ class OrderStatusPage extends StatefulWidget {
 }
 
 class _OrderStatusPageState extends State<OrderStatusPage> {
-  final user = auth.FirebaseAuth.instance.currentUser;
+  // final user = auth.FirebaseAuth.instance.currentUser;
   List<Items> orderitems = [];
   late Customer customer;
   bool isLoading = false, isEmptyAddress = true;
@@ -44,6 +44,8 @@ class _OrderStatusPageState extends State<OrderStatusPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final user = context.select((AppBloc bloc) => bloc.state.user);
+
     return Scaffold(
       appBar: appBar(text: 'Your order status'),
       body: isLoading
@@ -55,7 +57,7 @@ class _OrderStatusPageState extends State<OrderStatusPage> {
                 children: [
                   _buildTopList(theme),
                   SizedBox(height: 5.w),
-                  _buildBottomList(theme, context),
+                  _buildBottomList(theme, context, user),
                 ],
               ),
             ),
@@ -64,13 +66,15 @@ class _OrderStatusPageState extends State<OrderStatusPage> {
         // TODO change button
         child: MainButton(
           text: 'pay now',
-          onTap: setupOrder,
+          onTap: () {
+            setupOrder(user);
+          },
         ),
       ),
     );
   }
 
-  void setupOrder() async {
+  void setupOrder(user) async {
     // Navigator.pushNamed(context, '/CheckOutPage');
     if (!isEmptyAddress) {
       // log(isEmptyAddress.toString());
@@ -87,7 +91,7 @@ class _OrderStatusPageState extends State<OrderStatusPage> {
         total: total.toString(),
       );
       await PaymentGate.onPayment(
-        email: user!.email!,
+        email: user.email!,
         amount: total,
         context: context,
       ).then((value) {
@@ -162,9 +166,9 @@ class _OrderStatusPageState extends State<OrderStatusPage> {
     );
   }
 
-  Widget _buildBottomList(theme, context) {
+  Widget _buildBottomList(theme, context, user) {
     return StreamBuilder<DocumentSnapshot>(
-        stream: FirestoreRepository.customerDB.doc(user!.uid).snapshots(),
+        stream: FirestoreRepository.customerDB.doc(user.id).snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return const Center(child: HRDots());
