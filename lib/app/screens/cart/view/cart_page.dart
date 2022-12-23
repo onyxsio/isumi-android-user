@@ -14,8 +14,7 @@ class CartPage extends StatefulWidget {
 
 class _CartPageState extends State<CartPage> {
   final user = auth.FirebaseAuth.instance.currentUser;
-  bool isEmpty = false;
-  late List<DocumentSnapshot> carts;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,37 +32,42 @@ class _CartPageState extends State<CartPage> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: HRDots());
           }
-          // Map<String, dynamic> data =
-          //     snapshot.data!.docs as Map<String, dynamic>;
-          carts = snapshot.data!.docs;
-          // Customer customer = Customer.fromDocumentSnapshot(data);
+
           if (snapshot.data!.docs.isEmpty) {
-            isEmpty = true;
             return Center(
               child: Text('Your Shopping Cart Is Empty.', style: TxtStyle.b8),
             );
           }
-          // List<Items> item =
+
           return _buildItemList(snapshot.data!.docs);
         },
       ),
-      bottomNavigationBar: isEmpty
-          ? null
-          : bottomNavigationBar(
-              onTap: () => Navigator.pushNamed(context, '/OrderStatusPage',
-                  arguments: carts),
-              text: 'Proceed to checkout'),
     );
   }
 
   Widget _buildItemList(items) {
-    return ListView.builder(
-      physics: const BouncingScrollPhysics(),
-      itemCount: items.length,
-      padding: EdgeInsets.fromLTRB(5.w, 5.w, 5.w, 0),
-      itemBuilder: (context, index) {
-        return ItemListView(cart: items[index]);
-      },
+    return Stack(
+      children: [
+        ListView.builder(
+          physics: const BouncingScrollPhysics(),
+          itemCount: items.length,
+          padding: EdgeInsets.fromLTRB(5.w, 5.w, 5.w, 0),
+          itemBuilder: (context, index) {
+            return ItemListView(cart: items[index]);
+          },
+        ),
+        if (!items.isEmpty)
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            // alignment: Alignment.bottomCenter,
+            child: bottomNavigationBar(
+                onTap: () => Navigator.pushNamed(context, '/OrderStatusPage',
+                    arguments: items),
+                text: 'Proceed to checkout'),
+          )
+      ],
     );
   }
 }
