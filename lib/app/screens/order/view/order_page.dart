@@ -10,9 +10,12 @@ class OrderPage extends StatelessWidget {
     final user = context.select((AppBloc bloc) => bloc.state.user);
     return Scaffold(
       appBar: mainAppBar(text: 'My Orders'),
-      body: StreamBuilder<DocumentSnapshot>(
-        stream: FirestoreRepository.customerDB.doc(user.id).snapshots(),
-        builder: (context, snapshot) {
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirestoreRepository.customerDB
+            .doc(user.id)
+            .collection('orders')
+            .snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
             return const Center(child: HRDots());
           }
@@ -20,24 +23,27 @@ class OrderPage extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: HRDots());
           }
-          Map<String, dynamic> data =
-              snapshot.data!.data() as Map<String, dynamic>;
-          Customer customer = Customer.fromJson(data);
-          return body(context, customer.order!);
+          // var d = snapshot.data!.docs;
+          // Map<String, dynamic> data =
+          // snapshot.data!.docs.data() as Map<String, dynamic>;
+          // Customer customer = Customer.fromJson(data);
+          return body(context, snapshot.data!.docs);
         },
       ),
     );
   }
 
-  Widget body(BuildContext context, List<Orders> orders) {
+  Widget body(BuildContext context, List<DocumentSnapshot> document) {
     return ListView.builder(
         padding: EdgeInsets.symmetric(horizontal: 6.w),
-        itemCount: orders.length,
+        itemCount: document.length,
         itemBuilder: (itemBuilder, index) {
+          Map<String, dynamic> data =
+              document[index].data()! as Map<String, dynamic>;
+          Orders order = Orders.fromJson(data);
           return GestureDetector(
             onTap: () {
-              Navigator.pushNamed(context, '/OrderDetails',
-                  arguments: orders[index]);
+              Navigator.pushNamed(context, '/OrderDetails', arguments: order);
             },
             child: Container(
               padding: EdgeInsets.all(4.w),
@@ -50,7 +56,7 @@ class OrderPage extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                            'Order No: #${Utils.orderNumber(orders[index].oId!)}',
+                            'Order No: #${Utils.orderNumber(order.oId!)}',
                             maxLines: 1,
                             style: TxtStyle.h5),
                       ),
@@ -61,8 +67,7 @@ class OrderPage extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(Utils.formatDate(orders[index].date!),
-                          style: TxtStyle.b5),
+                      Text(Utils.formatDate(order.date!), style: TxtStyle.b5),
                       Row(
                         children: [
                           Text(
@@ -72,8 +77,8 @@ class OrderPage extends StatelessWidget {
                           ),
                           Text(
                               Utils.currency(
-                                  amount: double.parse(orders[index].total!),
-                                  name: orders[index].currency),
+                                  amount: double.parse(order.total!),
+                                  name: order.currency),
                               style: TxtStyle.b5B),
                         ],
                       )

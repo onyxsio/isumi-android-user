@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:isumi/core/util/image.dart';
@@ -58,8 +59,10 @@ class _ScanQrPageState extends State<ScanQrPage> {
           );
         },
       );
-      Timer(const Duration(seconds: 4), () {
+      Timer(const Duration(seconds: 3), () {
         Navigator.pop(context);
+        Provider.of<ScanPageProvider>(context, listen: false)
+            .qrCodeData(result!.code.toString());
         Provider.of<ScanPageProvider>(context, listen: false).jumpTo(1);
       });
     }
@@ -88,41 +91,44 @@ class _ScanQrPageState extends State<ScanQrPage> {
   Widget build(BuildContext context) {
     readQr();
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'Share your experience with others',
-              textAlign: TextAlign.center,
-              style: TxtStyle.l5,
-            ),
-            SizedBox(height: 10.w),
-            ClipRRect(
-                borderRadius: BorderRadius.circular(16.0),
-                child: SizedBox(
-                  width: 60.w,
-                  height: 60.w,
-                  child: QRView(
-                    key: qrKey,
-                    onQRViewCreated: _onQRViewCreated,
-                    overlay: QrScannerOverlayShape(
-                        borderColor: AppColor.yellow,
-                        borderRadius: 10,
-                        borderLength: 20,
-                        borderWidth: 5,
-                        cutOutSize: 150),
-                    onPermissionSet: (ctrl, p) =>
-                        _onPermissionSet(context, ctrl, p),
-                  ),
-                )),
-            SizedBox(height: 10.w),
-            Text(
-              'Please scan the QR Code for the review of the product.',
-              textAlign: TextAlign.center,
-              style: TxtStyle.l5,
-            )
-          ],
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 5.w),
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Share your experience with others',
+                textAlign: TextAlign.center,
+                style: TxtStyle.l7,
+              ),
+              SizedBox(height: 10.w),
+              ClipRRect(
+                  borderRadius: BorderRadius.circular(16.0),
+                  child: SizedBox(
+                    width: 60.w,
+                    height: 60.w,
+                    child: QRView(
+                      key: qrKey,
+                      onQRViewCreated: _onQRViewCreated,
+                      overlay: QrScannerOverlayShape(
+                          borderColor: AppColor.yellow,
+                          borderRadius: 10,
+                          borderLength: 20,
+                          borderWidth: 5,
+                          cutOutSize: 150),
+                      onPermissionSet: (ctrl, p) =>
+                          _onPermissionSet(context, ctrl, p),
+                    ),
+                  )),
+              SizedBox(height: 10.w),
+              Text(
+                'Please scan the QR Code for the review of the product.',
+                textAlign: TextAlign.center,
+                style: TxtStyle.l5,
+              )
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: bottomNavigationBar(

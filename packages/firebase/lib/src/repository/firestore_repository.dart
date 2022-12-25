@@ -46,6 +46,26 @@ class FirestoreRepository {
   // }
 
   //
+  static Future<bool> isAdmin(String email) async {
+    try {
+      return await sellerDB
+          .where('email', isEqualTo: email)
+          .get()
+          .then((QuerySnapshot snapshot) {
+        if (snapshot.docs.isEmpty) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+      // return true;
+    } on FirebaseException catch (e) {
+      throw AppFirebaseFailure.fromCode(e.code);
+    } catch (_) {
+      return false;
+    }
+  }
+
   static Future<void> createAccount(auth.User user) async {
     try {
       String? deviceToken = await FirebaseMessaging.instance.getToken();
@@ -200,9 +220,49 @@ class FirestoreRepository {
           .collection('orders')
           .doc(orderId)
           .set(order.copyWith(oId: orderId).toJson());
+      //
       await customerDB.doc(user!.uid).update({
         'order': FieldValue.arrayUnion([order.copyWith(oId: orderId).toJson()])
       });
+      //
+      await customerDB
+          .doc(user.uid)
+          .collection('orders')
+          .doc(orderId)
+          .set(order.copyWith(oId: orderId).toJson());
+      //
+      for (var item in order.items!) {
+        List<Variant> variants = [];
+        var product = await productsDB
+            .doc(item.productId)
+            .get()
+            .then((snapshot) => Product.fromSnap(snapshot));
+        // **
+        await customerDB.doc(user.uid).update({
+          'sold': FieldValue.arrayUnion([item.productId])
+        });
+        // **
+        for (var v in product.variant!) {
+          variants.add(v);
+          if (v.color! == (item.color!)) {
+            List<Subvariant> subs = [];
+            for (var s in v.subvariant!) {
+              subs.add(s);
+              if (s.size! == (item.size!)) {
+                variants.remove(v);
+                subs.remove(s);
+                var stock = (int.parse(s.stock!) - int.parse(item.quantity!));
+                subs.add(s.copyWith(stock: stock.toString()));
+              }
+            }
+            variants.add(v.copyWith(subvariant: subs));
+          }
+        }
+
+        await productsDB
+            .doc(item.productId)
+            .update(product.copyWith(variant: variants).toJson());
+      }
       // }
     } catch (e) {
       log(e.toString());
