@@ -1,6 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:isumi/core/util/image.dart';
 import 'package:isumi/core/util/utils.dart';
 import 'package:onyxsio/onyxsio.dart';
+
+import 'widgets/bottom_sheet.dart';
 
 class ProductDetailsPage extends StatefulWidget {
   final Product product;
@@ -14,7 +19,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
   String price = '0.0', stock = '';
   int selectedColor = 0, selectedSize = 0;
   List<Variant> veriants = [];
-  List minPrice = [];
+  // List minPrice = [];
 
   @override
   void initState() {
@@ -94,17 +99,28 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                       // space,
                       const Divider(),
                       space,
-                      Text('Select color', style: TxtStyle.b5B),
+                      Text('Choose the variation', style: TxtStyle.b5B),
                       space,
-                      _buildColorGrid(),
-
-                      space, const Divider(),
-                      Text('Select size', style: TxtStyle.b5B),
-                      space,
-                      _buildSizeGrid(),
-                      space,
-                      Text('Only $stock items left', style: TxtStyle.b6),
-                      space,
+                      GestureDetector(
+                        onTap: showVeriant,
+                        child: Row(
+                          children: [
+                            SvgPicture.asset(AppIcon.size, width: 10.w),
+                            SizedBox(width: 4.w),
+                            SvgPicture.asset(AppIcon.color, width: 10.w),
+                          ],
+                        ),
+                      ),
+                      // Text('Select color', style: TxtStyle.b5B),
+                      // space,
+                      // _buildColorGrid(),
+                      // space, const Divider(),
+                      // Text('Select size', style: TxtStyle.b5B),
+                      // space,
+                      // _buildSizeGrid(),
+                      // space,
+                      // Text('Only $stock items left', style: TxtStyle.b6),
+                      // space,
                     ],
                   ),
                 ),
@@ -191,6 +207,21 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
     );
   }
 
+  void showVeriant() async {
+    Selected data = await showModalBottomSheet(
+        context: context,
+        backgroundColor: Colors.transparent,
+        builder: (BuildContext context) {
+          return VeriantChoose(product: widget.product);
+        });
+    // log(data.toString());
+    setState(() {
+      selectedColor = data.color;
+      selectedSize = data.size;
+      price = data.price;
+    });
+  }
+
   void createOrder(qty) async {
     Items item = Items(
       productId: widget.product.sId!,
@@ -214,71 +245,71 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
   }
 
   //
-  Widget _buildColorGrid() => GridView.extent(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      maxCrossAxisExtent: 40,
-      mainAxisSpacing: 2.w,
-      crossAxisSpacing: 2.w,
-      children: _buildGridTileList());
+  // Widget _buildColorGrid() => GridView.extent(
+  //     shrinkWrap: true,
+  //     physics: const NeverScrollableScrollPhysics(),
+  //     maxCrossAxisExtent: 40,
+  //     mainAxisSpacing: 2.w,
+  //     crossAxisSpacing: 2.w,
+  //     children: _buildGridTileList());
 
   //
-  List<Widget> _buildGridTileList() => List.generate(
-      veriants.length,
-      (i) => GestureDetector(
-            onTap: () {
-              setState(() {
-                selectedColor = i;
-                selectedSize = 0;
-                price = convertToSize(veriants[i])[0].price!;
-                stock = convertToSize(veriants[i])[0].stock!;
-                context.read<CounterCubit>().reset();
-              });
-            },
-            child: Container(
-              height: 12.w,
-              width: 12.w,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color(int.parse(veriants[i].color!)),
-                border: selectedColor == i
-                    ? Border.all(color: AppColor.yellow, width: 4)
-                    : null,
-              ),
-            ),
-          ));
+  // List<Widget> _buildGridTileList() => List.generate(
+  //     veriants.length,
+  //     (i) => GestureDetector(
+  //           onTap: () {
+  //             setState(() {
+  //               selectedColor = i;
+  //               selectedSize = 0;
+  //               price = convertToSize(veriants[i])[0].price!;
+  //               stock = convertToSize(veriants[i])[0].stock!;
+  //               context.read<CounterCubit>().reset();
+  //             });
+  //           },
+  //           child: Container(
+  //             height: 12.w,
+  //             width: 12.w,
+  //             decoration: BoxDecoration(
+  //               shape: BoxShape.circle,
+  //               color: Color(int.parse(veriants[i].color!)),
+  //               border: selectedColor == i
+  //                   ? Border.all(color: AppColor.yellow, width: 4)
+  //                   : null,
+  //             ),
+  //           ),
+  //         ));
 
 //
-  Widget _buildSizeGrid() => GridView.extent(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      maxCrossAxisExtent: 46,
-      mainAxisSpacing: 2.w,
-      crossAxisSpacing: 2.w,
-      children: _buildSizeGridTileList());
+  // Widget _buildSizeGrid() => GridView.extent(
+  //     shrinkWrap: true,
+  //     physics: const NeverScrollableScrollPhysics(),
+  //     maxCrossAxisExtent: 46,
+  //     mainAxisSpacing: 2.w,
+  //     crossAxisSpacing: 2.w,
+  //     children: _buildSizeGridTileList());
 
-  List<GestureDetector> _buildSizeGridTileList() => List.generate(
-      convertToSize(veriants[selectedColor]).length,
-      (i) => GestureDetector(
-            onTap: () {
-              setState(() {
-                price = convertToSize(veriants[selectedColor])[i].price!;
-                stock = convertToSize(veriants[selectedColor])[i].stock!;
-                context.read<CounterCubit>().reset();
-                selectedSize = i;
-              });
-            },
-            child: Container(
-              height: 12.w,
-              width: 13.w,
-              decoration: BoxDeco.deco_2m(selectedSize == i),
-              child: Center(
-                  child: Text(
-                convertToSize(veriants[selectedColor])[i].size!,
-                style: TxtStyle.size(selectedSize == i),
-              )),
-            ),
-          ));
+  // List<GestureDetector> _buildSizeGridTileList() => List.generate(
+  //     convertToSize(veriants[selectedColor]).length,
+  //     (i) => GestureDetector(
+  //           onTap: () {
+  //             setState(() {
+  //               price = convertToSize(veriants[selectedColor])[i].price!;
+  //               stock = convertToSize(veriants[selectedColor])[i].stock!;
+  //               context.read<CounterCubit>().reset();
+  //               selectedSize = i;
+  //             });
+  //           },
+  //           child: Container(
+  //             height: 12.w,
+  //             width: 13.w,
+  //             decoration: BoxDeco.deco_2m(selectedSize == i),
+  //             child: Center(
+  //                 child: Text(
+  //               convertToSize(veriants[selectedColor])[i].size!,
+  //               style: TxtStyle.size(selectedSize == i),
+  //             )),
+  //           ),
+  //         ));
 //
   SizedBox _buildImageSilder(Size size) {
     return SizedBox(

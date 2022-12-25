@@ -362,7 +362,14 @@ class Variant {
   List<Subvariant>? subvariant;
 
   Variant({this.color, this.subvariant});
-
+  Variant copyWith({
+    String? color,
+    List<Subvariant>? subvariant,
+  }) =>
+      Variant(
+        color: color ?? this.color,
+        subvariant: subvariant ?? this.subvariant,
+      );
   Variant.fromJson(Map<String, dynamic> json) {
     color = json['color'];
     if (json['subvariant'] != null) {
@@ -389,7 +396,16 @@ class Subvariant {
   String? stock;
 
   Subvariant({this.size, this.price, this.stock});
-
+  Subvariant copyWith({
+    String? size,
+    String? price,
+    String? stock,
+  }) =>
+      Subvariant(
+        size: size ?? this.size,
+        price: price ?? this.price,
+        stock: stock ?? this.stock,
+      );
   Subvariant.fromJson(Map<String, dynamic> json) {
     size = json['size'];
     price = json['price'];

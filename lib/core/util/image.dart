@@ -28,6 +28,8 @@ class AppIcon {
   static const String oops = 'assets/icons/oops.svg';
   static const String wifi = 'assets/icons/wifi.svg';
   static const String save = 'assets/icons/save.svg';
+  static const String size = 'assets/icons/size.svg';
+  static const String color = 'assets/icons/color.svg';
   //
   static const String product = 'assets/icons/product.svg';
   static const String offer = 'assets/icons/offer.svg';

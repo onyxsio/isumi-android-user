@@ -55,7 +55,7 @@ class _ItemListViewState extends State<ItemListView> {
         children: [
           Text(item.name!, style: TxtStyle.b6),
           if (stock.isNotEmpty)
-            // TODO
+            // TODO maxLine:1,
             TXTHeader.cartListTileSubHeader('Only $stock items left'),
           TXTHeader.cartListTilePrice(item.price!, item.currency!),
         ],

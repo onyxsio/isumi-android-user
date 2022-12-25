@@ -14,6 +14,7 @@ class _ReviewTypePageState extends State<ReviewTypePage> {
   double _value = 1.0;
   @override
   Widget build(BuildContext context) {
+    final qrCode = Provider.of<ScanPageProvider>(context).qrCode;
     return Center(
       child: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 5.w),
@@ -25,20 +26,17 @@ class _ReviewTypePageState extends State<ReviewTypePage> {
             Text('How do you feel about our product?',
                 textAlign: TextAlign.center, style: TxtStyle.h11B),
             SizedBox(height: 5.w),
-            Image.asset(
-              AppImage.star,
-              height: 20.h,
-            ),
+            Image.asset(AppImage.star, height: 20.h),
             SizedBox(height: 5.w),
-            Text(
-              'Awesome expression',
-              style: TxtStyle.l5,
-            ),
+            Text('Awesome expression', style: TxtStyle.l7),
             SizedBox(height: 5.w),
             Slider(
               min: 0.0,
               max: 4.0,
               value: _value,
+              thumbColor: AppColor.yellow,
+              activeColor: AppColor.yellow,
+              inactiveColor: AppColor.yellow.withOpacity(0.2),
               divisions: 4,
               label: '${_value.round() + 1}',
               onChanged: (value) {
