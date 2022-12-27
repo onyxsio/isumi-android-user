@@ -48,13 +48,13 @@ class GridProductCard extends StatelessWidget {
                           children: [
                             Text(product.stock!, style: TxtStyle.b2),
                             Text(' sold', style: TxtStyle.b3B),
+                            Space.x3,
                           ],
                         ),
                       if (product.rivews != null &&
                           double.parse(product.rivews!.ratingValue!) > 0)
                         Row(
                           children: [
-                            Space.x3,
                             Icon(
                               Icons.star,
                               color: AppColor.yellow,
@@ -76,7 +76,7 @@ class GridProductCard extends StatelessWidget {
                   child: Text(
                     product.title!,
                     maxLines: 1,
-                    textAlign: TextAlign.center,
+                    // textAlign: TextAlign.center,
                     style: TxtStyle.itemCardHeading,
                   ),
                 ),

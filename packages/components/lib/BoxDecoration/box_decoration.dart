@@ -68,9 +68,9 @@ class BoxDeco {
         borderRadius: BorderRadius.circular(10),
       );
 
-  // static BoxDecoration unselectedCard = BoxDecoration(
-  //   color: AppColor.white,
-  //   boxShadow: [AppBoxShadow.itemCard],
-  //   borderRadius: BorderRadius.circular(16),
-  // );
+  static BoxDecoration unselected = BoxDecoration(
+    color: AppColor.gray,
+    // boxShadow: [AppBoxShadow.itemCard],
+    borderRadius: BorderRadius.circular(10),
+  );
 }

@@ -23,6 +23,7 @@ class Product {
   List? images;
   List? suggestion;
   List<Taxes>? taxes;
+  List<ReviewRating>? reviewRating;
   // Promotion? promotion;
 
   Product({
@@ -46,6 +47,7 @@ class Product {
     this.suggestion,
     this.taxes,
     this.sellerId,
+    this.reviewRating,
   });
 
   Product copyWith({
@@ -69,6 +71,7 @@ class Product {
     List? images,
     List? suggestion,
     List<Taxes>? taxes,
+    List<ReviewRating>? reviewRating,
   }) {
     return Product(
       sId: sId ?? this.sId,
@@ -91,6 +94,7 @@ class Product {
       images: images ?? this.images,
       suggestion: suggestion ?? this.suggestion,
       taxes: taxes ?? this.taxes,
+      reviewRating: reviewRating ?? this.reviewRating,
     );
   }
 
@@ -138,9 +142,12 @@ class Product {
         taxes!.add(Taxes.fromJson(v));
       });
     }
-    // promotion = json['promotion'] != null
-    //     ? Promotion.fromJson(json['promotion'])
-    //     : null;
+    if (json['reviewRating'] != null) {
+      reviewRating = <ReviewRating>[];
+      json['reviewRating'].forEach((v) {
+        reviewRating!.add(ReviewRating.fromJson(v));
+      });
+    }
   }
 //
   Product.fromJson(Map<String, dynamic> json) {
@@ -184,9 +191,12 @@ class Product {
         taxes!.add(Taxes.fromJson(v));
       });
     }
-    // promotion = json['promotion'] != null
-    //     ? Promotion.fromJson(json['promotion'])
-    //     : null;
+    if (json['reviewRating'] != null) {
+      reviewRating = <ReviewRating>[];
+      json['reviewRating'].forEach((v) {
+        reviewRating!.add(ReviewRating.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -227,9 +237,9 @@ class Product {
     if (taxes != null) {
       data['taxes'] = taxes!.map((v) => v.toJson()).toList();
     }
-    // if (promotion != null) {
-    //   data['promotion'] = promotion!.toJson();
-    // }
+    if (reviewRating != null) {
+      data['reviewRating'] = reviewRating!.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }
@@ -307,29 +317,35 @@ class Offers {
 }
 
 class Rivews {
-  List<ReviewRating>? reviewRating;
   String? ratingValue;
-  String? reviewCount;
+  String? reviewTot;
+  int? reviewCount;
 
-  Rivews({this.reviewRating, this.ratingValue, this.reviewCount});
+  Rivews({this.reviewTot, this.ratingValue, this.reviewCount});
+
+  Rivews copyWith({
+    String? ratingValue,
+    String? reviewTot,
+    int? reviewCount,
+  }) =>
+      Rivews(
+        reviewTot: reviewTot ?? this.reviewTot,
+        ratingValue: ratingValue ?? this.ratingValue,
+        reviewCount: reviewCount ?? this.reviewCount,
+      );
 
   Rivews.fromJson(Map<String, dynamic> json) {
-    if (json['reviewRating'] != null) {
-      reviewRating = <ReviewRating>[];
-      json['reviewRating'].forEach((v) {
-        reviewRating!.add(ReviewRating.fromJson(v));
-      });
-    }
     ratingValue = json['ratingValue'];
-    reviewCount = json['reviewCount'];
+    reviewTot = json['reviewTot'];
+    // int.parse(snapshot.data.data['totalPg'].toString());
+    reviewCount = (json['reviewCount']);
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    if (reviewRating != null) {
-      data['reviewRating'] = reviewRating!.map((v) => v.toJson()).toList();
-    }
+
     data['ratingValue'] = ratingValue;
+    data['reviewTot'] = reviewTot;
     data['reviewCount'] = reviewCount;
     return data;
   }
@@ -341,6 +357,17 @@ class ReviewRating {
   String? description;
 
   ReviewRating({this.ratingValue, this.author, this.description});
+
+  ReviewRating copyWith({
+    String? ratingValue,
+    String? author,
+    String? description,
+  }) =>
+      ReviewRating(
+        author: author ?? this.author,
+        ratingValue: ratingValue ?? this.ratingValue,
+        description: description ?? this.description,
+      );
 
   ReviewRating.fromJson(Map<String, dynamic> json) {
     ratingValue = json['ratingValue'];

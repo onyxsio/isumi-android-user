@@ -11,10 +11,8 @@ class OrderPage extends StatelessWidget {
     return Scaffold(
       appBar: mainAppBar(text: 'My Orders'),
       body: StreamBuilder<QuerySnapshot>(
-        stream: FirestoreRepository.customerDB
-            .doc(user.id)
-            .collection('orders')
-            .snapshots(),
+        stream:
+            FireRepo.customerDB.doc(user.id).collection('orders').snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
             return const Center(child: HRDots());

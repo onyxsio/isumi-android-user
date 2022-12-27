@@ -38,11 +38,11 @@ class _HomePageState extends State<HomePage> {
 
         SliverToBoxAdapter(
           child: StreamBuilder<QuerySnapshot>(
-            stream: FirestoreRepository.productLimitStream,
+            stream: FireRepo.productLimitStream,
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.hasError) {
-                return const Text('Something went wrong');
+                return const Center(child: HRDots());
               }
 
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -51,7 +51,7 @@ class _HomePageState extends State<HomePage> {
 
               List<Product> weightData =
                   snapshot.data!.docs.map((e) => Product.fromSnap(e)).toList();
-              // return AppLoading.productList;
+
               if (weightData.isEmpty) {
                 return AppLoading.productList;
               }

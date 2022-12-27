@@ -10,7 +10,7 @@ class SelectedList extends ChangeNotifier {
 class ScanPageProvider extends ChangeNotifier {
   final PageController controller = PageController();
 
-  String qrCode = '';
+  String qrCode = '0';
 
   void qrCodeData(String code) => qrCode = code;
   void jumpTo(int index) => controller.jumpToPage(index);

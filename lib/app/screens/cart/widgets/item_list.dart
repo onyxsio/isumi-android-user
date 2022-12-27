@@ -24,7 +24,7 @@ class _ItemListViewState extends State<ItemListView> {
   Future<void> getQuantity() async {
     Map<String, dynamic> data = widget.cart.data()! as Map<String, dynamic>;
     item = Items.fromJson(data);
-    var result = await FirestoreRepository.setupQuantity(item);
+    var result = await FireRepo.setupQuantity(item);
     // if (mounted) return;
     setState(() {
       stock = result;
@@ -73,7 +73,7 @@ class _ItemListViewState extends State<ItemListView> {
           actions: <Widget>[
             TextButton(
                 onPressed: () async {
-                  FirestoreRepository.removeCart(item.id!)
+                  FireRepo.removeCart(item.id!)
                       .then((value) => Navigator.of(context).pop(true));
                 },
                 child: const Text("Delete")),
@@ -134,7 +134,7 @@ class _ItemListViewState extends State<ItemListView> {
         InkWell(
           onTap: () async {
             if (int.parse(stock) > quantity) setState(() => quantity++);
-            FirestoreRepository.quantityUpdate(quantity.toString(), item.id!);
+            FireRepo.quantityUpdate(quantity.toString(), item.id!);
           },
           child: CircleAvatar(
             radius: 4.w,
@@ -146,7 +146,7 @@ class _ItemListViewState extends State<ItemListView> {
         InkWell(
           onTap: () {
             if (1 < quantity) setState(() => quantity--);
-            FirestoreRepository.quantityUpdate(quantity.toString(), item.id!);
+            FireRepo.quantityUpdate(quantity.toString(), item.id!);
             // SQFLiteDB.updateQuantity(widget.cart.id!, quantity.toString());
           },
           child: CircleAvatar(

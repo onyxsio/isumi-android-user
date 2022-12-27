@@ -15,10 +15,10 @@ class _FetchingItemsState extends State<FetchingItems> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: FirestoreRepository.productStream,
+      stream: FireRepo.productStream,
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
-          return const Text('Something went wrong');
+          return const Center(child: HRDots());
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {

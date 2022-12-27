@@ -14,10 +14,10 @@ import 'package:remote_data/src/key/api_key.dart';
 import 'package:remote_data/src/model/models.dart';
 import 'package:remote_data/src/model/seller.dart';
 import 'package:uuid/uuid.dart';
-import 'storage_repository.dart';
+import 'storage.dart';
 import 'package:google_sign_in/google_sign_in.dart' as gs;
 
-class FirestoreRepository {
+class FireRepo {
   // ! USE
   // Get instance of Firebase Firestore
   static FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -26,6 +26,7 @@ class FirestoreRepository {
   // Cerate instance of products Database
   static var productsDB = firestore.collection('products');
   static var sellerDB = firestore.collection('sellers');
+  static var ordersDB = firestore.collection('orders');
   // Stream<QuerySnapshot>
   static var productStream = productsDB.snapshots();
   static var productLimitStream = productsDB.limit(20).snapshots();
@@ -152,6 +153,7 @@ class FirestoreRepository {
     }
   }
 
+//
   static Future<String> setupAddress(Address address) async {
     final user = auth.FirebaseAuth.instance.currentUser;
 
@@ -185,6 +187,7 @@ class FirestoreRepository {
     }
   }
 
+  //
   static Future<void> removeCart(String id) async {
     final user = auth.FirebaseAuth.instance.currentUser;
     try {
@@ -194,6 +197,48 @@ class FirestoreRepository {
     }
   }
 
+//
+  static Future<void> addToRivewCustomerDB(Review review) async {
+    final user = auth.FirebaseAuth.instance.currentUser;
+    try {
+      await customerDB.doc(user!.uid).update({
+        'review': FieldValue.arrayUnion([review.toJson()])
+      });
+    } catch (_) {}
+  }
+
+//
+  static Future<void> addToRivewProductDB(
+      ReviewRating review, String id) async {
+    final user = auth.FirebaseAuth.instance.currentUser;
+    try {
+      await productsDB.doc(id).get().then((DocumentSnapshot doc) {
+        if (doc.exists) {
+          Map<String, dynamic> data = doc.data()! as Map<String, dynamic>;
+          Rivews val = Rivews.fromJson(data['rivews']);
+          log(Rivews.fromJson(data['rivews']).toJson().toString());
+
+          var total = (double.parse(val.reviewTot!) +
+              double.parse(review.ratingValue!));
+          var value = ((total / (val.reviewCount! + 1)) * 5);
+          log(value.toString());
+          productsDB.doc(id).update({
+            'rivews.reviewCount': FieldValue.increment(1),
+            'rivews.ratingValue': value.toString(),
+            'rivews.reviewTot': total.toString(),
+          });
+        }
+      });
+      await productsDB.doc(id).update({
+        'reviewRating': FieldValue.arrayUnion(
+            [review.copyWith(author: user!.displayName).toJson()])
+      });
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  //
   static Future<void> quantityUpdate(String value, String id) async {
     final user = auth.FirebaseAuth.instance.currentUser;
 
@@ -206,6 +251,34 @@ class FirestoreRepository {
     } catch (e) {
       log(e.toString());
     }
+  }
+
+  static Future<void> addToWishList(Product product) async {
+    final user = auth.FirebaseAuth.instance.currentUser;
+    try {
+      await customerDB
+          .doc(user!.uid)
+          .collection('wishlist')
+          .doc(product.sId)
+          .set(product.toJson());
+      await customerDB.doc(user.uid).update({
+        'wishlist': FieldValue.arrayUnion([product.sId])
+      });
+    } catch (_) {}
+  }
+
+  static Future<void> removeWishList(Product product) async {
+    final user = auth.FirebaseAuth.instance.currentUser;
+    try {
+      await customerDB
+          .doc(user!.uid)
+          .collection('wishlist')
+          .doc(product.sId)
+          .delete();
+      await customerDB.doc(user.uid).update({
+        'wishlist': FieldValue.arrayRemove([product.sId])
+      });
+    } catch (_) {}
   }
 
   // customerDB
@@ -222,8 +295,13 @@ class FirestoreRepository {
           .set(order.copyWith(oId: orderId).toJson());
       //
       await customerDB.doc(user!.uid).update({
-        'order': FieldValue.arrayUnion([order.copyWith(oId: orderId).toJson()])
+        'order': FieldValue.arrayUnion([orderId])
       });
+      // This is used to rivew
+      await firestore
+          .collection('orders')
+          .doc(orderId)
+          .set(order.copyWith(oId: orderId).toJson());
       //
       await customerDB
           .doc(user.uid)
@@ -238,7 +316,7 @@ class FirestoreRepository {
             .get()
             .then((snapshot) => Product.fromSnap(snapshot));
         // **
-        await customerDB.doc(user.uid).update({
+        await sellerDB.doc(item.sellerId).update({
           'sold': FieldValue.arrayUnion([item.productId])
         });
         // **

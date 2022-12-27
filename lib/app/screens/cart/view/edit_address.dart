@@ -90,7 +90,7 @@ class _EditAddressState extends State<EditAddress> {
 
     await SQFLiteDB.createAddress(laddress);
 
-    await FirestoreRepository.setupAddress(address).then((value) {
+    await FireRepo.setupAddress(address).then((value) {
       if (value == 'done') {
         DBox.autoClose(context,
             type: InfoDialog.successful,
@@ -124,7 +124,7 @@ class _EditAddressState extends State<EditAddress> {
 
     await SQFLiteDB.updateAddress(laddress);
 
-    await FirestoreRepository.setupAddress(address).then((value) {
+    await FireRepo.setupAddress(address).then((value) {
       if (value == 'done') {
         DBox.autoClose(context,
             type: InfoDialog.successful,

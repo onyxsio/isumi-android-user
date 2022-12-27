@@ -10,7 +10,7 @@ class ProfilePage extends StatelessWidget {
     return Scaffold(
       appBar: mainAppBar(text: 'My Profile'),
       body: StreamBuilder<DocumentSnapshot>(
-          stream: FirestoreRepository.customerDB.doc(user.id).snapshots(),
+          stream: FireRepo.customerDB.doc(user.id).snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return const Center(child: HRDots());

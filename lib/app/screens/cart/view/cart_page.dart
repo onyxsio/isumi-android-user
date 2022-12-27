@@ -20,10 +20,8 @@ class _CartPageState extends State<CartPage> {
     return Scaffold(
       appBar: mainAppBar(text: 'Shopping Cart'),
       body: StreamBuilder<QuerySnapshot>(
-        stream: FirestoreRepository.customerDB
-            .doc(user!.uid)
-            .collection('cart')
-            .snapshots(),
+        stream:
+            FireRepo.customerDB.doc(user!.uid).collection('cart').snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
             return const Center(child: HRDots());

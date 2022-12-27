@@ -14,6 +14,7 @@ class AppCIcon {
   static const String trash = 'assets/icons/trash.svg';
   static const String logo = 'assets/images/logo.png';
   // static const String camera = 'assets/icons/camera.svg';
+  static const String heart = 'assets/icons/heart.svg';
 }
 
 class Utils {
