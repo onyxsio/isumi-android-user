@@ -24,6 +24,35 @@ class MenuButton extends StatelessWidget {
 }
 
 //
+class WishButton extends StatelessWidget {
+  const WishButton({Key? key, required this.isWish, required this.onTap})
+      : super(key: key);
+  final Function() onTap;
+  final bool isWish;
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 14.w,
+        width: 14.w,
+        margin: EdgeInsets.all(1.5.w).copyWith(left: 5.w),
+        padding: EdgeInsets.all(3.2.w),
+        decoration: BoxDecoration(
+          color: AppColor.white,
+          boxShadow: [AppBoxShadow.black],
+          borderRadius: BorderRadius.circular(16),
+        ),
+        // child: SvgPicture.asset(AppCIcon.heart),
+        child: isWish
+            ? Icon(Icons.favorite, color: AppColor.black2)
+            : Icon(Icons.favorite_border_rounded, color: AppColor.black2),
+      ),
+    );
+  }
+}
+
+//
 class ArrowBackButton extends StatelessWidget {
   const ArrowBackButton({Key? key}) : super(key: key);
 

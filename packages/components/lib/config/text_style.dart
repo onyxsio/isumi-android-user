@@ -139,6 +139,7 @@ class TxtStyle {
 
   static TextStyle size(click) => h5.copyWith(
       fontWeight: b, color: click ? AppColor.white : AppColor.menuUnselect);
+  static TextStyle get sizeunselect => h5.copyWith(color: AppColor.white);
 //  Used 2
   static TextStyle get settingSubtitle =>
       b3.copyWith(color: AppColor.menuUnselect);

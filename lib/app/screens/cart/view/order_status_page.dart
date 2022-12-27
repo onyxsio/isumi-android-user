@@ -97,11 +97,11 @@ class _OrderStatusPageState extends State<OrderStatusPage> {
       ).then((value) {
         if (value == 'successful') {
           // Send Order To seller
-          FirestoreRepository.setupOrder(order);
+          FireRepo.setupOrder(order);
           // Delete All Cart
-          FirestoreRepository.deleteCart();
+          FireRepo.deleteCart();
           // Send notification
-          FirestoreRepository.sendOrder(order);
+          FireRepo.sendOrder(order);
 
           // Navigator.push(context,
           //     MaterialPageRoute(builder: (builder) => const EndPage()));
@@ -168,7 +168,7 @@ class _OrderStatusPageState extends State<OrderStatusPage> {
 
   Widget _buildBottomList(theme, context, user) {
     return StreamBuilder<DocumentSnapshot>(
-        stream: FirestoreRepository.customerDB.doc(user.id).snapshots(),
+        stream: FireRepo.customerDB.doc(user.id).snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return const Center(child: HRDots());

@@ -18,16 +18,27 @@ class ProductDetailsPage extends StatefulWidget {
 class _ProductDetailsPageState extends State<ProductDetailsPage> {
   String price = '0.0', stock = '';
   int selectedColor = 0, selectedSize = 0;
+  bool isWish = false;
+  bool isLoading = false;
   List<Variant> veriants = [];
   // List minPrice = [];
-
+  late Customer customer;
   @override
   void initState() {
     loadingPrice();
+    getUserData();
     super.initState();
   }
 
-  void loadingPrice() {
+  Future<void> getUserData() async {
+    setState(() => isLoading = true);
+    customer = await FireRepo.getCustomer();
+    isWish = customer.wishlist!.contains(widget.product.sId);
+    setState(() => isLoading = false);
+  }
+
+  void loadingPrice() async {
+    // customer = await FireRepo.getCustomer();
     setState(() {
       price = widget.product.price!.value!;
       veriants = widget.product.variant!;
@@ -61,130 +72,165 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
     return BlocBuilder<CounterCubit, CounterState>(
       builder: (context, state) {
         return Scaffold(
-          appBar: secondaryAppBar(),
-          body: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Column(
-              children: [
-                _buildImageSilder(size),
-                if (hasOffer)
-                  Container(
-                    height: 6.w,
-                    alignment: Alignment.centerLeft,
-                    padding: EdgeInsets.only(left: 5.w),
-                    color: AppColor.error,
-                    width: double.infinity,
-                    child: Text('super deal',
-                        style: TxtStyle.b6B.copyWith(color: AppColor.white)),
-                  ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.w),
-                  color: AppColor.white,
+          appBar: detailsPage(
+            onTap: () async {
+              setState(() => isWish = !isWish);
+              if (isWish) {
+                await FireRepo.addToWishList(widget.product);
+              } else {
+                await FireRepo.removeWishList(widget.product);
+              }
+            },
+            isWish: isWish,
+          ),
+          body: isLoading
+              ? const Center(child: HRDots())
+              : SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      priceTag(hasOffer, hasDiscount),
-                      space,
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                              child: Text(widget.product.title!,
-                                  style: TxtStyle.b8B)),
-                        ],
-                      ),
-                      space,
-                      reviewAndRating(),
-                      // space,
-                      const Divider(),
-                      space,
-                      Text('Choose the variation', style: TxtStyle.b5B),
-                      space,
-                      GestureDetector(
-                        onTap: showVeriant,
-                        child: Row(
+                      _buildImageSilder(size),
+                      if (hasOffer)
+                        Container(
+                          height: 6.w,
+                          alignment: Alignment.centerLeft,
+                          padding: EdgeInsets.only(left: 5.w),
+                          color: AppColor.error,
+                          width: double.infinity,
+                          child: Text('super deal',
+                              style:
+                                  TxtStyle.b6B.copyWith(color: AppColor.white)),
+                        ),
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 5.w, vertical: 5.w),
+                        color: AppColor.white,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SvgPicture.asset(AppIcon.size, width: 10.w),
-                            SizedBox(width: 4.w),
-                            SvgPicture.asset(AppIcon.color, width: 10.w),
+                            priceTag(hasOffer, hasDiscount),
+                            space,
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                    child: Text(widget.product.title!,
+                                        style: TxtStyle.b8B)),
+                              ],
+                            ),
+                            space,
+                            reviewAndRating(),
+                            // space,
+                            const Divider(),
+                            space,
+                            Text('Choose the variation', style: TxtStyle.b5B),
+                            space,
+                            GestureDetector(
+                              onTap: showVeriant,
+                              child: Row(
+                                children: [
+                                  SvgPicture.asset(AppIcon.size, width: 10.w),
+                                  SizedBox(width: 4.w),
+                                  SvgPicture.asset(AppIcon.color, width: 10.w),
+                                ],
+                              ),
+                            ),
+                            // Text('Select color', style: TxtStyle.b5B),
+                            // space,
+                            // _buildColorGrid(),
+                            // space, const Divider(),
+                            // Text('Select size', style: TxtStyle.b5B),
+                            // space,
+                            // _buildSizeGrid(),
+                            // space,
+                            // Text('Only $stock items left', style: TxtStyle.b6),
+                            // space,
                           ],
                         ),
                       ),
-                      // Text('Select color', style: TxtStyle.b5B),
-                      // space,
-                      // _buildColorGrid(),
-                      // space, const Divider(),
-                      // Text('Select size', style: TxtStyle.b5B),
-                      // space,
-                      // _buildSizeGrid(),
-                      // space,
-                      // Text('Only $stock items left', style: TxtStyle.b6),
-                      // space,
+                      space,
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 5.w, vertical: 5.w),
+                        color: AppColor.white,
+                        child: DropChild(
+                          title: 'Shipping details',
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Text('Delivery Price: ', style: TxtStyle.b5B),
+                                  Text(widget.product.shipping!.deliveryPrice!,
+                                      style: TxtStyle.reviews),
+                                ],
+                              ),
+                              SizedBox(height: 2.w),
+                              Row(
+                                children: [
+                                  Text(widget.product.shipping!.returnDays!,
+                                      style: TxtStyle.b5B),
+                                  Text(' days easy return ',
+                                      style: TxtStyle.reviews),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      space,
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 5.w, vertical: 5.w),
+                        color: AppColor.white,
+                        child: DropChild(
+                          title: 'Specifications',
+                          child: Text(widget.product.description!,
+                              style: TxtStyle.reviews),
+                        ),
+                      ),
+                      space,
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 5.w, vertical: 5.w),
+                        color: AppColor.white,
+                        child: DropChild(
+                            title: 'Ratings & Reciews',
+                            child: widget.product.reviewRating != null
+                                ? ListView(
+                                    shrinkWrap: true,
+                                    children: widget.product.reviewRating!
+                                        .map((e) => Column(
+                                              children: [
+                                                space,
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Expanded(
+                                                      child: Text(e.author!,
+                                                          style: TxtStyle.b5),
+                                                    ),
+                                                    StarRating(
+                                                        rating: e.ratingValue!),
+                                                  ],
+                                                ),
+                                                space,
+                                                Text(e.description!,
+                                                    style: TxtStyle.l3),
+                                                space,
+                                              ],
+                                            ))
+                                        .toList())
+                                : const SizedBox()),
+                      ),
+                      space,
                     ],
                   ),
                 ),
-                space,
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.w),
-                  color: AppColor.white,
-                  child: DropChild(
-                    title: 'Shipping details',
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Text('Delivery Price: ', style: TxtStyle.b5B),
-                            Text(widget.product.shipping!.deliveryPrice!,
-                                style: TxtStyle.reviews),
-                          ],
-                        ),
-                        SizedBox(height: 2.w),
-                        Row(
-                          children: [
-                            Text(widget.product.shipping!.returnDays!,
-                                style: TxtStyle.b5B),
-                            Text(' days easy return ', style: TxtStyle.reviews),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                space,
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.w),
-                  color: AppColor.white,
-                  child: DropChild(
-                    title: 'Specifications',
-                    child: Text(widget.product.description!,
-                        style: TxtStyle.reviews),
-                  ),
-                ),
-                space,
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.w),
-                  color: AppColor.white,
-                  child: DropChild(
-                      title: 'Ratings & Reciews',
-                      child: widget.product.rivews!.reviewRating != null
-                          ? ListView(
-                              children: widget.product.rivews!.reviewRating!
-                                  .map((e) => ListTile(
-                                        title: Text(e.author!,
-                                            style: TxtStyle.reviews),
-                                        subtitle: Text(e.description!,
-                                            style: TxtStyle.reviews),
-                                      ))
-                                  .toList())
-                          : const SizedBox()),
-                ),
-                space,
-              ],
-            ),
-          ),
           // bottomNavigationBar: _buildBottomNavigationBar(context),
           bottomNavigationBar: Container(
             padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.w),
@@ -219,6 +265,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       selectedColor = data.color;
       selectedSize = data.size;
       price = data.price;
+      stock = data.stock;
     });
   }
 
@@ -235,7 +282,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       size: convertToSize(veriants[selectedColor])[selectedSize].size!,
     );
 
-    await FirestoreRepository.addToCart(item).then((value) {
+    await FireRepo.addToCart(item).then((value) {
       if (value) {
         DBox.autoClose(context,
             type: InfoDialog.successful,

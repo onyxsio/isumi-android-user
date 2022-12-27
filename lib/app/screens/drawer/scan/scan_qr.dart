@@ -16,15 +16,32 @@ class _ScanQrPageState extends State<ScanQrPage> {
   Barcode? result;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  late Customer customer;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  Future<bool> getUserData(String id) async {
+    // setState(() => isLoading = true);
+    customer = await FireRepo.getCustomer();
+    return customer.order!.contains(id);
+    // setState(() => isLoading = false);
+  }
 
   void _onQRViewCreated(QRViewController controller) {
     setState(() => this.controller = controller);
-    controller.scannedDataStream.listen((scanData) {
+    controller.scannedDataStream.listen((scanData) async {
       setState(() {
         result = scanData;
         controller.pauseCamera();
       });
-      if (result != null) showMessage();
+      // if (result != null) showMessage();
+      if (result != null) {
+        // var data = await getUserData(result!.code!);
+        if (await getUserData(result!.code!)) showMessage();
+      }
     });
   }
 

@@ -7,7 +7,7 @@ class AdCarouselSlider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-        stream: FirestoreRepository.offerStream,
+        stream: FireRepo.offerStream,
         builder: (builder, AsyncSnapshot<QuerySnapshot> snap) {
           if (snap.hasError) {
             return const SizedBox();

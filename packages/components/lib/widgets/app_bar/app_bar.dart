@@ -26,6 +26,13 @@ ternaryAppBar({required String text}) => AppBar(
       title: TXTHeader.header3(text),
       leading: const ArrowBackButton(),
     );
+//
+detailsPage({required Function() onTap, required bool isWish}) => AppBar(
+      elevation: 0,
+      leadingWidth: 20.w,
+      leading: const ArrowBackButton(),
+      actions: [WishButton(onTap: onTap, isWish: isWish)],
+    );
 // !
 bottomNavigationBar({required Function() onTap, required String text}) =>
     Padding(

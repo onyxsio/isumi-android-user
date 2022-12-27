@@ -9,8 +9,8 @@ class Customer {
   String? phone;
   String? photoUrls;
   Address? address;
-  List<Orders>? order;
-  List<Product>? wishlist;
+  List<String>? order;
+  List<String>? wishlist;
   List<Review>? review;
   String? createdAt;
   String? deviceToken;
@@ -37,8 +37,8 @@ class Customer {
     String? phone,
     String? photoUrls,
     Address? address,
-    List<Orders>? order,
-    List<Product>? wishlist,
+    List<String>? order,
+    List<String>? wishlist,
     List<Review>? review,
     String? createdAt,
     String? deviceToken,
@@ -69,15 +69,16 @@ class Customer {
       address = Address.fromJson(json['address']);
     }
     if (json['order'] != null) {
-      order = <Orders>[];
+      order = <String>[];
       json['order'].forEach((v) {
-        order!.add(Orders.fromJson(v));
+        order!.add(v);
       });
     }
     if (json['wishlist'] != null) {
-      wishlist = <Product>[];
+      wishlist = <String>[];
       json['wishlist'].forEach((v) {
-        wishlist!.add(Product.fromJson(v));
+        // wishlist!.add(Product.fromJson(v));
+        wishlist!.add(v);
       });
     }
     if (json['review'] != null) {
@@ -101,15 +102,16 @@ class Customer {
       address = Address.fromJson(json['address']);
     }
     if (json['order'] != null) {
-      order = <Orders>[];
+      order = <String>[];
       json['order'].forEach((v) {
-        order!.add(Orders.fromJson(v));
+        order!.add(v);
       });
     }
     if (json['wishlist'] != null) {
-      wishlist = <Product>[];
+      wishlist = <String>[];
       json['wishlist'].forEach((v) {
-        wishlist!.add(Product.fromJson(v));
+        // wishlist!.add(Product.fromJson(v));
+        wishlist!.add(v);
       });
     }
     if (json['review'] != null) {
@@ -134,10 +136,11 @@ class Customer {
       data['address'] = address!.toJson();
     }
     if (order != null) {
-      data['order'] = order!.map((v) => v.toJson()).toList();
+      data['order'] = order!.map((v) => v).toList();
     }
     if (wishlist != null) {
-      data['wishlist'] = wishlist!.map((v) => v.toJson()).toList();
+      // data['wishlist'] = wishlist!.map((v) => v.toJson()).toList();
+      data['wishlist'] = wishlist!.map((v) => v).toList();
     }
     if (review != null) {
       data['review'] = review!.map((v) => v.toJson()).toList();

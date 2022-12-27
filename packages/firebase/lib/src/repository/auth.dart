@@ -45,7 +45,7 @@ class AuthRepository {
   /// Creates a new user with the provided email] and password].
   Future<void> signUp({required String email, required String password}) async {
     try {
-      var isAdmin = await FirestoreRepository.isAdmin(email);
+      var isAdmin = await FireRepo.isAdmin(email);
 
       if (isAdmin) {
         var newuser = await _firebaseAuth.createUserWithEmailAndPassword(
@@ -53,7 +53,7 @@ class AuthRepository {
           password: password,
         );
 
-        await FirestoreRepository.createAccount(newuser.user!);
+        await FireRepo.createAccount(newuser.user!);
       } else {
         log('message');
       }
@@ -83,7 +83,7 @@ class AuthRepository {
   Future<void> logInWithEmailAndPassword(
       {required String email, required String password}) async {
     try {
-      var isAdmin = await FirestoreRepository.isAdmin(email);
+      var isAdmin = await FireRepo.isAdmin(email);
 
       if (isAdmin) {
         await _firebaseAuth.signInWithEmailAndPassword(
@@ -105,7 +105,7 @@ class AuthRepository {
       late final firebase_auth.AuthCredential credential;
 
       final googleUser = await _googleSignIn.signIn();
-      var isAdmin = await FirestoreRepository.isAdmin(googleUser!.email);
+      var isAdmin = await FireRepo.isAdmin(googleUser!.email);
 
       if (isAdmin) {
         final googleAuth = await googleUser.authentication;
@@ -116,7 +116,7 @@ class AuthRepository {
 
         var user = await _firebaseAuth.signInWithCredential(credential);
         // googleUser.
-        await FirestoreRepository.createAccount(user.user!);
+        await FireRepo.createAccount(user.user!);
       }
       // TODO else alrady user logdind
     } on firebase_auth.FirebaseAuthException catch (e) {

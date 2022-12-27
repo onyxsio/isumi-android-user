@@ -7,8 +7,10 @@ class Selected {
   final int color;
   final int size;
   final String price;
+  final String stock;
   Selected({
     required this.color,
+    required this.stock,
     required this.price,
     required this.size,
   });
@@ -67,6 +69,7 @@ class _VeriantChooseState extends State<VeriantChoose> {
           price: price,
           color: selectedColor,
           size: selectedSize,
+          stock: stock,
         );
         Navigator.pop(context, selected);
         return true;
@@ -211,21 +214,28 @@ class _VeriantChooseState extends State<VeriantChoose> {
       convertToSize(veriants[selectedColor]).length,
       (i) => GestureDetector(
             onTap: () {
+              // if (convertToSize(veriants[selectedColor])[i].stock! != '0') {
               setState(() {
                 price = convertToSize(veriants[selectedColor])[i].price!;
                 selectedSize = i;
                 stock = convertToSize(veriants[selectedColor])[i].stock!;
                 context.read<CounterCubit>().reset();
               });
+              // }
             },
             child: Container(
               height: 12.w,
               width: 13.w,
-              decoration: BoxDeco.deco_2m(selectedSize == i),
+              decoration:
+                  convertToSize(veriants[selectedColor])[i].stock! != '0'
+                      ? BoxDeco.deco_2m(selectedSize == i)
+                      : BoxDeco.unselected,
               child: Center(
                   child: Text(
                 convertToSize(veriants[selectedColor])[i].size!,
-                style: TxtStyle.size(selectedSize == i),
+                style: convertToSize(veriants[selectedColor])[i].stock! != '0'
+                    ? TxtStyle.size(selectedSize == i)
+                    : TxtStyle.sizeunselect,
               )),
             ),
           ));

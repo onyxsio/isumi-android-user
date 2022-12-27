@@ -125,7 +125,7 @@ class _ShippingAddressPageState extends State<ShippingAddressPage> {
 
   usedAddress(int index, LAddress address) {
     return StreamBuilder<DocumentSnapshot>(
-        stream: FirestoreRepository.customerDB.doc(user!.uid).snapshots(),
+        stream: FireRepo.customerDB.doc(user!.uid).snapshots(),
         builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.hasError) {
             return const Center(child: HRDots());
@@ -173,7 +173,7 @@ class _ShippingAddressPageState extends State<ShippingAddressPage> {
       city: value.city,
       postalCode: value.postalCode,
     );
-    await FirestoreRepository.setupAddress(address);
+    await FireRepo.setupAddress(address);
   }
 
   Row titleRow(String name, BuildContext context, LAddress value) {

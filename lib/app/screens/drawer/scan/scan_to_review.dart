@@ -31,5 +31,5 @@ class _ScanToReviewState extends State<ScanToReview> {
 
 List<Widget> child = [
   const ScanQrPage(),
-  const ReviewTypePage(),
+  const GetOrdersData(),
 ];

@@ -22,6 +22,7 @@ class AppIcon {
   static const String trash = 'assets/icons/trash.svg';
   static const String logout = 'assets/icons/logout.svg';
   static const String done = 'assets/icons/done.svg';
+  static const String heart = 'assets/icons/heart.svg';
   static const String erorr = 'assets/icons/erorr.svg';
   static const String camera = 'assets/icons/camera.svg';
   static const String plus = 'assets/icons/plus.svg';
