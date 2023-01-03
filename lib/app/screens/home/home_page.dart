@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:isumi/core/util/image.dart';
 import 'package:onyxsio/onyxsio.dart';
 import 'widgets/ad_carousel_slider.dart';
 import 'widgets/product_card.dart';
@@ -23,12 +22,12 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     // final user = context.select((AppBloc bloc) => bloc.state.user);
-    final drawerProvider = Provider.of<DrawerProvider>(context);
+    // final drawerProvider = Provider.of<DrawerProvider>(context);
     return CustomScrollView(
       physics: const BouncingScrollPhysics(),
       slivers: <Widget>[
         topAppBar(),
-        topTitle(),
+        // topTitle(),
         SliverPersistentHeader(delegate: SearchHeader(), pinned: true),
         const SliverToBoxAdapter(child: AdCarouselSlider()),
         //
@@ -86,12 +85,17 @@ class _HomePageState extends State<HomePage> {
   SliverAppBar topAppBar() {
     return SliverAppBar(
       pinned: true,
+      backgroundColor: Colors.transparent,
       automaticallyImplyLeading: false,
       elevation: 0,
       title: Row(
         children: [
-          SvgPicture.asset(AppIcon.location),
-          Text('Deliver to Gram Bistro', style: TxtStyle.l5),
+          // SvgPicture.asset(AppIcon.location),
+          // CircleAvatar(
+          //   child: Image.asset(AppImage.logo),
+          //   backgroundColor: AppColor.black,
+          // ),
+          Text('Choose your lovely clothes', style: TxtStyle.l5),
         ],
       ),
       actions: const [MenuButton()],
@@ -100,14 +104,14 @@ class _HomePageState extends State<HomePage> {
   }
 
   // Top Title
-  SliverToBoxAdapter topTitle() {
-    return SliverToBoxAdapter(
-      child: Padding(
-        padding: EdgeInsets.only(left: 6.w, bottom: 5.w),
-        child: Text('Find the latest trend for you', style: TxtStyle.h10),
-      ),
-    );
-  }
+  // SliverToBoxAdapter topTitle() {
+  //   return SliverToBoxAdapter(
+  //     child: Padding(
+  //       padding: EdgeInsets.only(left: 6.w, bottom: 5.w),
+  //       child: Text('Find the latest trend for you', style: TxtStyle.h10),
+  //     ),
+  //   );
+  // }
 
   // Title for  Most Popular
   SliverToBoxAdapter mostPopularTitle() {

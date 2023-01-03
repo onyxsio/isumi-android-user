@@ -85,20 +85,21 @@ class ProfilePage extends StatelessWidget {
               ),
               const Divider(),
               SizedBox(height: 5.w),
-              listTile(
-                title: 'Payment Method',
-                subTitle: 'You have 2 cards',
-                onTap: () {
-                  Navigator.pushNamed(context, '/PaymetMethodPage');
-                },
-              ),
-              const Divider(),
-              SizedBox(height: 5.w),
+              // listTile(
+              //   title: 'Payment Method',
+              //   subTitle: 'You have 2 cards',
+              //   onTap: () {
+              //     Navigator.pushNamed(context, '/PaymetMethodPage');
+              //   },
+              // ),
+              // const Divider(),
+              // SizedBox(height: 5.w),
               listTile(
                 title: 'My reviews',
-                subTitle: 'Reviews for 5 items',
+                subTitle: 'Reviews for ${customer.review!.length} items',
                 onTap: () {
-                  Navigator.pushNamed(context, '/ReviewPage');
+                  Navigator.pushNamed(context, '/ReviewPage',
+                      arguments: customer);
                 },
               ),
             ],

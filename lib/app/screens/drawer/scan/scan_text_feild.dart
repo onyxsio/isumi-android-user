@@ -1,71 +1,6 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:isumi/core/util/image.dart';
 import 'package:onyxsio/onyxsio.dart';
-
-// class ReviewTypePage extends StatefulWidget {
-//   const ReviewTypePage(
-//       {Key? key, required this.value, required this.controller})
-//       : super(key: key);
-//   final PageController controller;
-//   final int value;
-//   @override
-//   State<ReviewTypePage> createState() => _ReviewTypePageState();
-// }
-
-// class _ReviewTypePageState extends State<ReviewTypePage> {
-//   var controller = TextEditingController();
-//   double _value = 1.0;
-//   @override
-//   Widget build(BuildContext context) {
-//     // final qrCode = Provider.of<ScanPageProvider>(context).qrCode;
-//     return Center(
-//       child: SingleChildScrollView(
-//         // padding: EdgeInsets.symmetric(horizontal: 5.w),
-//         physics: const BouncingScrollPhysics(),
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           mainAxisSize: MainAxisSize.min,
-//           children: [
-//             Text(' of ${widget.value} items'),
-//             Text('How do you feel about our product?',
-//                 textAlign: TextAlign.center, style: TxtStyle.h8),
-//             SizedBox(height: 5.w),
-//             Image.asset(AppImage.star, height: 20.h),
-//             SizedBox(height: 5.w),
-//             Text('Awesome expression', style: TxtStyle.l5),
-//             SizedBox(height: 5.w),
-//             Slider(
-//               min: 0.0,
-//               max: 4.0,
-//               value: _value,
-//               thumbColor: AppColor.yellow,
-//               activeColor: AppColor.yellow,
-//               inactiveColor: AppColor.yellow.withOpacity(0.2),
-//               divisions: 4,
-//               label: '${_value.round() + 1}',
-//               onChanged: (value) {
-//                 setState(() {
-//                   _value = value;
-//                 });
-//               },
-//             ),
-//             _TextInput(controller: controller),
-//             SizedBox(height: 5.w),
-//             MainButton(
-//               text: 'Continue',
-//               onTap: () {
-//                 widget.controller.jumpToPage(widget.value);
-//                 // TODO
-//               },
-//             )
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
 
 class _TextInput extends StatelessWidget {
   final TextEditingController controller;
@@ -208,7 +143,7 @@ class _MyReviewState extends State<MyReview> {
               onTap: () async {
                 controller.jumpToPage(index + 1);
                 Review review = Review(
-                  ratingValue: ((_value + 1) / 5).toString(),
+                  ratingValue: ((_value + 1)).toString(),
                   description: txtcontroller.text,
                   date: DateTime.now().toString(),
                   productName: widget.order.items![index].name,

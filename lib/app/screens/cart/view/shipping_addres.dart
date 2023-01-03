@@ -1,4 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart' as auth;
+// import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
 import 'package:isumi/core/util/image.dart';
 import 'package:onyxsio/onyxsio.dart';
@@ -11,7 +11,7 @@ class ShippingAddressPage extends StatefulWidget {
 }
 
 class _ShippingAddressPageState extends State<ShippingAddressPage> {
-  final user = auth.FirebaseAuth.instance.currentUser;
+  // final user = auth.FirebaseAuth.instance.currentUser;
   bool isLoading = false;
   int isClick = 0;
   // late Customer customer;
@@ -124,8 +124,9 @@ class _ShippingAddressPageState extends State<ShippingAddressPage> {
   }
 
   usedAddress(int index, LAddress address) {
+    final user = context.select((AppBloc bloc) => bloc.state.user);
     return StreamBuilder<DocumentSnapshot>(
-        stream: FireRepo.customerDB.doc(user!.uid).snapshots(),
+        stream: FireRepo.customerDB.doc(user.id).snapshots(),
         builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.hasError) {
             return const Center(child: HRDots());

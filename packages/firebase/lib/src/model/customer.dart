@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:remote_data/remote_data.dart';
 
 class Customer {
   String? id;

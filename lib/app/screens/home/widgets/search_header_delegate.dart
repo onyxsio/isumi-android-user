@@ -8,7 +8,10 @@ class SearchHeader extends SliverPersistentHeaderDelegate {
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return Material(child: _SearchInput());
+    return Material(
+      color: Colors.transparent,
+      child: _SearchInput(),
+    );
   }
 
   @override

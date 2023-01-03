@@ -1,5 +1,6 @@
 import 'package:components/components.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 //
 itemsFound({required int number}) {
@@ -20,3 +21,6 @@ pickImage(ImageSource source) async {
     return await file.readAsBytes();
   }
 }
+
+// URL Launcher
+void openURL(String url) => launchUrl(Uri.parse(url));

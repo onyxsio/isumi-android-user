@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:isumi/app/screens/authentication/forgotPass/view/forgot_page.dart';
 import 'package:isumi/app/screens/authentication/login/login.dart';
 import 'package:isumi/app/screens/authentication/sign_up/view/sign_up_page.dart';
-import 'package:isumi/app/screens/cart/view/checkout.dart';
+// import 'package:isumi/app/screens/cart/view/checkout.dart';
 import 'package:isumi/app/screens/cart/view/edit_address.dart';
 import 'package:isumi/app/screens/cart/view/end_page.dart';
 import 'package:isumi/app/screens/cart/view/order_status_page.dart';
 import 'package:isumi/app/screens/cart/view/shipping_addres.dart';
 import 'package:isumi/app/screens/drawer/page/account_setting.dart';
 import 'package:isumi/app/screens/drawer/page/notification_page.dart';
+import 'package:isumi/app/screens/drawer/page/support_page.dart';
 import 'package:isumi/app/screens/drawer/scan/scan_to_review.dart';
 import 'package:isumi/app/screens/drawer/page/settings_page.dart';
 import 'package:isumi/app/screens/drawer/page/wish_list_page.dart';
@@ -64,8 +65,8 @@ class RouteGenerator {
         return OpenAndFadeTransition(OrderStatusPage(carts: data));
       case '/ShippingAddressPage':
         return OpenAndFadeTransition(const ShippingAddressPage());
-      case '/CheckOutPage':
-        return OpenAndFadeTransition(const CheckOutPage());
+      // case '/CheckOutPage':
+      //   return OpenAndFadeTransition(const CheckOutPage());
       case '/EditAddress':
         LAddress? shipTo = arguments as LAddress?;
         return OpenAndFadeTransition(EditAddress(shipTo: shipTo));
@@ -87,7 +88,13 @@ class RouteGenerator {
         return OpenAndFadeTransition(const NotificationPage());
       //
       case '/ReviewPage':
-        return OpenAndFadeTransition(const ReviewPage());
+        Customer customer = arguments as Customer;
+        return OpenAndFadeTransition(ReviewPage(customer: customer));
+
+      case '/SupportPage':
+        String type = arguments as String;
+        return OpenAndFadeTransition(SupportPage(type: type));
+      //
       default:
         // If there is no such named route in the switch statement
         return _errorRoute();
