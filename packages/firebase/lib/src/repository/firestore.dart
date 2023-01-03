@@ -4,18 +4,14 @@ import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:components/components.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:local_database/local_db.dart';
 import 'package:remote_data/src/error/failure.dart';
 import 'package:remote_data/src/key/api_key.dart';
 import 'package:remote_data/src/model/models.dart';
 import 'package:remote_data/src/model/seller.dart';
 import 'package:uuid/uuid.dart';
 import 'storage.dart';
-import 'package:google_sign_in/google_sign_in.dart' as gs;
+// import 'package:google_sign_in/google_sign_in.dart' as gs;
 
 class FireRepo {
   // ! USE
@@ -151,6 +147,21 @@ class FireRepo {
     } catch (_) {
       return Customer();
     }
+  }
+
+//
+  static Future<void> updateCustomer(Customer customer, xfile) async {
+    final user = auth.FirebaseAuth.instance.currentUser;
+    try {
+      String photoUrl =
+          await StorageRepository().uploadImages('profile', xfile);
+      await customerDB
+          .doc(customer.id)
+          .update(customer.copyWith(photoUrls: photoUrl).toJson());
+      //
+      user!.updateDisplayName(customer.name);
+      user.updatePhotoURL(photoUrl);
+    } catch (_) {}
   }
 
 //
@@ -396,102 +407,4 @@ class FireRepo {
       });
     } catch (_) {}
   }
-  // ! not user below
-
-  // !
-
-  static Future<void> setupOffers(
-      List<Product> products, Offers offers, xfile) async {
-    try {
-      List productDB = [];
-      for (var product in products) {
-        await productsDB.doc(product.sId).update({'offers': offers.toJson()});
-        productDB.add(product.toJson());
-      }
-      // !
-      String offerId = const Uuid().v1();
-      String photoUrl = await StorageRepository().uploadImages('offer', xfile);
-      await offerDB.doc(offerId).set({
-        'banner': photoUrl,
-        'valid': offers.expirationDate,
-        'products': productDB
-      });
-    } on FirebaseException catch (e) {
-      AppFirebaseFailure.fromCode(e.code);
-    } catch (_) {}
-  }
-
-  static Future<void> deleteOffer(String id) async {
-    try {
-      await offerDB.doc(id).delete();
-    } catch (_) {}
-  }
-// ***
-  // static Future<void> getOffers(
-  //     List<Product> products, Offers offers, xfile) async {
-  //   try {
-  //     List productDB = [];
-  //     for (var product in products) {
-  //       await productsDB.doc(product.sId).update({'offers': offers.toJson()});
-  //       productDB.add(product.toJson());
-  //     }
-  //     // !
-  //     String offerId = const Uuid().v1();
-  //     String photoUrl = await StorageRepository().uploadImages('offer', xfile);
-  //     await offerDB
-  //         .doc(offerId)
-  //         .set({'banner': photoUrl, 'products': productDB});
-  //   } catch (e) {
-  //     log(e.toString());
-  //   }
-  // }
-
-// ***
-// ! TODO delete this below code
-  // static Future<void> setupOrder() async {
-  //   try {
-  //     String orderId = const Uuid().v4();
-  //     // demoOrder
-  //     sellerDB
-  //         .doc('overview')
-  //         .collection('orders')
-  //         .doc(orderId)
-  //         .set(demoOrder.toJson());
-  //   } catch (_) {}
-  // }
-
-//! TODO delete this above code
-  static Future<void> orderMoveToDelivered(Orders orders) async {
-    try {
-      // String orderId = const Uuid().v4();
-      // demoOrder
-      await sellerDB
-          .doc('overview')
-          .collection('orders')
-          .doc(orders.oId)
-          .delete();
-      //
-      sellerDB
-          .doc('overview')
-          .collection('delivered')
-          .doc(orders.oId)
-          .set(orders.toJson());
-      //
-    } on FirebaseException catch (e) {
-      throw AppFirebaseFailure.fromCode(e.code);
-    } catch (_) {}
-  }
-
-// !
-  static Future<void> deleteDelivery(String pId) async {
-    try {
-      await sellerDB.doc('overview').collection('delivered').doc(pId).delete();
-    } on FirebaseException catch (e) {
-      throw AppFirebaseFailure.fromCode(e.code);
-    } catch (_) {
-      throw const AppFirebaseFailure();
-    }
-  }
-
-// !
 }

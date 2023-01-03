@@ -34,4 +34,12 @@ class AppBoxShadow {
         offset: const Offset(0, 10),
         blurRadius: 10),
   ];
+
+  static List<BoxShadow> profile = [
+    BoxShadow(
+      color: AppColor.menuSelected.withOpacity(0.5),
+      blurRadius: 5,
+      offset: const Offset(0, 4),
+    )
+  ];
 }

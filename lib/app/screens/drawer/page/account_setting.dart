@@ -18,12 +18,13 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
   var phoneController = TextEditingController();
   Map<String, dynamic> data = {"emoji": "🇯🇵", "code": "+81"};
   Uint8List? _image;
+  late Customer customer;
   // Map<String, dynamic>? dataResult;
-  @override
-  void initState() {
-    // getData();
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   // getData();
+  //   super.initState();
+  // }
 
   // getData() {
   //   // TODO
@@ -150,15 +151,21 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
             }
             Map<String, dynamic> data =
                 snapshot.data!.data() as Map<String, dynamic>;
-            Customer customer = Customer.fromJson(data);
+            customer = Customer.fromJson(data);
             emailController.text = customer.email!;
             phoneController.text = customer.phone!;
             nameController.text = customer.name!;
             return body(customer);
           }),
       bottomNavigationBar: bottomNavigationBar(
-        onTap: () {
+        onTap: () async {
           // TODO
+          await FireRepo.updateCustomer(
+              customer.copyWith(
+                name: nameController.text,
+                phone: phoneController.text,
+              ),
+              _image);
         },
         text: 'Save changes',
       ),
@@ -185,9 +192,18 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
                           radius: 10.h,
                           backgroundImage: MemoryImage(_image!),
                         )
-                      : CircleAvatar(
-                          radius: 10.h,
-                          backgroundImage: NetworkImage(customer.photoUrls!),
+                      // : CircleAvatar(
+                      //     radius: 10.h,
+                      //     backgroundImage: NetworkImage(customer.photoUrls!),
+                      //   ),
+                      : CachedNetworkImage(
+                          imageUrl: customer.photoUrls!,
+                          imageBuilder: (context, imageProvider) =>
+                              CircleAvatar(
+                                  radius: 10.h, backgroundImage: imageProvider),
+                          placeholder: (context, url) => AppLoading.profile,
+                          errorWidget: (context, url, error) =>
+                              AppLoading.profile,
                         ),
                   CustomPaint(
                     painter: MyPainter(),

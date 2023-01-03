@@ -5,3 +5,7 @@ class CoreTexts {
 
   static String text_2 = 'What are the offering products?';
 }
+
+class AppLinks {
+  static String onyxsio = 'https://onyxsio.com/';
+}
