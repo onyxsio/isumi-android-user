@@ -12,18 +12,20 @@ class Orders {
   String? discountedPrice;
   String? delivery;
   Customer? customer;
-
-  Orders(
-      {this.items,
-      this.total,
-      this.sellerId,
-      this.oId,
-      this.date,
-      this.currency,
-      this.delivery,
-      this.paymetStatus,
-      this.discountedPrice,
-      this.customer});
+  TimeLine? timeLine;
+  Orders({
+    this.items,
+    this.total,
+    this.sellerId,
+    this.oId,
+    this.date,
+    this.currency,
+    this.delivery,
+    this.paymetStatus,
+    this.discountedPrice,
+    this.customer,
+    this.timeLine,
+  });
   //
   Orders copyWith({
     String? oId,
@@ -36,18 +38,21 @@ class Orders {
     String? discountedPrice,
     String? delivery,
     Customer? customer,
+    TimeLine? timeLine,
   }) =>
       Orders(
-          items: items ?? this.items,
-          total: total ?? this.total,
-          sellerId: sellerId ?? this.sellerId,
-          oId: oId ?? this.oId,
-          date: date ?? this.date,
-          currency: currency ?? this.currency,
-          delivery: delivery ?? this.delivery,
-          paymetStatus: paymetStatus ?? this.paymetStatus,
-          discountedPrice: discountedPrice ?? this.discountedPrice,
-          customer: customer ?? this.customer);
+        items: items ?? this.items,
+        total: total ?? this.total,
+        sellerId: sellerId ?? this.sellerId,
+        oId: oId ?? this.oId,
+        date: date ?? this.date,
+        currency: currency ?? this.currency,
+        delivery: delivery ?? this.delivery,
+        paymetStatus: paymetStatus ?? this.paymetStatus,
+        discountedPrice: discountedPrice ?? this.discountedPrice,
+        customer: customer ?? this.customer,
+        timeLine: timeLine ?? this.timeLine,
+      );
 //
   Orders.fromFirebaseJson(DocumentSnapshot snap) {
     Map<String, dynamic> json = snap.data() as Map<String, dynamic>;
@@ -65,6 +70,8 @@ class Orders {
     total = json['total'];
     paymetStatus = json['paymetStatus'];
     discountedPrice = json['discountedPrice'];
+    timeLine =
+        json['TimeLine'] != null ? TimeLine.fromJson(json['TimeLine']) : null;
     customer =
         json['customer'] != null ? Customer.fromJson(json['customer']) : null;
   }
@@ -84,6 +91,8 @@ class Orders {
     total = json['total'];
     paymetStatus = json['paymetStatus'];
     discountedPrice = json['discountedPrice'];
+    timeLine =
+        json['TimeLine'] != null ? TimeLine.fromJson(json['TimeLine']) : null;
     customer =
         json['customer'] != null ? Customer.fromJson(json['customer']) : null;
   }
@@ -104,6 +113,56 @@ class Orders {
     if (customer != null) {
       data['customer'] = customer!.toJson();
     }
+    if (timeLine != null) {
+      data['TimeLine'] = timeLine!.toJson();
+    }
+    return data;
+  }
+}
+
+// !
+class TimeLine {
+  String? confirmed;
+  String? inprocess;
+  String? processed;
+  String? shipped;
+  String? delivered;
+
+  TimeLine(
+      {this.confirmed,
+      this.inprocess,
+      this.processed,
+      this.shipped,
+      this.delivered});
+  TimeLine copyWith({
+    String? confirmed,
+    String? inprocess,
+    String? processed,
+    String? shipped,
+    String? delivered,
+  }) =>
+      TimeLine(
+        confirmed: confirmed ?? this.confirmed,
+        inprocess: inprocess ?? this.inprocess,
+        processed: processed ?? this.processed,
+        shipped: shipped ?? this.shipped,
+        delivered: delivered ?? this.delivered,
+      );
+  TimeLine.fromJson(Map<String, dynamic> json) {
+    confirmed = json['Confirmed'];
+    inprocess = json['Inprocess'];
+    processed = json['Processed'];
+    shipped = json['Shipped'];
+    delivered = json['Delivered'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['Confirmed'] = confirmed;
+    data['Inprocess'] = inprocess;
+    data['Processed'] = processed;
+    data['Shipped'] = shipped;
+    data['Delivered'] = delivered;
     return data;
   }
 }

@@ -65,7 +65,7 @@ class OrderPage extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(Utils.formatDate(order.date!), style: TxtStyle.b5),
+                      Text(Utils.date(order.date!), style: TxtStyle.b5),
                       Row(
                         children: [
                           Text(
