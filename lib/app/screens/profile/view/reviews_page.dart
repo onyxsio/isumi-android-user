@@ -59,7 +59,7 @@ Row subTitleRow(Review review) {
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
       StarRating(rating: review.ratingValue!),
-      Text(Utils.formatDate(review.date!), style: TxtStyle.b5B),
+      Text(Utils.date(review.date!), style: TxtStyle.b5B),
     ],
   );
 }

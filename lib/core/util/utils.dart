@@ -5,11 +5,13 @@ import 'package:onyxsio/onyxsio.dart';
 
 class Utils {
   // static formatPrice(double price) => '\$ ${price.toStringAsFixed(2)}';
-  static formatDate(String date) =>
-      DateFormat.yMd().format(DateTime.parse(date));
+  static date(String date) => DateFormat.yMd().format(DateTime.parse(date));
 
-  static formatDateTime(DateTime date) =>
+  static dateTime(DateTime date) =>
       DateFormat('yyyy-M-d hh:mm:ss').format(date);
+
+  static day(String date) =>
+      DateFormat.yMMMMEEEEd().format(DateTime.parse(date));
 
   static formatCurrencySymble({name}) =>
       NumberFormat.simpleCurrency(name: name).currencySymbol;

@@ -6,7 +6,7 @@ import '../widgets/time_line.dart';
 class OrderDetails extends StatelessWidget {
   final Orders order;
   const OrderDetails({Key? key, required this.order}) : super(key: key);
-
+// TODO
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,13 +17,13 @@ class OrderDetails extends StatelessWidget {
         child: Column(
           children: [
             _tileBackground([
-              priceTag('Items Total', '500'),
+              priceTag('Items Total', order.total!),
               const SizedBox(height: 10),
-              priceTag('Delivery charges', '50'),
+              priceTag('Delivery charges', order.delivery!),
               const SizedBox(height: 10),
-              priceTag('Discount', '0'),
+              priceTag('Discount', order.discountedPrice!),
               const SizedBox(height: 10),
-              priceTag('Tax', '0'),
+              // priceTag('Tax', '0'),
               const Divider(),
               const SizedBox(height: 10),
               Row(
@@ -33,14 +33,17 @@ class OrderDetails extends StatelessWidget {
                     'Total Amount',
                     style: TxtStyle.h7B.copyWith(color: AppColor.gray1),
                   ),
-                  Text('2.0', style: TxtStyle.h11B),
+                  Text(order.total!, style: TxtStyle.h11B),
                 ],
               ),
             ], 'Price details'),
-            _tileBackground([orderTimeLine()], 'Delivery details'),
+            _tileBackground([orderTimeLine(order)], 'Delivery details'),
+            _tileBackground(
+                order.items!.map((e) => buildProductTile(e)).toList(),
+                'Product details'),
             _tileBackground([
               Text(
-                '25 rue Robert Latouche, Nice, 06200, Côte D’azur, France: ',
+                """${order.customer!.address!.name!}, ${order.customer!.address!.streetAddress!}, ${order.customer!.address!.city!}\n${order.customer!.address!.state!} ${order.customer!.address!.postalCode!}""",
                 style: TxtStyle.l5,
               ),
             ], 'Shipping details')
