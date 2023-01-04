@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:isumi/app/screens/cart/widgets/item_list.dart';
+import 'package:isumi/core/util/image.dart';
 import 'package:onyxsio/onyxsio.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 
@@ -51,7 +52,9 @@ class _CartPageState extends State<CartPage> {
           itemCount: items.length,
           padding: EdgeInsets.fromLTRB(5.w, 5.w, 5.w, 0),
           itemBuilder: (context, index) {
-            return ItemListView(cart: items[index]);
+            return FocusedMenuHolder(
+                menuContent: menuContent(items[index].id),
+                child: ItemListView(cart: items[index]));
           },
         ),
         if (!items.isEmpty)
@@ -66,6 +69,49 @@ class _CartPageState extends State<CartPage> {
                 text: 'Proceed to checkout'),
           )
       ],
+    );
+  }
+
+  Widget menuContent(String id) {
+    return Padding(
+      padding: EdgeInsets.all(5.w),
+      child: GestureDetector(
+          onTap: () async {
+            await _buildDialog(id).then((_) => Navigator.pop(context));
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SvgPicture.asset(AppIcon.trash, color: AppColor.error),
+              SizedBox(width: 2.w),
+              Text('Delete', style: TxtStyle.itemDelete),
+            ],
+          )),
+    );
+  }
+
+  _buildDialog(String id) async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Delete Confirmation"),
+          content: const Text("Are you sure you want to delete this item?"),
+          actions: <Widget>[
+            TextButton(
+                onPressed: () async {
+                  await FireRepo.removeCart(id)
+                      .then((value) => Navigator.of(context).pop(true));
+                  setState(() {});
+                },
+                child: const Text("Delete")),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text("Cancel"),
+            ),
+          ],
+        );
+      },
     );
   }
 }

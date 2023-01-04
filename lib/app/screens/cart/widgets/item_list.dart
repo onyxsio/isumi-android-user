@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:isumi/core/util/image.dart';
+import 'package:isumi/core/util/utils.dart';
 import 'package:onyxsio/onyxsio.dart';
 
 class ItemListView extends StatefulWidget {
@@ -36,7 +37,7 @@ class _ItemListViewState extends State<ItemListView> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        background(),
+        // background(),
         _buildItemCard(),
       ],
     );
@@ -55,8 +56,7 @@ class _ItemListViewState extends State<ItemListView> {
         children: [
           Text(item.name!, style: TxtStyle.b6),
           if (stock.isNotEmpty)
-            // TODO maxLine:1,
-            TXTHeader.cartListTileSubHeader('Only $stock items left'),
+            TXTHeader.cartListTileSubHeader(Utils.stok(stock)),
           TXTHeader.cartListTilePrice(item.price!, item.currency!),
         ],
       ),
@@ -64,7 +64,7 @@ class _ItemListViewState extends State<ItemListView> {
   }
 
   _buildDialog(BuildContext context) async {
-    showDialog(
+    await showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -87,45 +87,85 @@ class _ItemListViewState extends State<ItemListView> {
     );
   }
 
-  Container background() {
+  // Container background() {
+  //   return Container(
+  //     height: 20.h,
+  //     alignment: Alignment.centerRight,
+  //     padding: EdgeInsets.only(right: 5.w),
+  //     margin: EdgeInsets.only(bottom: 5.w),
+  //     decoration: BoxDeco.deco_4,
+  //     child: SvgPicture.asset(AppIcon.trash),
+  //   );
+  // }
+
+  // Dismissible _buildItemCard() {
+  //   // getQuantity(carts[index]);
+  //   return Dismissible(
+  //     key: UniqueKey(),
+  //     direction: DismissDirection.endToStart,
+  //     confirmDismiss: (DismissDirection direction) async {
+  //       return await await _buildDialog(context);
+  //     },
+  //     background: background(),
+  //     child: Container(
+  //       height: 20.h,
+  //       padding: EdgeInsets.all(3.w),
+  //       margin: EdgeInsets.only(bottom: 5.w),
+  //       decoration: BoxDeco.deco_2,
+  //       child: Row(
+  //         // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: [
+  //           _buildCardImage(),
+  //           SizedBox(width: 3.w),
+  //           _buildItemCardText(),
+  //           SizedBox(width: 3.w),
+  //           _buildItemCardQuantityButton(),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
+  // FocusedMenuHolder(
+  //             menuContent: menuContent(order, context),
+
+  Widget _buildItemCard() {
     return Container(
       height: 20.h,
-      alignment: Alignment.centerRight,
-      padding: EdgeInsets.only(right: 5.w),
+      padding: EdgeInsets.all(3.w),
       margin: EdgeInsets.only(bottom: 5.w),
-      decoration: BoxDeco.deco_4,
-      child: SvgPicture.asset(AppIcon.trash),
-    );
-  }
-
-  Dismissible _buildItemCard() {
-    // getQuantity(carts[index]);
-    return Dismissible(
-      key: UniqueKey(),
-      direction: DismissDirection.endToStart,
-      confirmDismiss: (DismissDirection direction) async {
-        return await await _buildDialog(context);
-      },
-      background: background(),
-      child: Container(
-        height: 20.h,
-        padding: EdgeInsets.all(3.w),
-        margin: EdgeInsets.only(bottom: 5.w),
-        decoration: BoxDeco.deco_2,
-        child: Row(
-          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildCardImage(),
-            SizedBox(width: 3.w),
-            _buildItemCardText(),
-            SizedBox(width: 3.w),
-            _buildItemCardQuantityButton(),
-          ],
-        ),
+      decoration: BoxDeco.deco_2,
+      child: Row(
+        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildCardImage(),
+          SizedBox(width: 3.w),
+          _buildItemCardText(),
+          SizedBox(width: 3.w),
+          _buildItemCardQuantityButton(),
+        ],
       ),
     );
   }
+
+  // Widget menuContent() {
+  //   return Padding(
+  //     padding: EdgeInsets.all(5.w),
+  //     child: GestureDetector(
+  //         onTap: () async {
+  //           await _buildDialog(context).then((_) => Navigator.pop(context));
+  //         },
+  //         child: Row(
+  //           mainAxisAlignment: MainAxisAlignment.start,
+  //           children: [
+  //             SvgPicture.asset(AppIcon.trash, color: AppColor.error),
+  //             SizedBox(width: 2.w),
+  //             Text('Delete', style: TxtStyle.itemDelete),
+  //           ],
+  //         )),
+  //   );
+  // }
 
   Column _buildItemCardQuantityButton() {
     return Column(

@@ -375,6 +375,17 @@ class FireRepo {
     }
   }
 
+//
+  static Future<void> deleteOrder(String id) async {
+    final user = auth.FirebaseAuth.instance.currentUser;
+    try {
+      await customerDB.doc(user!.uid).collection('orders').doc(id).delete();
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+//
   static Future<void> sendOrder(Orders order) async {
     try {
       await sellerDB

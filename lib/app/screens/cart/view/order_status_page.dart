@@ -43,7 +43,7 @@ class _OrderStatusPageState extends State<OrderStatusPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final user = context.select((AppBloc bloc) => bloc.state.user);
-// TODO
+
     return Scaffold(
       appBar: appBar(text: 'Your order status'),
       body: isLoading
@@ -61,9 +61,8 @@ class _OrderStatusPageState extends State<OrderStatusPage> {
             ),
       bottomNavigationBar: Padding(
         padding: EdgeInsets.symmetric(horizontal: 5.w).copyWith(bottom: 3.h),
-        // TODO change button
         child: MainButton(
-          text: 'pay now',
+          text: 'Pay now',
           onTap: () {
             setupOrder(user);
           },
@@ -131,8 +130,8 @@ class _OrderStatusPageState extends State<OrderStatusPage> {
             SizedBox(height: 4.w),
             priceTag('Items Total', total.toString()),
             SizedBox(height: 2.w),
-            priceTag('Delivery charges', '50.2'),
-            SizedBox(height: 2.w),
+            // priceTag('Delivery charges', '50.2'),
+            // SizedBox(height: 2.w),
             priceTag('Discount', '0.0'),
             // SizedBox(height: 2.w),
             // priceTag('Tax', '0.2'),
@@ -199,7 +198,7 @@ class _OrderStatusPageState extends State<OrderStatusPage> {
                   SizedBox(height: 5.w),
                   isEmptyAddress
                       ? _addNewShippingAdderss(context)
-                      : Text(customer.address!.streetAddress!,
+                      : Text(Utils.adderss(customer.address!),
                           style: TxtStyle.l5),
                   SizedBox(height: 5.w),
                   if (!isEmptyAddress) _updateShippingAdderss(context),

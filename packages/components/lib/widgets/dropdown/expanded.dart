@@ -17,7 +17,7 @@ class _SelectDropListState extends State<DropChild>
   late AnimationController expandController;
   late Animation<double> animation;
 
-  bool isShow = false;
+  bool isShow = true;
 
   @override
   void initState() {

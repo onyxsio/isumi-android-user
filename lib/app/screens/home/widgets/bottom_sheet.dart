@@ -24,7 +24,7 @@ class VeriantChoose extends StatefulWidget {
 }
 
 class _VeriantChooseState extends State<VeriantChoose> {
-  String price = '0.0', stock = '';
+  String price = '0.0', stock = '0';
   int selectedColor = 0, selectedSize = 0;
   List<Variant> veriants = [];
   List minPrice = [];
@@ -65,14 +65,18 @@ class _VeriantChooseState extends State<VeriantChoose> {
     return WillPopScope(
       onWillPop: () async {
         // listener dismiss
-        Selected selected = Selected(
-          price: price,
-          color: selectedColor,
-          size: selectedSize,
-          stock: stock,
-        );
-        Navigator.pop(context, selected);
-        return true;
+        if (stock != '0') {
+          Selected selected = Selected(
+            price: price,
+            color: selectedColor,
+            size: selectedSize,
+            stock: stock,
+          );
+          Navigator.pop(context, selected);
+          return true;
+        } else {
+          return false;
+        }
       },
       child: Container(
         // height: 30.h,
@@ -214,14 +218,14 @@ class _VeriantChooseState extends State<VeriantChoose> {
       convertToSize(veriants[selectedColor]).length,
       (i) => GestureDetector(
             onTap: () {
-              // if (convertToSize(veriants[selectedColor])[i].stock! != '0') {
-              setState(() {
-                price = convertToSize(veriants[selectedColor])[i].price!;
-                selectedSize = i;
-                stock = convertToSize(veriants[selectedColor])[i].stock!;
-                context.read<CounterCubit>().reset();
-              });
-              // }
+              if (convertToSize(veriants[selectedColor])[i].stock! != '0') {
+                setState(() {
+                  price = convertToSize(veriants[selectedColor])[i].price!;
+                  selectedSize = i;
+                  stock = convertToSize(veriants[selectedColor])[i].stock!;
+                  context.read<CounterCubit>().reset();
+                });
+              }
             },
             child: Container(
               height: 12.w,
@@ -233,9 +237,10 @@ class _VeriantChooseState extends State<VeriantChoose> {
               child: Center(
                   child: Text(
                 convertToSize(veriants[selectedColor])[i].size!,
-                style: convertToSize(veriants[selectedColor])[i].stock! != '0'
-                    ? TxtStyle.size(selectedSize == i)
-                    : TxtStyle.sizeunselect,
+                // style: convertToSize(veriants[selectedColor])[i].stock! != '0'
+                //     ? TxtStyle.size(selectedSize == i)
+                //     : TxtStyle.sizeunselect,
+                style: TxtStyle.size(selectedSize == i),
               )),
             ),
           ));

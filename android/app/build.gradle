@@ -56,9 +56,13 @@ android {
         release {
         
             signingConfig signingConfigs.debug
-            shrinkResources false
-            minifyEnabled false
+            // shrinkResources false
+            // minifyEnabled false
         }
+    }
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/services/javax.annotation.processing.Processor'
     }
 }
 

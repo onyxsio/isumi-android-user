@@ -75,7 +75,7 @@ class BoxDeco {
       );
 
   static BoxDecoration unselected = BoxDecoration(
-    color: AppColor.gray,
+    color: AppColor.gray3,
     // boxShadow: [AppBoxShadow.itemCard],
     borderRadius: BorderRadius.circular(10),
   );

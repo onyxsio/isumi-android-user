@@ -11,7 +11,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  # ^7.0.0
   flutter_stripe: ^7.0.0
   cupertino_icons: ^1.0.2
   http: ^0.13.5
